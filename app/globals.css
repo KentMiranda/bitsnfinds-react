@@ -1,0 +1,76 @@
+/* ================================================================
+   globals.css
+   Only put things here that Tailwind can't handle with classes.
+   Most styling is done with Tailwind classes in the components.
+   ================================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,700;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Base ─────────────────────────────────────────────────────── */
+html { scroll-behavior: smooth; }
+body { font-family: 'DM Sans', sans-serif; }
+
+/* ── Scroll reveal animation ─────────────────────────────────── */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.75s ease, transform 0.75s ease;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Animated underline on nav links ─────────────────────────── */
+.nav-underline {
+  position: relative;
+}
+.nav-underline::after {
+  content: '';
+  position: absolute;
+  bottom: -3px; left: 0; right: 0;
+  height: 1px;
+  background: #4A6741;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+.nav-underline:hover::after {
+  transform: scaleX(1);
+}
+
+/* ── FAQ accordion ───────────────────────────────────────────── */
+.faq-answer {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.45s cubic-bezier(0.4, 0, 0.2, 1),
+              padding 0.3s ease;
+}
+.faq-answer.open {
+  max-height: 300px;
+  padding-bottom: 1.25rem;
+}
+
+/* ── Hero scroll indicator ───────────────────────────────────── */
+@keyframes scrollPulse {
+  0%, 100% { opacity: 0.3; transform: scaleY(1);   }
+  50%       { opacity: 1;   transform: scaleY(1.2); }
+}
+.scroll-line {
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+
+/* ── Botanical offset image border ──────────────────────────── */
+.img-offset::after {
+  content: '';
+  position: absolute;
+  top: 1.2rem; left: -1.2rem;
+  width: 100%; height: 100%;
+  border: 1px solid #C8D9BF;
+  border-radius: 16px;
+  z-index: -1;
+}
