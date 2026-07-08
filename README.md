@@ -1,5 +1,5 @@
+# note to self, Read this if you need a guide AGAIN!
 # Bits & Finds — Next.js Website
-
 ## 📁 Project Structure
 
 ```
@@ -27,13 +27,13 @@ bitsnfinds-react/
 │   └── SectionHeader.jsx   ← Reusable section title block
 │
 ├── lib/
-│   └── config.js           ← ⭐ EDIT THIS to update all site content
+│   └── config.js           ← EDIT to update all site content
 │
 ├── tailwind.config.js      ← Brand colors and fonts
 └── package.json            ← Dependencies
 ```
 
-## ⚡ Getting Started
+##  Setting up
 
 ```bash
 # 1. Install dependencies (only needed once)
@@ -48,7 +48,7 @@ npm run dev
 
 ## ✏️ How to update content
 
-**90% of the time, you only need to edit one file:**
+**90% of the time, I only need to edit one file:**
 
 ```
 lib/config.js
@@ -59,14 +59,7 @@ lib/config.js
 - Add a new page → create a new folder in `app/` with a `page.jsx` inside
 - Add a product → add a new object to `CONFIG.products` in `config.js`
 
-## 🚀 Deploy to Vercel
+## 🚀 soon to Deploy
 
-```bash
-# 1. Push to GitHub
-git add .
-git commit -m "your message"
-git push
 
-# 2. Connect repo to Vercel at vercel.com
-# 3. Add your custom domain: bitsnfinds.com
 ```
