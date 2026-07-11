@@ -6,9 +6,47 @@ import { CONFIG } from '@/lib/config'
 
 export default function OrderPage() {
   const [submitted, setSubmitted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
+  const [error, setError] = useState('')
   const [form, setForm] = useState({ name: '', phone: '', email: '', productType: '', details: '' })
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value })
-  const handleSubmit = (e) => { e.preventDefault(); setSubmitted(true) }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setSubmitting(true)
+    setError('')
+
+    try {
+      const res = await fetch(`${CONFIG.apiBaseUrl}/api/orders/`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: form.name,
+          phone_number: form.phone,
+          email: form.email,
+          product_type: form.productType,
+          details: form.details,
+        }),
+      })
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}))
+        const message = data.email?.[0]
+          || data.phone_number?.[0]
+          || data.product_type?.[0]
+          || data.name?.[0]
+          || 'Something went wrong. Please try again.'
+        throw new Error(message)
+      }
+
+      setSubmitted(true)
+    } catch (err) {
+      setError(err.message || 'Could not send your order. Please try again.')
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
   const { order } = CONFIG
 
   const inputClass = `w-full bg-cream/5 border border-cream/10 rounded-sm
@@ -57,7 +95,7 @@ export default function OrderPage() {
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-[0.65rem] font-medium tracking-[0.14em] uppercase text-cream/45">Email Address</label>
-                <input name="email" type="email" placeholder="you@email.com"
+                <input name="email" type="email" required placeholder="you@email.com"
                   value={form.email} onChange={handleChange} className={inputClass}/>
               </div>
               <div className="flex flex-col gap-1.5">
@@ -76,11 +114,15 @@ export default function OrderPage() {
                   placeholder="Describe what you'd like — size, wood type, design, quantity..."
                   value={form.details} onChange={handleChange} className={`${inputClass} resize-y`}/>
               </div>
-              <button type="submit"
+              {error && (
+                <p className="text-sm text-red-300/90 font-light">{error}</p>
+              )}
+              <button type="submit" disabled={submitting}
                 className="self-start bg-cream text-bark text-xs font-medium
                            tracking-widest uppercase px-8 py-3 rounded-sm
-                           hover:bg-wheat transition-all hover:-translate-y-0.5">
-                Send Order Request →
+                           hover:bg-wheat transition-all hover:-translate-y-0.5
+                           disabled:opacity-50 disabled:hover:translate-y-0">
+                {submitting ? 'Sending…' : 'Send Order Request →'}
               </button>
             </form>
           ) : (
