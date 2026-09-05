@@ -36,7 +36,7 @@ const DOT_COLORS = {
   delivered: 'bg-green-500',
 }
 
-const TABS = ['All', 'Unread', 'Active', 'Done']
+const TABS = ['All', 'Unread', 'Active', 'Archives']
 
 export default function AdminOrdersPage() {
   const router = useRouter()
@@ -85,6 +85,7 @@ export default function AdminOrdersPage() {
             is_read: true,
           }),
         }
+
       )
       if (res.ok) {
         await fetchOrders()
@@ -97,10 +98,35 @@ export default function AdminOrdersPage() {
     }
   }
 
+  async function deleteArchivedOrder() {
+    if (!selectedOrder || selectedOrder.status !== 'delivered') return
+    if (!window.confirm(`Permanently delete ${selectedOrder.order_number}?`)) return
+
+    setSaving(true)
+    try {
+      const res = await fetch(
+        `${CONFIG.apiBaseUrl}/api/admin/orders/${selectedOrder.id}/`,
+        {
+          method: 'DELETE',
+          headers: { 'Authorization': `Token ${getToken()}` },
+        }
+      )
+      if (res.ok) {
+        setOrders((current) => current.filter((order) => order.id !== selectedOrder.id))
+        setSelectedOrder(null)
+      }
+    } catch (err) {
+      console.error('Failed to delete archived order:', err)
+    } finally {
+      setSaving(false)
+    }
+  }
+
   const filteredOrders = orders.filter((o) => {
-    if (activeTab === 'Unread') return !o.is_read
+    if (activeTab === 'Unread') return !o.is_read && o.status !== 'delivered'
     if (activeTab === 'Active') return ['confirmed', 'engraving', 'quality', 'ready'].includes(o.status)
-    if (activeTab === 'Done')   return ['shipped', 'delivered'].includes(o.status)
+    if (activeTab === 'Archives') return o.status === 'delivered'
+    if (activeTab === 'All') return o.status !== 'delivered'
     return true
   })
 
@@ -133,9 +159,9 @@ export default function AdminOrdersPage() {
 
           <div className="grid grid-cols-3 gap-3 px-5 py-3 border-b border-mist">
             {[
-              { label: 'Total',  value: orders.length },
+              { label: 'Total',  value: orders.filter(o => o.status !== 'delivered').length },
               { label: 'Active', value: orders.filter(o => ['confirmed','engraving','quality','ready'].includes(o.status)).length },
-              { label: 'Done',   value: orders.filter(o => ['shipped','delivered'].includes(o.status)).length },
+              { label: 'Archived', value: orders.filter(o => o.status === 'delivered').length },
             ].map((s) => (
               <div key={s.label} className="bg-cream rounded-md p-2">
                 <div className="text-xl font-medium text-bark">{s.value}</div>
@@ -304,6 +330,16 @@ export default function AdminOrdersPage() {
                   {saving ? 'Saving...' : 'Save changes'}
                 </button>
               </div>
+              {activeTab === 'Archives' && selectedOrder.status === 'delivered' && (
+                <button
+                  onClick={deleteArchivedOrder}
+                  disabled={saving}
+                  className="w-full border border-red-300 text-red-600 text-xs font-medium
+                             tracking-widest uppercase py-2.5 rounded-sm
+                             hover:bg-red-50 transition-colors disabled:opacity-50">
+                  {saving ? 'Deleting...' : 'Delete archived order'}
+                </button>
+              )}
 
             </div>
           </div>
