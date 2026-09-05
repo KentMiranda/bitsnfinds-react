@@ -7,7 +7,6 @@ export default function HomePage() {
 
   return (
     <>
-      {/* HERO */}
       <section className="relative min-h-[92vh] flex items-center justify-center
                           text-center px-6 py-24 bg-cream overflow-hidden">
         <LeafSVG variant="branch"
@@ -59,7 +58,6 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* ABOUT */}
       <section id="about" className="relative px-6 py-24 bg-paper overflow-hidden">
         <LeafSVG variant="single"
           className="absolute right-0 top-1/2 -translate-y-1/2 w-56 opacity-[0.08] pointer-events-none" />

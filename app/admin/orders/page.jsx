@@ -1,19 +1,11 @@
-// app/admin/orders/page.jsx
-// ================================================================
-// The orders dashboard — Tita Mari sees all incoming orders here.
-// She can filter by status, click an order to see details,
-// and update the status of each order.
-// ================================================================
-
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter }           from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { getToken, isLoggedIn } from '@/lib/auth'
-import AdminSidebar             from '@/components/admin/AdminSidebar'
-import { CONFIG }               from '@/lib/config'
+import AdminSidebar from '@/components/admin/AdminSidebar'
+import { CONFIG } from '@/lib/config'
 
-// Status badge colors
 const STATUS_STYLES = {
   received:  'bg-red-50 text-red-600',
   confirmed: 'bg-amber-50 text-amber-600',
@@ -56,7 +48,6 @@ export default function AdminOrdersPage() {
   const [saving,       setSaving]       = useState(false)
   const [statusUpdate, setStatusUpdate] = useState('')
 
-  // Redirect to login if not logged in
   useEffect(() => {
     if (!isLoggedIn()) router.push('/admin/login')
     else fetchOrders()
@@ -106,7 +97,6 @@ export default function AdminOrdersPage() {
     }
   }
 
-  // Filter orders based on active tab
   const filteredOrders = orders.filter((o) => {
     if (activeTab === 'Unread') return !o.is_read
     if (activeTab === 'Active') return ['confirmed', 'engraving', 'quality', 'ready'].includes(o.status)
@@ -124,14 +114,8 @@ export default function AdminOrdersPage() {
     <div className="min-h-screen bg-cream flex">
       <AdminSidebar />
 
-      {/* Main panel */}
       <div className="flex-1 flex overflow-hidden">
-
-        {/* Orders list */}
-        <div className={`flex flex-col border-r border-mist bg-paper
-                         ${selectedOrder ? 'w-80 flex-shrink-0' : 'flex-1'}`}>
-
-          {/* Header */}
+        <div className={`flex flex-col border-r border-mist bg-paper ${selectedOrder ? 'w-80 flex-shrink-0' : 'flex-1'}`}>
           <div className="px-5 py-4 border-b border-mist flex items-center justify-between">
             <div>
               <h1 className="font-display text-xl font-normal text-bark">Orders</h1>
@@ -147,7 +131,6 @@ export default function AdminOrdersPage() {
             )}
           </div>
 
-          {/* Stats */}
           <div className="grid grid-cols-3 gap-3 px-5 py-3 border-b border-mist">
             {[
               { label: 'Total',  value: orders.length },
@@ -161,7 +144,6 @@ export default function AdminOrdersPage() {
             ))}
           </div>
 
-          {/* Tabs */}
           <div className="flex border-b border-mist">
             {TABS.map((tab) => (
               <button key={tab}
@@ -176,7 +158,6 @@ export default function AdminOrdersPage() {
             ))}
           </div>
 
-          {/* Order list */}
           <div className="flex-1 overflow-y-auto">
             {loading ? (
               <div className="p-8 text-center text-ink-muted text-sm font-light">
@@ -196,11 +177,8 @@ export default function AdminOrdersPage() {
                                 ? 'bg-mist/40'
                                 : 'hover:bg-cream'}`}>
 
-                  {/* Status dot */}
-                  <div className={`w-2 h-2 rounded-full flex-shrink-0
-                                   ${DOT_COLORS[order.status] || 'bg-gray-300'}`} />
+                  <div className={`w-2 h-2 rounded-full flex-shrink-0 ${DOT_COLORS[order.status] || 'bg-gray-300'}`} />
 
-                  {/* Info */}
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-medium text-bark truncate">
@@ -215,7 +193,6 @@ export default function AdminOrdersPage() {
                     </div>
                   </div>
 
-                  {/* Right side */}
                   <div className="flex flex-col items-end gap-1 flex-shrink-0">
                     <span className={`text-[0.6rem] font-medium px-1.5 py-0.5 rounded-sm
                                       ${STATUS_STYLES[order.status] || 'bg-gray-50 text-gray-500'}`}>
@@ -231,11 +208,8 @@ export default function AdminOrdersPage() {
           </div>
         </div>
 
-        {/* Order detail panel */}
         {selectedOrder && (
           <div className="flex-1 flex flex-col overflow-hidden">
-
-            {/* Detail header */}
             <div className="px-6 py-4 border-b border-mist flex items-center justify-between">
               <div className="flex items-center gap-3">
                 <button
@@ -259,10 +233,7 @@ export default function AdminOrdersPage() {
               )}
             </div>
 
-            {/* Detail body */}
             <div className="flex-1 overflow-y-auto px-6 py-5 flex flex-col gap-4">
-
-              {/* Customer info */}
               <div className="bg-paper border border-mist rounded-md p-4">
                 <p className="text-[0.65rem] font-medium tracking-widest uppercase
                               text-ink-muted mb-3">
@@ -286,7 +257,6 @@ export default function AdminOrdersPage() {
                 </div>
               </div>
 
-              {/* Order message */}
               <div className="bg-paper border border-mist rounded-md p-4">
                 <p className="text-[0.65rem] font-medium tracking-widest uppercase
                               text-ink-muted mb-2">
@@ -297,7 +267,6 @@ export default function AdminOrdersPage() {
                 </p>
               </div>
 
-              {/* Status update */}
               <div className="bg-paper border border-mist rounded-md p-4">
                 <p className="text-[0.65rem] font-medium tracking-widest uppercase
                               text-ink-muted mb-3">
@@ -329,7 +298,6 @@ export default function AdminOrdersPage() {
           </div>
         )}
 
-        {/* Empty state when no order selected */}
         {!selectedOrder && !loading && filteredOrders.length > 0 && (
           <div className="flex-1 flex items-center justify-center text-ink-muted
                           text-sm font-light">

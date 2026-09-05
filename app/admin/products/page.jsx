@@ -1,19 +1,10 @@
-// app/admin/products/page.jsx
-// ================================================================
-// Products management page — Tita Mari can:
-// - See all products
-// - Add a new product
-// - Edit an existing product
-// - Delete a product
-// ================================================================
-
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter }           from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { getToken, isLoggedIn } from '@/lib/auth'
-import AdminSidebar             from '@/components/admin/AdminSidebar'
-import { CONFIG }               from '@/lib/config'
+import AdminSidebar from '@/components/admin/AdminSidebar'
+import { CONFIG } from '@/lib/config'
 
 const EMPTY_FORM = {
   name: '', description: '', price: '', tag: '', emoji: '', image_url: '', is_active: true
@@ -121,8 +112,6 @@ export default function AdminProductsPage() {
       <AdminSidebar />
 
       <div className="flex-1 overflow-y-auto">
-
-        {/* Header */}
         <div className="px-8 py-6 border-b border-mist flex items-center justify-between
                         sticky top-0 bg-cream/95 backdrop-blur-sm z-10">
           <div>
@@ -140,8 +129,6 @@ export default function AdminProductsPage() {
         </div>
 
         <div className="px-8 py-6">
-
-          {/* Add/Edit form */}
           {showForm && (
             <div className="bg-paper border border-mist rounded-lg p-6 mb-6">
               <h2 className="font-display text-lg font-normal text-bark mb-5">
@@ -210,7 +197,6 @@ export default function AdminProductsPage() {
                 </div>
               </div>
 
-              {/* Active toggle */}
               <div className="flex items-center gap-3 mb-5">
                 <input type="checkbox" id="is_active"
                   checked={form.is_active}
@@ -221,7 +207,6 @@ export default function AdminProductsPage() {
                 </label>
               </div>
 
-              {/* Form buttons */}
               <div className="flex gap-3">
                 <button onClick={handleSave} disabled={saving}
                   className="bg-bark text-cream text-xs font-medium tracking-widest
@@ -239,7 +224,6 @@ export default function AdminProductsPage() {
             </div>
           )}
 
-          {/* Products grid */}
           {loading ? (
             <div className="text-center text-ink-muted text-sm font-light py-16">
               Loading products...
@@ -254,9 +238,7 @@ export default function AdminProductsPage() {
                 <div key={product.id}
                   className="bg-paper border border-mist rounded-md overflow-hidden">
 
-                  {/* Product image / placeholder */}
-                  <div className="aspect-[4/3] bg-mist flex items-center justify-center
-                                  text-4xl relative">
+                  <div className="aspect-[4/3] bg-mist flex items-center justify-center text-4xl relative">
                     {product.image_url
                       ? <img src={product.image_url} alt={product.name}
                              className="w-full h-full object-cover"/>
@@ -278,7 +260,6 @@ export default function AdminProductsPage() {
                     )}
                   </div>
 
-                  {/* Product info */}
                   <div className="p-4">
                     <h3 className="font-display text-base font-normal text-bark mb-0.5">
                       {product.name}

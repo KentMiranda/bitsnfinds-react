@@ -1,10 +1,3 @@
-// components/LeafSVG.jsx
-// ================================================================
-// Reusable botanical SVG illustrations used across all sections.
-// Three variants: 'branch', 'single', 'sprig'
-// Usage: <LeafSVG variant="branch" className="..." />
-// ================================================================
-
 export default function LeafSVG({ variant = 'branch', className = '' }) {
 
   if (variant === 'branch') return (
