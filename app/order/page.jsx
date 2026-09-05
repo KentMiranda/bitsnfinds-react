@@ -8,7 +8,7 @@ export default function OrderPage() {
   const [submitted, setSubmitted] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
-  const [form, setForm] = useState({ name: '', phone: '', email: '', productType: '', details: '' })
+  const [form, setForm] = useState({ name: '', phone: '', email: '', facebookName: '', productType: '', details: '', referenceImage: null })
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value })
 
   const handleSubmit = async (e) => {
@@ -17,21 +17,27 @@ export default function OrderPage() {
     setError('')
 
     try {
+      const payload = new FormData()
+      payload.append('name', form.name)
+      payload.append('phone_number', form.phone)
+      payload.append('email', form.email)
+      payload.append('facebook_name', form.facebookName)
+      payload.append('product_type', form.productType)
+      payload.append('details', form.details)
+      if (form.referenceImage) payload.append('reference_image', form.referenceImage)
+
       const res = await fetch(`${CONFIG.apiBaseUrl}/api/orders/`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: form.name,
-          phone_number: form.phone,
-          email: form.email,
-          product_type: form.productType,
-          details: form.details,
-        }),
+        body: payload,
       })
 
       if (!res.ok) {
         const data = await res.json().catch(() => ({}))
-        const message = data.email?.[0]
+        const message = data.errors?.email?.[0]
+          || data.errors?.phone_number?.[0]
+          || data.errors?.product_type?.[0]
+          || data.errors?.reference_image?.[0]
+          || data.email?.[0]
           || data.phone_number?.[0]
           || data.product_type?.[0]
           || data.name?.[0]
@@ -99,6 +105,12 @@ export default function OrderPage() {
                   value={form.email} onChange={handleChange} className={inputClass}/>
               </div>
               <div className="flex flex-col gap-1.5">
+                <label className="text-[0.65rem] font-medium tracking-[0.14em] uppercase text-cream/45">Facebook Name</label>
+                <input name="facebookName" type="text" placeholder="Your Facebook name"
+                  value={form.facebookName} onChange={handleChange} className={inputClass}/>
+                <p className="text-xs text-cream/40">So the owner can message you about your order.</p>
+              </div>
+              <div className="flex flex-col gap-1.5">
                 <label className="text-[0.65rem] font-medium tracking-[0.14em] uppercase text-cream/45">Product Type</label>
                 <select name="productType" required value={form.productType}
                   onChange={handleChange} className={inputClass}>
@@ -107,6 +119,13 @@ export default function OrderPage() {
                     <option key={opt} value={opt} className="bg-bark">{opt}</option>
                   ))}
                 </select>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[0.65rem] font-medium tracking-[0.14em] uppercase text-cream/45">Reference Image (optional)</label>
+                <input name="referenceImage" type="file" accept="image/jpeg,image/png,image/webp"
+                  onChange={(e) => setForm({ ...form, referenceImage: e.target.files?.[0] || null })}
+                  className="w-full text-sm text-cream/70 file:mr-3 file:rounded-sm file:border-0 file:bg-cream file:px-3 file:py-2 file:text-xs file:font-medium file:text-bark"/>
+                <p className="text-xs text-cream/40">JPG, PNG, or WebP up to 5 MB.</p>
               </div>
               <div className="flex flex-col gap-1.5">
                 <label className="text-[0.65rem] font-medium tracking-[0.14em] uppercase text-cream/45">Order Details</label>

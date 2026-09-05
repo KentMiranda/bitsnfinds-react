@@ -244,6 +244,7 @@ export default function AdminOrdersPage() {
                     { label: 'Name',    value: selectedOrder.name         },
                     { label: 'Email',   value: selectedOrder.email        },
                     { label: 'Phone',   value: selectedOrder.phone_number },
+                    { label: 'Facebook', value: selectedOrder.facebook_name || 'Not provided' },
                     { label: 'Product', value: selectedOrder.product_type },
                     { label: 'Date',    value: formatDate(selectedOrder.created_at) },
                   ].map((row) => (
@@ -266,6 +267,16 @@ export default function AdminOrdersPage() {
                   "{selectedOrder.details}"
                 </p>
               </div>
+              {selectedOrder.reference_image && (
+                <div className="bg-paper border border-mist rounded-md p-4">
+                  <p className="text-[0.65rem] font-medium tracking-widest uppercase text-ink-muted mb-3">
+                    Reference image
+                  </p>
+                  <a href={selectedOrder.reference_image} target="_blank" rel="noreferrer">
+                    <img src={selectedOrder.reference_image} alt="Customer reference" className="max-h-64 w-full object-contain rounded-sm bg-cream" />
+                  </a>
+                </div>
+              )}
 
               <div className="bg-paper border border-mist rounded-md p-4">
                 <p className="text-[0.65rem] font-medium tracking-widest uppercase
