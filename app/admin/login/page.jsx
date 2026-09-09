@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { saveAuth } from '@/lib/auth'
 import { CONFIG } from '@/lib/config'
@@ -11,6 +11,13 @@ export default function AdminLoginPage() {
   const [form, setForm] = useState({ username: '', password: '' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [warming, setWarming] = useState(true)
+
+  useEffect(() => {
+    fetch(`${CONFIG.apiBaseUrl}/health/`)
+      .catch(() => {})
+      .finally(() => setWarming(false))
+  }, [])
 
   async function handleSubmit(e) {
     e.preventDefault()
@@ -87,9 +94,9 @@ export default function AdminLoginPage() {
 
           <button
             type="submit"
-            disabled={loading}
+            disabled={loading || warming}
             className="w-full bg-bark text-cream text-xs font-medium tracking-widest uppercase py-3 rounded-sm hover:bg-walnut transition-colors disabled:opacity-50">
-            {loading ? 'Signing in...' : 'Sign in'}
+            {loading ? 'Signing in...' : warming ? 'Waking up server...' : 'Sign in'}
           </button>
         </form>
 
