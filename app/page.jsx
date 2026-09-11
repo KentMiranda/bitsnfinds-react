@@ -142,21 +142,21 @@ export default function HomePage() {
 
       <section id="services" className="relative px-6 py-24 bg-cream overflow-hidden">
         <div className="max-w-6xl mx-auto">
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
-            <p className="text-forest text-xs font-medium tracking-[0.25em] uppercase mb-3">
-              {services.eyebrow}
-            </p>
-            <h2 className="font-display text-4xl md:text-6xl text-bark leading-tight">
+          <div className="flex flex-col md:flex-row md:items-start justify-between gap-8 mb-16">
+            <h2 className="order-2 md:order-1 font-display text-4xl md:text-6xl text-bark leading-tight">
               {services.title}
               <br />
               <em className="italic text-walnut font-light">{services.titleEm}</em>
             </h2>
+            <p className="order-1 md:order-2 text-forest text-xs font-medium tracking-[0.25em] uppercase md:pt-2">
+              {services.eyebrow}
+            </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-0 border-y border-bark/20">
+          <div className="grid md:grid-cols-3 gap-10 md:gap-14">
             {services.items.map((service) => (
-              <article key={service.title} className="bg-transparent p-7 md:p-10 min-h-[300px] flex flex-col border-b md:border-b-0 md:border-r last:border-0 border-bark/20">
-                <div className="flex items-start justify-between mb-14">
+              <article key={service.title} className="min-h-[300px] flex flex-col">
+                <div className="flex items-start justify-between mb-12">
                   <span className="text-2xl text-wheat" aria-hidden="true">{service.icon}</span>
                   <span className="text-xs tracking-[0.2em] text-ink-muted">{service.number}</span>
                 </div>
