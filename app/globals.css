@@ -131,9 +131,14 @@ main .hero-image-block img {
 }
 
 .event-info {
+  z-index: 4;
   opacity: 0;
   transform: translateY(1.25rem);
   transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.event-overlay {
+  z-index: 2;
 }
 
 .group:hover .event-info,
