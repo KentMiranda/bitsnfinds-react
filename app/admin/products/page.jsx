@@ -20,6 +20,7 @@ export default function AdminProductsPage() {
   const [form,      setForm]      = useState(EMPTY_FORM)
   const [saving,    setSaving]    = useState(false)
   const [imageFile, setImageFile] = useState(null)
+  const [saveError, setSaveError] = useState('')
 
   useEffect(() => {
     if (!isLoggedIn()) router.push('/admin/login')
@@ -45,6 +46,7 @@ export default function AdminProductsPage() {
     setForm(EMPTY_FORM)
     setEditingId(null)
     setImageFile(null)
+    setSaveError('')
     setShowForm(true)
   }
 
@@ -60,11 +62,13 @@ export default function AdminProductsPage() {
     })
     setEditingId(product.id)
     setImageFile(null)
+    setSaveError('')
     setShowForm(true)
   }
 
   async function handleSave() {
     setSaving(true)
+    setSaveError('')
     try {
       const url    = editingId
         ? `${CONFIG.apiBaseUrl}/api/products/${editingId}/`
@@ -89,9 +93,18 @@ export default function AdminProductsPage() {
         setEditingId(null)
         setForm(EMPTY_FORM)
         setImageFile(null)
+      } else {
+        const data = await res.json().catch(() => ({}))
+        const errors = data.errors || data
+        const message = Object.values(errors)
+          .flat()
+          .filter(Boolean)
+          .join(' ')
+        setSaveError(message || 'Could not save this product. Please check the fields and try again.')
       }
     } catch (err) {
       console.error('Failed to save product:', err)
+      setSaveError('Could not reach the server. Please try again.')
     } finally {
       setSaving(false)
     }
@@ -222,6 +235,8 @@ export default function AdminProductsPage() {
                   Show this product on the website
                 </label>
               </div>
+
+              {saveError && <p className="text-sm text-red-700 mb-4">{saveError}</p>}
 
               <div className="flex gap-3">
                 <button onClick={handleSave} disabled={saving}

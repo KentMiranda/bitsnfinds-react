@@ -13,18 +13,18 @@ export default function ProductsPage() {
 
   useEffect(() => {
     document.title = `Gallery — ${CONFIG.brand.name}`
-    fetch(`${CONFIG.apiBaseUrl}/api/products/`)
+    fetch(`${CONFIG.apiBaseUrl}/api/products/`, { cache: 'no-store' })
       .then((response) => response.ok ? response.json() : [])
       .then((data) => {
-        if (Array.isArray(data) && data.length > 0) {
-          setProducts(data.map((product) => ({
-            ...product,
-            desc: product.description,
-            image: product.image || product.image_url,
-          })))
-        }
+        if (!Array.isArray(data) || data.length === 0) return
+        setProducts(data.map((product) => ({
+          ...product,
+          slug: product.id || product.name,
+          desc: product.description,
+          image: product.image || product.image_url || '',
+        })))
       })
-      .catch(() => {})
+      .catch((error) => console.warn('Could not load gallery products:', error))
   }, [])
 
   return (
