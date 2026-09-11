@@ -50,77 +50,16 @@ export default function HomePage() {
             <LeafSVG variant="sprig" className="w-4 h-4 opacity-60 scale-x-[-1]" />
           </div>
 
-          <div className="min-h-[250px] max-w-5xl mx-auto mb-8">
-            {event ? (
-              <div
-                key={event.id}
-                className="group relative min-h-[430px] md:min-h-[540px] overflow-hidden text-left event-slide focus-within:ring-2 focus-within:ring-forest"
-                tabIndex="0"
-              >
-                {event.image_url ? (
-                  <img
-                    src={event.image_url}
-                    alt=""
-                    className="absolute inset-0 w-full h-full object-contain bg-paper transition-transform duration-700 ease-out group-hover:scale-[1.02]"
-                  />
-                ) : (
-                  <div className="absolute inset-0 bg-mist/70 flex items-center justify-center">
-                    <LeafSVG variant="single" className="w-56 opacity-25" />
-                  </div>
-                )}
-                <div className="absolute inset-0 bg-gradient-to-t from-bark/90 via-bark/25 to-transparent transition-colors duration-500 group-hover:from-bark/95 group-hover:via-bark/45" />
-
-                <div className="absolute inset-x-0 bottom-0 p-7 md:p-12 text-cream
-                                opacity-100 translate-y-0 transition-all duration-500
-                                md:opacity-0 md:translate-y-5
-                                md:group-hover:opacity-100 md:group-hover:translate-y-0
-                                md:group-focus-within:opacity-100 md:group-focus-within:translate-y-0">
-                  <p className="text-sage text-xs font-medium tracking-[0.22em] uppercase mb-2">
-                    {event.is_past ? 'Past event' : 'Upcoming event'}
-                  </p>
-                  <p className="text-cream/75 text-[0.65rem] tracking-[0.2em] uppercase mb-3">
-                    {formatDate(event.date)}{event.location ? ` · ${event.location}` : ''}
-                  </p>
-                  <h1 className="font-display text-4xl md:text-6xl text-cream leading-[1.05] mb-4">
-                    {event.title}
-                  </h1>
-                  {event.description && (
-                    <p className="text-cream/85 text-sm font-light leading-relaxed max-w-lg">
-                      {event.description}
-                    </p>
-                  )}
-                </div>
-                <span className="absolute top-5 right-5 text-cream/70 text-[0.6rem] tracking-[0.2em] uppercase
-                                 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-500">
-                  Hover for details
-                </span>
-              </div>
-            ) : (
-              <>
-                <h1 className="font-display text-5xl md:text-7xl font-normal text-bark leading-[1.1] mb-5 tracking-tight">
-                  {hero.titleLine1}
-                  <br />
-                  <em className="italic text-walnut font-light">{hero.titleLine2}</em>
-                </h1>
-                <p className="text-ink-muted text-base font-light leading-relaxed max-w-md mx-auto">
-                  {hero.subtitle}
-                </p>
-              </>
-            )}
+          <div className="min-h-[250px] max-w-xl mx-auto mb-8">
+            <h1 className="font-display text-5xl md:text-7xl font-normal text-bark leading-[1.1] mb-5 tracking-tight">
+              {hero.titleLine1}
+              <br />
+              <em className="italic text-walnut font-light">{hero.titleLine2}</em>
+            </h1>
+            <p className="text-ink-muted text-base font-light leading-relaxed max-w-md mx-auto">
+              {hero.subtitle}
+            </p>
           </div>
-
-          {events.length > 1 && (
-            <div className="flex justify-center gap-2 mb-8" aria-label="Event slides">
-              {events.map((item, index) => (
-                <button
-                  key={item.id}
-                  onClick={() => setEventIndex(index)}
-                  aria-label={`Show event ${index + 1}`}
-                  className={`w-2 h-2 rounded-full transition-colors ${index === eventIndex ? 'bg-forest' : 'bg-sage/40'}`}
-                />
-              ))}
-            </div>
-          )}
 
           <div className="flex gap-3 justify-center flex-wrap">
             <Link href={hero.cta1.href}
@@ -144,6 +83,62 @@ export default function HomePage() {
           <span className="text-ink-muted text-[0.6rem] tracking-[0.2em] uppercase">scroll</span>
         </div>
       </section>
+
+      {event && (
+        <section id="events" className="relative px-6 py-24 bg-paper overflow-hidden">
+          <div className="max-w-6xl mx-auto">
+            <div className="flex items-end justify-between gap-6 mb-8">
+              <div>
+                <p className="text-forest text-xs font-medium tracking-[0.25em] uppercase mb-2">
+                  Where to find us
+                </p>
+                <h2 className="font-display text-3xl md:text-5xl text-bark">
+                  Upcoming &amp; past events
+                </h2>
+              </div>
+              {events.length > 1 && (
+                <div className="flex gap-2" aria-label="Event slides">
+                  {events.map((item, index) => (
+                    <button
+                      key={item.id}
+                      onClick={() => setEventIndex(index)}
+                      aria-label={`Show event ${index + 1}`}
+                      className={`w-2 h-2 rounded-full transition-colors ${index === eventIndex ? 'bg-forest' : 'bg-sage/40'}`}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+
+            <div
+              key={event.id}
+              className="group relative min-h-[430px] md:min-h-[600px] overflow-hidden event-slide focus-within:ring-2 focus-within:ring-forest"
+              tabIndex="0"
+            >
+              {event.image_url ? (
+                <img src={event.image_url} alt="" className="absolute inset-0 w-full h-full object-contain bg-mist transition-transform duration-700 ease-out group-hover:scale-[1.02]" />
+              ) : (
+                <div className="absolute inset-0 bg-mist flex items-center justify-center">
+                  <LeafSVG variant="single" className="w-56 opacity-25" />
+                </div>
+              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-bark/90 via-bark/20 to-transparent" />
+              <div className="absolute inset-x-0 bottom-0 p-7 md:p-12 text-cream opacity-100 md:opacity-0 md:translate-y-5 transition-all duration-500 md:group-hover:opacity-100 md:group-hover:translate-y-0 md:group-focus-within:opacity-100 md:group-focus-within:translate-y-0">
+                <p className="text-sage text-xs font-medium tracking-[0.22em] uppercase mb-2">
+                  {event.is_past ? 'Past event' : 'Upcoming event'}
+                </p>
+                <p className="text-cream/75 text-[0.65rem] tracking-[0.2em] uppercase mb-3">
+                  {formatDate(event.date)}{event.location ? ` · ${event.location}` : ''}
+                </p>
+                <h3 className="font-display text-4xl md:text-6xl leading-[1.05] mb-4">
+                  {event.title}
+                </h3>
+                {event.description && <p className="text-cream/85 text-sm font-light leading-relaxed max-w-lg">{event.description}</p>}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
 
       <section id="about" className="relative px-6 py-24 bg-paper overflow-hidden">
         <LeafSVG variant="single"
