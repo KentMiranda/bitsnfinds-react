@@ -50,28 +50,38 @@ export default function HomePage() {
             <LeafSVG variant="sprig" className="w-4 h-4 opacity-60 scale-x-[-1]" />
           </div>
 
-          <div className="min-h-[250px] max-w-xl mx-auto mb-8">
+          <div className="min-h-[250px] max-w-4xl mx-auto mb-8">
             {event ? (
-              <div className="bg-paper border border-mist rounded-lg overflow-hidden text-left shadow-sm">
-                {event.image_url && (
-                  <img src={event.image_url} alt="" className="w-full h-32 object-cover" />
-                )}
-                <div className="p-6">
+              <div key={event.id} className="grid md:grid-cols-[1fr_1.15fr] gap-8 md:gap-14 items-center text-left event-slide">
+                <div className="order-2 md:order-1">
                   <p className="text-forest text-xs font-medium tracking-[0.22em] uppercase mb-2">
                     {event.is_past ? 'Past event' : 'Upcoming event'}
                   </p>
-                  <h1 className="font-display text-3xl md:text-4xl text-bark leading-tight mb-2">
-                    {event.title}
-                  </h1>
-                  <p className="text-walnut text-sm mb-3">
+                  <p className="text-ink-muted text-[0.65rem] tracking-[0.2em] uppercase mb-4">
                     {formatDate(event.date)}{event.location ? ` · ${event.location}` : ''}
                   </p>
+                  <h1 className="font-display text-4xl md:text-6xl text-bark leading-[1.05] mb-4">
+                    {event.title}
+                  </h1>
                   {event.description && (
-                    <p className="text-ink-muted text-sm font-light leading-relaxed">
+                    <p className="text-ink-muted text-sm font-light leading-relaxed max-w-sm">
                       {event.description}
                     </p>
                   )}
                 </div>
+                {event.image_url ? (
+                  <div className="order-1 md:order-2 relative aspect-[4/3] overflow-hidden">
+                    <img src={event.image_url} alt="" className="w-full h-full object-cover" />
+                    <div className="absolute inset-4 border border-cream/60 pointer-events-none" />
+                  </div>
+                ) : (
+                  <div className="order-1 md:order-2 aspect-[4/3] bg-mist/50 flex items-center justify-center relative overflow-hidden">
+                    <LeafSVG variant="single" className="w-48 opacity-20" />
+                    <span className="absolute bottom-4 right-5 text-forest/60 text-[0.6rem] tracking-[0.2em] uppercase">
+                      Bits &amp; Finds
+                    </span>
+                  </div>
+                )}
               </div>
             ) : (
               <>

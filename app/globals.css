@@ -58,6 +58,15 @@ body { font-family: 'DM Sans', sans-serif; }
   animation: scrollPulse 2s ease-in-out infinite;
 }
 
+.event-slide {
+  animation: eventReveal 0.65s ease both;
+}
+
+@keyframes eventReveal {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .img-offset::after {
   content: '';
   position: absolute;
