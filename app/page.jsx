@@ -34,34 +34,32 @@ export default function HomePage() {
 
   return (
     <>
-      <section className="relative min-h-[92vh] flex items-center justify-center
-                          text-center px-6 py-24 bg-cream overflow-hidden">
+      <section className="relative min-h-[calc(100vh-73px)] flex items-center
+                          px-6 py-16 md:py-24 bg-cream overflow-hidden">
         <LeafSVG variant="branch"
           className="absolute top-0 left-0 w-[min(280px,35vw)] opacity-[0.13] pointer-events-none" />
         <LeafSVG variant="branch"
           className="absolute bottom-0 right-0 w-[min(240px,30vw)] opacity-[0.11] pointer-events-none rotate-180" />
 
-        <div className="relative max-w-2xl mx-auto">
-          <div className="flex items-center justify-center gap-3 mb-5">
-            <LeafSVG variant="sprig" className="w-4 h-4 opacity-60" />
-            <span className="text-forest text-xs font-medium tracking-[0.25em] uppercase">
-              {hero.eyebrow}
-            </span>
-            <LeafSVG variant="sprig" className="w-4 h-4 opacity-60 scale-x-[-1]" />
-          </div>
+        <div className="relative max-w-7xl w-full mx-auto grid lg:grid-cols-[0.9fr_1.1fr] gap-12 lg:gap-20 items-center">
+          <div className="max-w-xl">
+            <div className="inline-flex items-center gap-2 border border-sage/70 rounded-full px-3 py-1.5 mb-7">
+              <span className="w-1.5 h-1.5 rounded-full bg-wheat" />
+              <span className="text-forest text-[0.65rem] font-medium tracking-[0.22em] uppercase">
+                {hero.eyebrow}
+              </span>
+            </div>
 
-          <div className="min-h-[250px] max-w-xl mx-auto mb-8">
-            <h1 className="font-display text-5xl md:text-7xl font-normal text-bark leading-[1.1] mb-5 tracking-tight">
-              {hero.titleLine1}
+            <h1 className="font-display text-6xl md:text-8xl font-normal text-bark leading-[0.92] mb-7 tracking-[-0.04em]">
+              Made to
               <br />
-              <em className="italic text-walnut font-light">{hero.titleLine2}</em>
+              <em className="italic text-walnut font-light">mean more.</em>
             </h1>
-            <p className="text-ink-muted text-base font-light leading-relaxed max-w-md mx-auto">
+            <p className="text-ink-muted text-base md:text-lg font-light leading-relaxed max-w-md mb-9">
               {hero.subtitle}
             </p>
-          </div>
 
-          <div className="flex gap-3 justify-center flex-wrap">
+            <div className="flex gap-3 flex-wrap">
             <Link href={hero.cta1.href}
               className="bg-bark text-cream text-xs font-medium tracking-widest
                          uppercase px-8 py-3 rounded-sm hover:bg-walnut
@@ -75,33 +73,53 @@ export default function HomePage() {
               {hero.cta2.label}
             </Link>
           </div>
-        </div>
 
-        <div className="absolute bottom-8 left-1/2 -translate-x-1/2
-                        flex flex-col items-center gap-1 opacity-50">
-          <div className="w-px h-8 bg-forest scroll-line" />
-          <span className="text-ink-muted text-[0.6rem] tracking-[0.2em] uppercase">scroll</span>
+            <div className="flex items-center gap-5 mt-12 pt-5 border-t border-sage/50 max-w-md">
+              <span className="text-2xl font-display text-bark">01</span>
+              <p className="text-xs text-ink-muted leading-relaxed">
+                Designed with intention.
+                <br />
+                Engraved with precision.
+              </p>
+              <span className="ml-auto text-[0.6rem] tracking-[0.18em] uppercase text-forest">Est. 2024</span>
+            </div>
+          </div>
+
+          <div className="relative min-h-[450px] md:min-h-[620px]">
+            <div className="absolute top-0 right-0 w-[68%] h-[78%] overflow-hidden bg-mist">
+              <img src="/images/products/ellie.jpeg" alt="Custom engraved portrait piece" className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" />
+            </div>
+            <div className="absolute bottom-0 left-0 w-[54%] h-[48%] overflow-hidden bg-sage border-[10px] border-cream">
+              <img src="/images/products/cutting-board.jpeg" alt="Custom engraved cutting board" className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" />
+            </div>
+            <div className="absolute bottom-[13%] right-[4%] bg-wheat text-bark w-24 h-24 rounded-full flex items-center justify-center text-center rotate-[-12deg]">
+              <span className="text-[0.6rem] tracking-[0.15em] uppercase leading-tight">Made<br />personal</span>
+            </div>
+            <span className="absolute top-[10%] left-0 text-[0.6rem] tracking-[0.2em] uppercase text-forest [writing-mode:vertical-rl]">
+              Laser engraving · custom design
+            </span>
+          </div>
         </div>
       </section>
 
       <section id="services" className="relative px-6 py-24 bg-cream overflow-hidden">
         <div className="max-w-6xl mx-auto">
-          <div className="max-w-xl mb-12">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
             <p className="text-forest text-xs font-medium tracking-[0.25em] uppercase mb-3">
               {services.eyebrow}
             </p>
-            <h2 className="font-display text-4xl md:text-5xl text-bark leading-tight">
+            <h2 className="font-display text-4xl md:text-6xl text-bark leading-tight">
               {services.title}
               <br />
               <em className="italic text-walnut font-light">{services.titleEm}</em>
             </h2>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-px bg-sage/40 border border-sage/40">
+          <div className="grid md:grid-cols-3 gap-0 border-y border-bark/20">
             {services.items.map((service) => (
-              <article key={service.title} className="bg-paper p-7 md:p-8 min-h-[300px] flex flex-col">
-                <div className="flex items-start justify-between mb-10">
-                  <span className="text-3xl text-wheat" aria-hidden="true">{service.icon}</span>
+              <article key={service.title} className="bg-transparent p-7 md:p-10 min-h-[300px] flex flex-col border-b md:border-b-0 md:border-r last:border-0 border-bark/20">
+                <div className="flex items-start justify-between mb-14">
+                  <span className="text-2xl text-wheat" aria-hidden="true">{service.icon}</span>
                   <span className="text-xs tracking-[0.2em] text-ink-muted">{service.number}</span>
                 </div>
                 <h3 className="font-display text-2xl text-bark mb-4">{service.title}</h3>
