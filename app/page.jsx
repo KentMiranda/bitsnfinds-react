@@ -6,7 +6,7 @@ import LeafSVG from '@/components/LeafSVG'
 import { CONFIG } from '@/lib/config'
 
 export default function HomePage() {
-  const { hero, about } = CONFIG
+  const { hero, about, services } = CONFIG
   const [events, setEvents] = useState([])
   const [eventIndex, setEventIndex] = useState(0)
 
@@ -81,6 +81,34 @@ export default function HomePage() {
                         flex flex-col items-center gap-1 opacity-50">
           <div className="w-px h-8 bg-forest scroll-line" />
           <span className="text-ink-muted text-[0.6rem] tracking-[0.2em] uppercase">scroll</span>
+        </div>
+      </section>
+
+      <section id="services" className="relative px-6 py-24 bg-cream overflow-hidden">
+        <div className="max-w-6xl mx-auto">
+          <div className="max-w-xl mb-12">
+            <p className="text-forest text-xs font-medium tracking-[0.25em] uppercase mb-3">
+              {services.eyebrow}
+            </p>
+            <h2 className="font-display text-4xl md:text-5xl text-bark leading-tight">
+              {services.title}
+              <br />
+              <em className="italic text-walnut font-light">{services.titleEm}</em>
+            </h2>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-px bg-sage/40 border border-sage/40">
+            {services.items.map((service) => (
+              <article key={service.title} className="bg-paper p-7 md:p-8 min-h-[300px] flex flex-col">
+                <div className="flex items-start justify-between mb-10">
+                  <span className="text-3xl text-wheat" aria-hidden="true">{service.icon}</span>
+                  <span className="text-xs tracking-[0.2em] text-ink-muted">{service.number}</span>
+                </div>
+                <h3 className="font-display text-2xl text-bark mb-4">{service.title}</h3>
+                <p className="text-sm text-ink-muted font-light leading-relaxed">{service.body}</p>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 
