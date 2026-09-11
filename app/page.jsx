@@ -252,15 +252,14 @@ export default function HomePage() {
             <p className="text-ink-muted text-sm md:text-base font-light leading-relaxed max-w-2xl mx-auto mb-10">
               {about.body}
             </p>
-            <ul className="grid md:grid-cols-3 gap-8 text-left border-t border-sage/50 pt-8">
+            <ul className="max-w-2xl mx-auto border-t border-sage/50">
               {about.values.map((v) => (
-                <li key={v.title} className="flex gap-3 items-start">
-                  <span className="w-1.5 h-1.5 rounded-full bg-sage flex-shrink-0 mt-2.5" />
+                <li key={v.title} className="py-6 border-b border-sage/50 text-center">
                   <div>
                     <strong className="block text-sm font-medium text-bark mb-0.5">
                       {v.icon} {v.title}
                     </strong>
-                    <span className="text-xs text-ink-muted font-light">{v.desc}</span>
+                    <span className="block max-w-lg mx-auto text-xs text-ink-muted font-light leading-relaxed">{v.desc}</span>
                   </div>
                 </li>
               ))}
