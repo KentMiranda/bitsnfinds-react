@@ -239,18 +239,8 @@ export default function HomePage() {
         <LeafSVG variant="single"
           className="absolute right-0 top-1/2 -translate-y-1/2 w-56 opacity-[0.08] pointer-events-none" />
 
-        <div className="grid md:grid-cols-2 gap-20 items-center max-w-5xl mx-auto">
-          <div className="relative img-offset">
-            <div className="aspect-[3/4] bg-mist rounded-lg overflow-hidden
-                            flex items-center justify-center text-8xl">
-              {about.image
-                ? <img src={about.image} alt="About Bits and Finds" className="w-full h-full object-cover" />
-                : '🪵'
-              }
-            </div>
-          </div>
-
-          <div>
+        <div className="max-w-4xl mx-auto">
+          <div className="max-w-3xl">
             <p className="text-forest text-xs font-medium tracking-[0.22em] uppercase mb-2">
               {about.eyebrow}
             </p>
