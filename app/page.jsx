@@ -101,15 +101,9 @@ export default function HomePage() {
             </p>
 
             <div className="flex gap-3 flex-wrap">
-            <Link href={hero.cta1.href}
+            <Link href={hero.cta2.href}
               className="bg-bark text-cream text-xs font-medium tracking-widest
                          uppercase px-8 py-3 rounded-sm hover:bg-walnut
-                         transition-all hover:-translate-y-0.5">
-              {hero.cta1.label}
-            </Link>
-            <Link href={hero.cta2.href}
-              className="border border-sage text-bark text-xs font-medium tracking-widest
-                         uppercase px-8 py-3 rounded-sm hover:border-forest hover:text-forest
                          transition-all hover:-translate-y-0.5">
               {hero.cta2.label}
             </Link>
@@ -130,7 +124,7 @@ export default function HomePage() {
             <div className="hero-image-block hero-image-main absolute top-[-4%] right-0 w-[76%] h-[82%] overflow-hidden bg-mist shadow-[12px_12px_0_rgba(168,221,224,0.42)]">
               <img src="/images/products/ellie.jpeg" alt="Custom engraved portrait piece" className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" />
             </div>
-            <div className="hero-image-block hero-image-detail absolute bottom-[7%] left-[3%] w-[58%] h-[45%] overflow-hidden bg-sage border-[8px] border-cream shadow-[-10px_10px_0_rgba(239,143,156,0.3)]">
+            <div className="hero-image-block hero-image-detail absolute top-[43%] left-[3%] w-[58%] h-[45%] overflow-hidden bg-sage border-[8px] border-cream shadow-[-10px_10px_0_rgba(239,143,156,0.3)]">
               <img src="/images/products/cutting-board.jpeg" alt="Custom engraved cutting board" className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" />
             </div>
             <div className="hero-gallery-mark absolute bottom-[13%] right-[1%] bg-wheat text-bark w-24 h-24 rounded-full flex items-center justify-center text-center rotate-[-12deg]">
