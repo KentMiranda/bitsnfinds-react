@@ -132,20 +132,47 @@ main .hero-image-block img {
 
 .event-info {
   z-index: 4;
-  opacity: 0;
-  transform: translateY(1.25rem);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  opacity: 1;
+  transform: translateY(0);
+  text-shadow: 0 1px 12px rgba(24, 48, 68, 0.45);
+  background: linear-gradient(
+    to top,
+    rgba(24, 48, 68, 0.94) 0%,
+    rgba(24, 48, 68, 0.78) 55%,
+    rgba(24, 48, 68, 0.35) 85%,
+    transparent 100%
+  );
 }
 
 .event-overlay {
   z-index: 2;
-  transition: background 0.35s ease;
+  background: linear-gradient(
+    to top,
+    rgba(24, 48, 68, 0.92) 0%,
+    rgba(24, 48, 68, 0.55) 38%,
+    rgba(24, 48, 68, 0.12) 68%,
+    transparent 100%
+  );
 }
 
-.group:hover .event-info,
-.group:focus-within .event-info {
-  opacity: 1;
-  transform: translateY(0);
+.event-nav-btn {
+  z-index: 5;
+  border-radius: 999px;
+  width: 2.75rem;
+  height: 2.75rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 253, 240, 0.94);
+  color: #183044;
+  font-size: 1.25rem;
+  line-height: 1;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.event-nav-btn:hover {
+  background: #f5e6a8;
+  transform: scale(1.05);
 }
 
 .event-filter {
@@ -170,10 +197,6 @@ main .hero-image-block img {
 
 .event-filter-active span {
   color: #A8DDE0;
-}
-
-.event-pause {
-  border-radius: 999px;
 }
 
 .hero-slideshow-controls {
@@ -228,10 +251,6 @@ main .hero-image-block img {
     right: 9%;
   }
 
-  .event-info {
-    opacity: 1;
-    transform: translateY(0);
-  }
 }
 
 button, a { -webkit-tap-highlight-color: transparent; }

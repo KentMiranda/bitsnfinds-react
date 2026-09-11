@@ -13,7 +13,6 @@ export default function HomePage() {
   const [heroImageIndex, setHeroImageIndex] = useState(0)
   const [eventImageIndex, setEventImageIndex] = useState(0)
   const [eventFilter, setEventFilter] = useState('all')
-  const [eventPaused, setEventPaused] = useState(false)
 
   useEffect(() => {
     const cacheKey = 'bitsnfinds-events'
@@ -67,28 +66,12 @@ export default function HomePage() {
       : []
 
   useEffect(() => {
-    if (eventPaused || visibleEvents.length < 2) return undefined
-    const timer = window.setInterval(() => {
-      setEventIndex((current) => (current + 1) % visibleEvents.length)
-    }, 5000)
-    return () => window.clearInterval(timer)
-  }, [visibleEvents.length, eventPaused])
-
-  useEffect(() => {
     if (visibleEvents.length > 0 && eventIndex >= visibleEvents.length) setEventIndex(0)
   }, [visibleEvents.length, eventIndex])
 
   useEffect(() => {
     setEventImageIndex(0)
   }, [event?.id])
-
-  useEffect(() => {
-    if (eventPaused || eventImages.length < 2) return undefined
-    const timer = window.setInterval(() => {
-      setEventImageIndex((current) => (current + 1) % eventImages.length)
-    }, 4500)
-    return () => window.clearInterval(timer)
-  }, [eventImages.length, event?.id, eventPaused])
 
   const heroImages = [
     { src: '/images/products/1.jpg', alt: 'Bits & Finds engraved creation' },
@@ -255,15 +238,26 @@ export default function HomePage() {
               key={event.id}
               className="group relative min-h-[430px] md:min-h-[600px] overflow-hidden event-slide focus-within:ring-2 focus-within:ring-forest"
               tabIndex="0"
+              onKeyDown={(keyboardEvent) => {
+                if (eventImages.length < 2) return
+                if (keyboardEvent.key === 'ArrowLeft') {
+                  keyboardEvent.preventDefault()
+                  setEventImageIndex((current) => (current - 1 + eventImages.length) % eventImages.length)
+                }
+                if (keyboardEvent.key === 'ArrowRight') {
+                  keyboardEvent.preventDefault()
+                  setEventImageIndex((current) => (current + 1) % eventImages.length)
+                }
+              }}
             >
               {eventImages.length > 0 ? (
-                <img src={eventImages[eventImageIndex]} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-contain bg-mist transition-transform duration-700 ease-out group-hover:scale-[1.02]" />
+                <img key={eventImages[eventImageIndex]} src={eventImages[eventImageIndex]} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-contain bg-mist" />
               ) : (
                 <div className="absolute inset-0 bg-mist flex items-center justify-center">
                   <LeafSVG variant="single" className="w-56 opacity-25" />
                 </div>
               )}
-              <div className="event-overlay absolute inset-0 bg-gradient-to-t from-bark/70 via-bark/10 to-transparent group-hover:from-bark/80 group-hover:via-bark/30" />
+              <div className="event-overlay absolute inset-0 pointer-events-none" />
               <div className="event-info absolute inset-x-0 bottom-0 p-7 md:p-12 text-cream">
                 <p className="text-sage text-xs font-medium tracking-[0.22em] uppercase mb-2">
                   {event.is_past ? 'Past event' : 'Upcoming event'}
@@ -277,26 +271,28 @@ export default function HomePage() {
                 {event.description && <p className="text-cream/85 text-sm font-light leading-relaxed max-w-lg">{event.description}</p>}
               </div>
               {eventImages.length > 1 && (
-                <div className="absolute top-5 right-5 z-[4] flex gap-2" aria-label="Event images">
-                  {eventImages.map((imageUrl, index) => (
-                    <button
-                      key={imageUrl}
-                      type="button"
-                      onClick={() => setEventImageIndex(index)}
-                      aria-label={`Show event image ${index + 1}`}
-                      className={`w-2 h-2 rounded-full ${index === eventImageIndex ? 'bg-cream' : 'bg-cream/45'}`}
-                    />
-                  ))}
-                </div>
+                <>
+                  <button
+                    type="button"
+                    onClick={() => setEventImageIndex((current) => (current - 1 + eventImages.length) % eventImages.length)}
+                    className="event-nav-btn absolute left-4 top-1/2 -translate-y-1/2 md:left-6"
+                    aria-label="Previous event image"
+                  >
+                    ←
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setEventImageIndex((current) => (current + 1) % eventImages.length)}
+                    className="event-nav-btn absolute right-4 top-1/2 -translate-y-1/2 md:right-6"
+                    aria-label="Next event image"
+                  >
+                    →
+                  </button>
+                  <p className="absolute top-5 right-5 z-[4] text-cream/90 text-xs tracking-[0.2em] tabular-nums" aria-live="polite">
+                    {eventImageIndex + 1} / {eventImages.length}
+                  </p>
+                </>
               )}
-              <button
-                type="button"
-                onClick={() => setEventPaused((paused) => !paused)}
-                className="event-pause absolute bottom-5 right-5 z-[4] bg-paper/90 text-bark px-4 py-2 text-[0.65rem] tracking-[0.16em] uppercase transition-colors hover:bg-wheat"
-                aria-pressed={eventPaused}
-              >
-                {eventPaused ? 'Play slideshow' : 'Pause slideshow'}
-              </button>
             </div> : (
                 <div className="min-h-[430px] md:min-h-[600px] bg-mist/40 flex items-center justify-center">
                   <div className="text-center">
