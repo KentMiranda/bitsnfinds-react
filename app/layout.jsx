@@ -12,9 +12,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-        <link rel="apple-touch-icon" href="/favicon.svg" />
-        <meta name="theme-color" content="#162869" />
+        <link rel="icon" href="/images/favicon.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/images/favicon.png" />
+        <meta name="theme-color" content="#123B57" />
       </head>
       <body className="bg-parchment text-ink font-body antialiased">
         <div className="brand-watermark" aria-hidden="true">
