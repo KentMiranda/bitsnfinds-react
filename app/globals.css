@@ -52,7 +52,7 @@ body::after {
 
 .brand-watermark {
   position: fixed;
-  z-index: 1;
+  z-index: 0;
   top: 12%;
   right: 5%;
   width: min(42rem, 52vw);
@@ -72,7 +72,7 @@ main,
 body > header,
 body > footer {
   position: relative;
-  z-index: auto;
+  z-index: 1;
 }
 
 main :where(h1, h2, h3, h4, p, a, button, input, textarea, select, label, ul, ol, img, svg) {
