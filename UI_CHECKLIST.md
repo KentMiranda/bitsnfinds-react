@@ -8,7 +8,7 @@ This checklist translates the reference article into project-specific checks. It
 
 - [x] **Font pairing:** The site uses two families only: Playfair Display for display headings and DM Sans for interface/body text.
 - [x] **Spacing:** Existing sections use consistent Tailwind spacing steps and shared content widths rather than arbitrary per-element spacing.
-- [x] **Color and contrast:** The existing cream/paper/bark palette is reused consistently; interactive focus now has a visible forest-green outline.
+- [x] **Color and contrast:** The Carrd reference palette is reused consistently through shared theme tokens: deep navy, blue, coral, mint, lavender, white, and neutral gray. Interactive focus uses coral for clear visibility.
 - [x] **Responsiveness:** Hero, event showcase, navigation, forms, and admin pages use responsive breakpoints; mobile navigation has touch-sized controls.
 - [x] **Icons:** Existing icons remain familiar and paired with text or accessible labels; the mobile menu button now exposes its state to assistive technology.
 - [x] **Hierarchy:** Display headings, uppercase eyebrow labels, muted supporting text, and primary/secondary buttons establish a consistent reading order.
@@ -24,5 +24,5 @@ This checklist translates the reference article into project-specific checks. It
 
 ## Intentionally preserved
 
-- The existing visual identity and color palette were kept instead of introducing a new theme.
+- The Carrd reference visual identity is represented through the shared navy/coral/mint palette instead of page-specific color overrides.
 - Existing event hover behavior remains on desktop, while mobile continues to show event details without requiring hover.

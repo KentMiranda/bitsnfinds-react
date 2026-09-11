@@ -8,19 +8,18 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // ── Golf Palette (Tyler the Creator) ──────────────────
-        // Change these to retheme the whole site
-        bark:       '#3B2F1E',   // darkest brown — text, nav
-        walnut:     '#6B4F2A',   // mid brown — headings
-        tan:        '#9C7A4A',   // lighter brown — accents
-        forest:     '#4A6741',   // deep green — buttons, highlights
-        sage:       '#7A9E6E',   // muted green — borders, dividers
-        mist:       '#C8DDB8',   // very light green — subtle bg
-        wheat:      '#C4A96B',   // warm gold — prices, tags
-        cream:      '#F2ECD8',   // main background
-        paper:      '#FAF7EE',   // card background
-        ink:        '#1E1608',   // near black — body text
-        'ink-muted':'#7A6A50',   // muted — secondary text
+        // ── Bits & Finds reference palette ────────────────────
+        bark:       '#162869',   // deep navy — text, nav, primary actions
+        walnut:     '#3B5DAD',   // blue — headings and secondary actions
+        tan:        '#A464A1',   // lavender — accent
+        forest:     '#162869',   // navy — buttons and highlights
+        sage:       '#88D8C0',   // mint — borders and dividers
+        mist:       '#D1D1D1',   // light gray — subtle surfaces
+        wheat:      '#FF9385',   // coral — prices, tags, hover accents
+        cream:      '#F7F9FC',   // cool white — main background
+        paper:      '#FFFFFF',   // white — card background
+        ink:        '#000000',   // black — body text
+        'ink-muted':'#757575',   // neutral gray — secondary text
       },
       fontFamily: {
         display: ['Playfair Display', 'Georgia', 'serif'],
