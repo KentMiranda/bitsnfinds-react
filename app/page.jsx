@@ -1,9 +1,36 @@
+ 'use client'
+
 import Link from 'next/link'
+import { useEffect, useState } from 'react'
 import LeafSVG from '@/components/LeafSVG'
 import { CONFIG } from '@/lib/config'
 
 export default function HomePage() {
   const { hero, about } = CONFIG
+  const [events, setEvents] = useState([])
+  const [eventIndex, setEventIndex] = useState(0)
+
+  useEffect(() => {
+    fetch(`${CONFIG.apiBaseUrl}/api/events/`)
+      .then((response) => response.ok ? response.json() : [])
+      .then((data) => setEvents(Array.isArray(data) ? data : []))
+      .catch(() => setEvents([]))
+  }, [])
+
+  useEffect(() => {
+    if (events.length < 2) return undefined
+    const timer = window.setInterval(() => {
+      setEventIndex((current) => (current + 1) % events.length)
+    }, 5000)
+    return () => window.clearInterval(timer)
+  }, [events.length])
+
+  const event = events[eventIndex]
+  const formatDate = (value) => value
+    ? new Date(`${value}T00:00:00`).toLocaleDateString(undefined, {
+        month: 'long', day: 'numeric', year: 'numeric'
+      })
+    : ''
 
   return (
     <>
@@ -23,17 +50,55 @@ export default function HomePage() {
             <LeafSVG variant="sprig" className="w-4 h-4 opacity-60 scale-x-[-1]" />
           </div>
 
-          <h1 className="font-display text-5xl md:text-7xl font-normal
-                         text-bark leading-[1.1] mb-5 tracking-tight">
-            {hero.titleLine1}
-            <br />
-            <em className="italic text-walnut font-light">{hero.titleLine2}</em>
-          </h1>
+          <div className="min-h-[250px] max-w-xl mx-auto mb-8">
+            {event ? (
+              <div className="bg-paper border border-mist rounded-lg overflow-hidden text-left shadow-sm">
+                {event.image_url && (
+                  <img src={event.image_url} alt="" className="w-full h-32 object-cover" />
+                )}
+                <div className="p-6">
+                  <p className="text-forest text-xs font-medium tracking-[0.22em] uppercase mb-2">
+                    {event.is_past ? 'Past event' : 'Upcoming event'}
+                  </p>
+                  <h1 className="font-display text-3xl md:text-4xl text-bark leading-tight mb-2">
+                    {event.title}
+                  </h1>
+                  <p className="text-walnut text-sm mb-3">
+                    {formatDate(event.date)}{event.location ? ` · ${event.location}` : ''}
+                  </p>
+                  {event.description && (
+                    <p className="text-ink-muted text-sm font-light leading-relaxed">
+                      {event.description}
+                    </p>
+                  )}
+                </div>
+              </div>
+            ) : (
+              <>
+                <h1 className="font-display text-5xl md:text-7xl font-normal text-bark leading-[1.1] mb-5 tracking-tight">
+                  {hero.titleLine1}
+                  <br />
+                  <em className="italic text-walnut font-light">{hero.titleLine2}</em>
+                </h1>
+                <p className="text-ink-muted text-base font-light leading-relaxed max-w-md mx-auto">
+                  {hero.subtitle}
+                </p>
+              </>
+            )}
+          </div>
 
-          <p className="text-ink-muted text-base font-light leading-relaxed
-                        max-w-md mx-auto mb-10">
-            {hero.subtitle}
-          </p>
+          {events.length > 1 && (
+            <div className="flex justify-center gap-2 mb-8" aria-label="Event slides">
+              {events.map((item, index) => (
+                <button
+                  key={item.id}
+                  onClick={() => setEventIndex(index)}
+                  aria-label={`Show event ${index + 1}`}
+                  className={`w-2 h-2 rounded-full transition-colors ${index === eventIndex ? 'bg-forest' : 'bg-sage/40'}`}
+                />
+              ))}
+            </div>
+          )}
 
           <div className="flex gap-3 justify-center flex-wrap">
             <Link href={hero.cta1.href}

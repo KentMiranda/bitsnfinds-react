@@ -39,6 +39,15 @@ export default function AdminSidebar() {
         📦
       </Link>
 
+      <Link href="/admin/events"
+        title="Events"
+        className={`w-9 h-9 rounded-md flex items-center justify-center text-lg transition-colors
+                    ${isActive('/admin/events')
+                      ? 'bg-forest text-cream'
+                      : 'text-cream/40 hover:text-cream hover:bg-forest/50'}`}>
+        📅
+      </Link>
+
       <button
         onClick={handleLogout}
         title="Log out"
