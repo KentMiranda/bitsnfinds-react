@@ -10,6 +10,7 @@ export default function HomePage() {
   const [events, setEvents] = useState([])
   const [eventIndex, setEventIndex] = useState(0)
   const [eventsLoading, setEventsLoading] = useState(true)
+  const [heroImageIndex, setHeroImageIndex] = useState(0)
 
   useEffect(() => {
     const cacheKey = 'bitsnfinds-events'
@@ -65,6 +66,11 @@ export default function HomePage() {
   }, [events.length, eventIndex])
 
   const event = events[eventIndex]
+  const heroImages = [
+    { src: '/images/products/ellie.jpeg', alt: 'Custom engraved portrait piece' },
+    { src: '/images/products/cutting-board.jpeg', alt: 'Custom engraved cutting board' }
+  ]
+  const heroImage = heroImages[heroImageIndex]
   const upcomingCount = events.filter((item) => !item.is_past).length
   const pastCount = events.filter((item) => item.is_past).length
   const formatDate = (value) => value
@@ -121,11 +127,26 @@ export default function HomePage() {
           </div>
 
           <div className="hero-gallery relative min-h-[470px] md:min-h-[680px] mt-4 lg:mt-0">
-            <div className="hero-image-block hero-image-main absolute overflow-hidden bg-mist">
-              <img src="/images/products/ellie.jpeg" alt="Custom engraved portrait piece" className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" />
+            <div className="hero-image-block hero-image-slideshow absolute overflow-hidden bg-mist">
+              <img
+                key={heroImage.src}
+                src={heroImage.src}
+                alt={heroImage.alt}
+                className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+              />
             </div>
-            <div className="hero-image-block hero-image-detail absolute overflow-hidden bg-sage border-[8px] border-cream">
-              <img src="/images/products/cutting-board.jpeg" alt="Custom engraved cutting board" className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" />
+            <div className="hero-slideshow-controls absolute bottom-[13%] left-[12%] right-[12%] flex items-center justify-between">
+              <span className="text-xs tracking-[0.2em] text-bark" aria-live="polite">
+                {String(heroImageIndex + 1).padStart(2, '0')} / {String(heroImages.length).padStart(2, '0')}
+              </span>
+              <button
+                type="button"
+                onClick={() => setHeroImageIndex((current) => (current + 1) % heroImages.length)}
+                className="hero-slideshow-next bg-bark text-cream rounded-full w-12 h-12 flex items-center justify-center text-xl transition-transform hover:scale-105"
+                aria-label="Show next hero image"
+              >
+                →
+              </button>
             </div>
             <div className="hero-gallery-mark absolute bottom-[13%] right-[1%] bg-wheat text-bark w-24 h-24 rounded-full flex items-center justify-center text-center rotate-[-12deg]">
               <span className="text-[0.6rem] tracking-[0.15em] uppercase leading-tight">Made<br />personal</span>
