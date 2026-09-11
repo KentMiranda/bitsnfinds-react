@@ -52,12 +52,12 @@ body::after {
 
 .brand-watermark {
   position: fixed;
-  z-index: 0;
+  z-index: 2;
   top: 10%;
   right: 4%;
   width: min(42rem, 52vw);
   pointer-events: none;
-  opacity: 0.14;
+  opacity: 0.2;
   mix-blend-mode: multiply;
   transform: rotate(8deg);
 }
@@ -101,7 +101,7 @@ body > footer {
     top: 16%;
     right: -3rem;
     width: 24rem;
-    opacity: 0.11;
+    opacity: 0.16;
   }
 }
 
