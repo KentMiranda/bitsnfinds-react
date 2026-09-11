@@ -108,8 +108,17 @@ main .hero-image-block img {
   isolation: isolate;
 }
 
-.hero-gallery-mark {
+.hero-image-main {
+  z-index: 4;
+}
+
+.hero-image-detail {
   z-index: 6;
+  transform: rotate(-3deg);
+}
+
+.hero-gallery-mark {
+  z-index: 7;
 }
 
 @keyframes atmosphereDrift {
@@ -142,6 +151,12 @@ main .hero-image-block img {
 
   .hero-gallery {
     min-height: 520px;
+  }
+
+  .hero-image-detail {
+    bottom: 5%;
+    left: 0;
+    width: 62%;
   }
 }
 
