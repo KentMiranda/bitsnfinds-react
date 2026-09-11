@@ -9,12 +9,47 @@ export default function HomePage() {
   const { hero, about, services } = CONFIG
   const [events, setEvents] = useState([])
   const [eventIndex, setEventIndex] = useState(0)
+  const [eventsLoading, setEventsLoading] = useState(true)
 
   useEffect(() => {
-    fetch(`${CONFIG.apiBaseUrl}/api/events/`)
+    const cacheKey = 'bitsnfinds-events'
+    try {
+      const cached = window.sessionStorage.getItem(cacheKey)
+      if (cached) {
+        const parsed = JSON.parse(cached)
+        if (Array.isArray(parsed)) {
+          setEvents(parsed)
+          setEventsLoading(false)
+        }
+      }
+    } catch (error) {
+      console.warn('Could not read cached events:', error)
+    }
+
+    const controller = new AbortController()
+    const timeout = window.setTimeout(() => controller.abort(), 10000)
+
+    fetch(`${CONFIG.apiBaseUrl}/api/events/`, { signal: controller.signal })
       .then((response) => response.ok ? response.json() : [])
-      .then((data) => setEvents(Array.isArray(data) ? data : []))
-      .catch(() => setEvents([]))
+      .then((data) => {
+        if (!Array.isArray(data)) return
+        setEvents(data)
+        try {
+          window.sessionStorage.setItem(cacheKey, JSON.stringify(data))
+        } catch (error) {
+          console.warn('Could not cache events:', error)
+        }
+      })
+      .catch(() => {})
+      .finally(() => {
+        window.clearTimeout(timeout)
+        setEventsLoading(false)
+      })
+
+    return () => {
+      window.clearTimeout(timeout)
+      controller.abort()
+    }
   }, [])
 
   useEffect(() => {
@@ -25,7 +60,13 @@ export default function HomePage() {
     return () => window.clearInterval(timer)
   }, [events.length])
 
+  useEffect(() => {
+    if (events.length > 0 && eventIndex >= events.length) setEventIndex(0)
+  }, [events.length, eventIndex])
+
   const event = events[eventIndex]
+  const upcomingCount = events.filter((item) => !item.is_past).length
+  const pastCount = events.filter((item) => item.is_past).length
   const formatDate = (value) => value
     ? new Date(`${value}T00:00:00`).toLocaleDateString(undefined, {
         month: 'long', day: 'numeric', year: 'numeric'
@@ -127,7 +168,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      {event && (
+      {(event || eventsLoading) && (
         <section id="events" className="relative px-6 py-24 bg-paper overflow-hidden">
           <div className="max-w-6xl mx-auto">
             <div className="flex items-end justify-between gap-6 mb-8">
@@ -138,6 +179,10 @@ export default function HomePage() {
                 <h2 className="font-display text-3xl md:text-5xl text-bark">
                   Upcoming &amp; past events
                 </h2>
+                <div className="flex gap-4 mt-4 text-[0.65rem] tracking-[0.18em] uppercase text-ink-muted">
+                  <span><strong className="text-forest">{upcomingCount}</strong> upcoming</span>
+                  <span><strong className="text-walnut">{pastCount}</strong> past</span>
+                </div>
               </div>
               {events.length > 1 && (
                 <div className="flex gap-2" aria-label="Event slides">
@@ -153,13 +198,13 @@ export default function HomePage() {
               )}
             </div>
 
-            <div
+            {event ? <div
               key={event.id}
               className="group relative min-h-[430px] md:min-h-[600px] overflow-hidden event-slide focus-within:ring-2 focus-within:ring-forest"
               tabIndex="0"
             >
               {event.image_url ? (
-                <img src={event.image_url} alt="" className="absolute inset-0 w-full h-full object-contain bg-mist transition-transform duration-700 ease-out group-hover:scale-[1.02]" />
+                <img src={event.image_url} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-contain bg-mist transition-transform duration-700 ease-out group-hover:scale-[1.02]" />
               ) : (
                 <div className="absolute inset-0 bg-mist flex items-center justify-center">
                   <LeafSVG variant="single" className="w-56 opacity-25" />
@@ -178,7 +223,14 @@ export default function HomePage() {
                 </h3>
                 {event.description && <p className="text-cream/85 text-sm font-light leading-relaxed max-w-lg">{event.description}</p>}
               </div>
-            </div>
+            </div> : (
+                <div className="min-h-[430px] md:min-h-[600px] bg-mist/40 flex items-center justify-center">
+                  <div className="text-center">
+                    <div className="w-8 h-8 border-2 border-sage/40 border-t-forest rounded-full animate-spin mx-auto mb-4" />
+                    <p className="text-xs tracking-[0.2em] uppercase text-ink-muted">Loading events</p>
+                  </div>
+                </div>
+              )}
           </div>
         </section>
       )}
