@@ -53,11 +53,11 @@ body::after {
 .brand-watermark {
   position: fixed;
   z-index: 0;
-  top: 14%;
-  right: 7%;
-  width: min(32rem, 42vw);
+  top: 10%;
+  right: 4%;
+  width: min(42rem, 52vw);
   pointer-events: none;
-  opacity: 0.075;
+  opacity: 0.14;
   mix-blend-mode: multiply;
   transform: rotate(8deg);
 }
@@ -66,7 +66,7 @@ body::after {
   display: block;
   width: 100%;
   height: auto;
-  filter: grayscale(1) contrast(1.35) brightness(0.72);
+  filter: grayscale(0.25) contrast(0.95) brightness(1.08);
 }
 
 main,
@@ -98,10 +98,10 @@ body > footer {
   }
 
   .brand-watermark {
-    top: 18%;
-    right: -4rem;
-    width: 18rem;
-    opacity: 0.06;
+    top: 16%;
+    right: -3rem;
+    width: 24rem;
+    opacity: 0.11;
   }
 }
 
