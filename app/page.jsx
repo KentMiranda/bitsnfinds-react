@@ -42,7 +42,7 @@ export default function HomePage() {
           className="absolute bottom-0 right-0 w-[min(240px,30vw)] opacity-[0.11] pointer-events-none rotate-180" />
 
         <div className="relative max-w-7xl w-full mx-auto grid lg:grid-cols-[0.9fr_1.1fr] gap-12 lg:gap-20 items-center">
-          <div className="max-w-xl">
+          <div className="max-w-xl lg:pt-4">
             <div className="inline-flex items-center gap-2 border border-sage/70 rounded-full px-3 py-1.5 mb-7">
               <span className="w-1.5 h-1.5 rounded-full bg-wheat" />
               <span className="text-forest text-[0.65rem] font-medium tracking-[0.22em] uppercase">
@@ -74,30 +74,27 @@ export default function HomePage() {
             </Link>
           </div>
 
-            <div className="flex items-center gap-5 mt-12 pt-5 border-t border-sage/50 max-w-md">
+            <div className="flex items-center gap-4 mt-10 pt-5 border-t border-sage/50 max-w-md">
               <span className="text-2xl font-display text-bark">01</span>
-              <p className="text-xs text-ink-muted leading-relaxed">
+              <p className="text-xs text-ink-muted leading-relaxed flex-1">
                 Designed with intention.
                 <br />
                 Engraved with precision.
               </p>
-              <span className="ml-auto text-[0.6rem] tracking-[0.18em] uppercase text-forest">Est. 2024</span>
+              <span className="text-[0.6rem] tracking-[0.18em] uppercase text-forest whitespace-nowrap">Est. 2024</span>
             </div>
           </div>
 
-          <div className="relative min-h-[450px] md:min-h-[620px]">
-            <div className="absolute top-0 right-0 w-[68%] h-[78%] overflow-hidden bg-mist">
+          <div className="relative min-h-[420px] md:min-h-[620px] mt-4 lg:mt-0">
+            <div className="absolute top-0 right-0 w-[68%] h-[78%] overflow-hidden bg-mist shadow-[10px_10px_0_rgba(136,216,192,0.28)]">
               <img src="/images/products/ellie.jpeg" alt="Custom engraved portrait piece" className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" />
             </div>
-            <div className="absolute bottom-0 left-0 w-[54%] h-[48%] overflow-hidden bg-sage border-[10px] border-cream">
+            <div className="absolute bottom-0 left-0 w-[54%] h-[48%] overflow-hidden bg-sage border-[8px] border-cream shadow-[-8px_8px_0_rgba(255,147,133,0.24)]">
               <img src="/images/products/cutting-board.jpeg" alt="Custom engraved cutting board" className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" />
             </div>
-            <div className="absolute bottom-[13%] right-[4%] bg-wheat text-bark w-24 h-24 rounded-full flex items-center justify-center text-center rotate-[-12deg]">
+            <div className="absolute bottom-[12%] right-[3%] bg-wheat text-bark w-20 h-20 rounded-full flex items-center justify-center text-center rotate-[-12deg]">
               <span className="text-[0.6rem] tracking-[0.15em] uppercase leading-tight">Made<br />personal</span>
             </div>
-            <span className="absolute top-[10%] left-0 text-[0.6rem] tracking-[0.2em] uppercase text-forest [writing-mode:vertical-rl]">
-              Laser engraving · custom design
-            </span>
           </div>
         </div>
       </section>
