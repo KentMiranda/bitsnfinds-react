@@ -176,9 +176,9 @@ export default function AdminProductsPage() {
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <label className="text-[0.65rem] font-medium tracking-widest uppercase text-ink-muted">
-                    Price *
+                    Price or pricing note
                   </label>
-                  <input type="text" placeholder="e.g. From ₱1,800"
+                  <input type="text" placeholder="e.g. From $25, Custom quote, Contact us"
                     value={form.price}
                     onChange={(e) => setForm({ ...form, price: e.target.value })}
                     className={inputClass}/>
