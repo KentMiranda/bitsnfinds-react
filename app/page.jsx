@@ -12,6 +12,8 @@ export default function HomePage() {
   const [eventsLoading, setEventsLoading] = useState(true)
   const [heroImageIndex, setHeroImageIndex] = useState(0)
   const [eventImageIndex, setEventImageIndex] = useState(0)
+  const [eventFilter, setEventFilter] = useState('all')
+  const [eventPaused, setEventPaused] = useState(false)
 
   useEffect(() => {
     const cacheKey = 'bitsnfinds-events'
@@ -54,19 +56,10 @@ export default function HomePage() {
     }
   }, [])
 
-  useEffect(() => {
-    if (events.length < 2) return undefined
-    const timer = window.setInterval(() => {
-      setEventIndex((current) => (current + 1) % events.length)
-    }, 5000)
-    return () => window.clearInterval(timer)
-  }, [events.length])
-
-  useEffect(() => {
-    if (events.length > 0 && eventIndex >= events.length) setEventIndex(0)
-  }, [events.length, eventIndex])
-
-  const event = events[eventIndex]
+  const visibleEvents = eventFilter === 'all'
+    ? events
+    : events.filter((item) => eventFilter === 'past' ? item.is_past : !item.is_past)
+  const event = visibleEvents[eventIndex]
   const eventImages = event?.image_urls?.length
     ? event.image_urls
     : event?.image_url
@@ -74,16 +67,28 @@ export default function HomePage() {
       : []
 
   useEffect(() => {
+    if (eventPaused || visibleEvents.length < 2) return undefined
+    const timer = window.setInterval(() => {
+      setEventIndex((current) => (current + 1) % visibleEvents.length)
+    }, 5000)
+    return () => window.clearInterval(timer)
+  }, [visibleEvents.length, eventPaused])
+
+  useEffect(() => {
+    if (visibleEvents.length > 0 && eventIndex >= visibleEvents.length) setEventIndex(0)
+  }, [visibleEvents.length, eventIndex])
+
+  useEffect(() => {
     setEventImageIndex(0)
   }, [event?.id])
 
   useEffect(() => {
-    if (eventImages.length < 2) return undefined
+    if (eventPaused || eventImages.length < 2) return undefined
     const timer = window.setInterval(() => {
       setEventImageIndex((current) => (current + 1) % eventImages.length)
     }, 4500)
     return () => window.clearInterval(timer)
-  }, [eventImages.length, event?.id])
+  }, [eventImages.length, event?.id, eventPaused])
 
   const heroImages = [
     { src: '/images/products/1.jpg', alt: 'Bits & Finds engraved creation' },
@@ -215,9 +220,21 @@ export default function HomePage() {
                 <h2 className="font-display text-3xl md:text-5xl text-bark">
                   Where to find us
                 </h2>
-                <div className="flex gap-4 mt-4 text-[0.65rem] tracking-[0.18em] uppercase text-ink-muted">
-                  <span><strong className="text-forest">{upcomingCount}</strong> upcoming</span>
-                  <span><strong className="text-walnut">{pastCount}</strong> past</span>
+                <div className="flex flex-wrap gap-2 mt-4 text-[0.65rem] tracking-[0.18em] uppercase">
+                  {[
+                    ['all', 'All events', events.length],
+                    ['upcoming', 'Upcoming', upcomingCount],
+                    ['past', 'Past', pastCount],
+                  ].map(([value, label, count]) => (
+                    <button
+                      key={value}
+                      type="button"
+                      onClick={() => { setEventFilter(value); setEventIndex(0) }}
+                      className={`event-filter ${eventFilter === value ? 'event-filter-active' : ''}`}
+                    >
+                      {label} <span>{count}</span>
+                    </button>
+                  ))}
                 </div>
               </div>
               {events.length > 1 && (
@@ -246,7 +263,7 @@ export default function HomePage() {
                   <LeafSVG variant="single" className="w-56 opacity-25" />
                 </div>
               )}
-              <div className="event-overlay absolute inset-0 bg-gradient-to-t from-bark/70 via-bark/10 to-transparent" />
+              <div className="event-overlay absolute inset-0 bg-gradient-to-t from-bark/70 via-bark/10 to-transparent group-hover:from-bark/80 group-hover:via-bark/30" />
               <div className="event-info absolute inset-x-0 bottom-0 p-7 md:p-12 text-cream">
                 <p className="text-sage text-xs font-medium tracking-[0.22em] uppercase mb-2">
                   {event.is_past ? 'Past event' : 'Upcoming event'}
@@ -272,6 +289,14 @@ export default function HomePage() {
                   ))}
                 </div>
               )}
+              <button
+                type="button"
+                onClick={() => setEventPaused((paused) => !paused)}
+                className="event-pause absolute bottom-5 right-5 z-[4] bg-paper/90 text-bark px-4 py-2 text-[0.65rem] tracking-[0.16em] uppercase transition-colors hover:bg-wheat"
+                aria-pressed={eventPaused}
+              >
+                {eventPaused ? 'Play slideshow' : 'Pause slideshow'}
+              </button>
             </div> : (
                 <div className="min-h-[430px] md:min-h-[600px] bg-mist/40 flex items-center justify-center">
                   <div className="text-center">

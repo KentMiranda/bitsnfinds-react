@@ -139,12 +139,41 @@ main .hero-image-block img {
 
 .event-overlay {
   z-index: 2;
+  transition: background 0.35s ease;
 }
 
 .group:hover .event-info,
 .group:focus-within .event-info {
   opacity: 1;
   transform: translateY(0);
+}
+
+.event-filter {
+  border: 1px solid rgba(18, 59, 87, 0.2);
+  border-radius: 999px;
+  padding: 0.45rem 0.75rem;
+  color: #607786;
+  transition: color 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+}
+
+.event-filter span {
+  margin-left: 0.25rem;
+  color: #2B6680;
+}
+
+.event-filter:hover,
+.event-filter-active {
+  color: #FFFDF0;
+  background: #123B57;
+  border-color: #123B57;
+}
+
+.event-filter-active span {
+  color: #A8DDE0;
+}
+
+.event-pause {
+  border-radius: 999px;
 }
 
 .hero-slideshow-controls {
