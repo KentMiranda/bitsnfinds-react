@@ -6,6 +6,7 @@
 
 html { scroll-behavior: smooth; }
 body {
+  position: relative;
   font-family: 'DM Sans', sans-serif;
   color: #183044;
   background:
@@ -52,12 +53,12 @@ body::after {
 
 .brand-watermark {
   position: fixed;
-  z-index: 1;
-  top: 12%;
-  right: 5%;
-  width: min(42rem, 52vw);
+  z-index: 0;
+  top: 14%;
+  right: 7%;
+  width: min(44rem, 54vw);
   pointer-events: none;
-  opacity: 0.17;
+  opacity: 0.12;
   transform: rotate(8deg);
 }
 
@@ -65,10 +66,13 @@ body::after {
   display: block;
   width: 100%;
   height: auto;
+  opacity: 1;
+  mix-blend-mode: normal;
   filter: grayscale(0.25) contrast(0.95) brightness(1.08);
 }
 
 main,
+body > nav,
 body > header,
 body > footer {
   position: relative;
@@ -168,7 +172,7 @@ main .hero-image-block img {
     top: 16%;
     right: -3rem;
     width: 24rem;
-    opacity: 0.16;
+    opacity: 0.1;
   }
 
   .hero-gallery {
