@@ -17,6 +17,9 @@ export default function RootLayout({ children }) {
         <meta name="theme-color" content="#123B57" />
       </head>
       <body className="bg-parchment text-ink font-body antialiased">
+        <div className="brand-watermark" aria-hidden="true">
+          <img src="/images/favicon.png" alt="" />
+        </div>
         {!isAdmin && <Navbar />}
         <main>{children}</main>
         {!isAdmin && <Footer />}

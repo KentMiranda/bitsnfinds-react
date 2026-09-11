@@ -50,10 +50,9 @@ body::after {
   animation: orbitShape 18s ease-in-out infinite alternate;
 }
 
-.hero-brand-watermark {
-  display: block;
-  position: absolute;
-  z-index: 0;
+.brand-watermark {
+  position: fixed;
+  z-index: 1;
   top: 12%;
   right: 5%;
   width: min(42rem, 52vw);
@@ -69,12 +68,12 @@ main,
 body > header,
 body > footer {
   position: relative;
-  z-index: 1;
+  z-index: auto;
 }
 
-main :where(h1, h2, h3, h4, p, a, button, input, textarea, select, label, ul, ol, svg) {
+main :where(h1, h2, h3, h4, p, a, button, input, textarea, select, label, ul, ol, img, svg) {
   position: relative;
-  z-index: 2;
+  z-index: 3;
 }
 
 @keyframes atmosphereDrift {
@@ -98,7 +97,7 @@ main :where(h1, h2, h3, h4, p, a, button, input, textarea, select, label, ul, ol
     right: -10rem;
   }
 
-  .hero-brand-watermark {
+  .brand-watermark {
     top: 16%;
     right: -3rem;
     width: 24rem;
