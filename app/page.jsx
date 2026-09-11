@@ -50,38 +50,50 @@ export default function HomePage() {
             <LeafSVG variant="sprig" className="w-4 h-4 opacity-60 scale-x-[-1]" />
           </div>
 
-          <div className="min-h-[250px] max-w-4xl mx-auto mb-8">
+          <div className="min-h-[250px] max-w-5xl mx-auto mb-8">
             {event ? (
-              <div key={event.id} className="grid md:grid-cols-[1fr_1.15fr] gap-8 md:gap-14 items-center text-left event-slide">
-                <div className="order-2 md:order-1">
-                  <p className="text-forest text-xs font-medium tracking-[0.22em] uppercase mb-2">
+              <div
+                key={event.id}
+                className="group relative min-h-[430px] md:min-h-[540px] overflow-hidden text-left event-slide focus-within:ring-2 focus-within:ring-forest"
+                tabIndex="0"
+              >
+                {event.image_url ? (
+                  <img
+                    src={event.image_url}
+                    alt=""
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                  />
+                ) : (
+                  <div className="absolute inset-0 bg-mist/70 flex items-center justify-center">
+                    <LeafSVG variant="single" className="w-56 opacity-25" />
+                  </div>
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-bark/90 via-bark/25 to-transparent transition-colors duration-500 group-hover:from-bark/95 group-hover:via-bark/45" />
+
+                <div className="absolute inset-x-0 bottom-0 p-7 md:p-12 text-cream
+                                opacity-100 translate-y-0 transition-all duration-500
+                                md:opacity-0 md:translate-y-5
+                                md:group-hover:opacity-100 md:group-hover:translate-y-0
+                                md:group-focus-within:opacity-100 md:group-focus-within:translate-y-0">
+                  <p className="text-sage text-xs font-medium tracking-[0.22em] uppercase mb-2">
                     {event.is_past ? 'Past event' : 'Upcoming event'}
                   </p>
-                  <p className="text-ink-muted text-[0.65rem] tracking-[0.2em] uppercase mb-4">
+                  <p className="text-cream/75 text-[0.65rem] tracking-[0.2em] uppercase mb-3">
                     {formatDate(event.date)}{event.location ? ` · ${event.location}` : ''}
                   </p>
-                  <h1 className="font-display text-4xl md:text-6xl text-bark leading-[1.05] mb-4">
+                  <h1 className="font-display text-4xl md:text-6xl text-cream leading-[1.05] mb-4">
                     {event.title}
                   </h1>
                   {event.description && (
-                    <p className="text-ink-muted text-sm font-light leading-relaxed max-w-sm">
+                    <p className="text-cream/85 text-sm font-light leading-relaxed max-w-lg">
                       {event.description}
                     </p>
                   )}
                 </div>
-                {event.image_url ? (
-                  <div className="order-1 md:order-2 relative aspect-[4/3] overflow-hidden">
-                    <img src={event.image_url} alt="" className="w-full h-full object-cover" />
-                    <div className="absolute inset-4 border border-cream/60 pointer-events-none" />
-                  </div>
-                ) : (
-                  <div className="order-1 md:order-2 aspect-[4/3] bg-mist/50 flex items-center justify-center relative overflow-hidden">
-                    <LeafSVG variant="single" className="w-48 opacity-20" />
-                    <span className="absolute bottom-4 right-5 text-forest/60 text-[0.6rem] tracking-[0.2em] uppercase">
-                      Bits &amp; Finds
-                    </span>
-                  </div>
-                )}
+                <span className="absolute top-5 right-5 text-cream/70 text-[0.6rem] tracking-[0.2em] uppercase
+                                 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-500">
+                  Hover for details
+                </span>
               </div>
             ) : (
               <>
