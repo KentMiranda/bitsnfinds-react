@@ -7,7 +7,7 @@ import { CONFIG } from '@/lib/config'
 import { getToken, isLoggedIn } from '@/lib/auth'
 
 const EMPTY_FORM = {
-  title: '', date: '', location: '', description: '', image_url: '', is_past: false, is_active: true
+  title: '', date: '', location: '', description: '', is_past: false, is_active: true
 }
 
 export default function AdminEventsPage() {
@@ -18,6 +18,7 @@ export default function AdminEventsPage() {
   const [showForm, setShowForm] = useState(false)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
+  const [imageFile, setImageFile] = useState(null)
 
   useEffect(() => {
     if (!isLoggedIn()) router.push('/admin/login')
@@ -39,27 +40,39 @@ export default function AdminEventsPage() {
 
   function editEvent(event) {
     setEditingId(event.id)
-    setForm({ ...event, date: event.date || '' })
+    setForm({
+      title: event.title,
+      date: event.date || '',
+      location: event.location || '',
+      description: event.description || '',
+      is_past: event.is_past,
+      is_active: event.is_active,
+    })
+    setImageFile(null)
     setShowForm(true)
   }
 
   async function saveEvent() {
     setSaving(true)
     try {
+      const body = new FormData()
+      Object.entries(form).forEach(([key, value]) => body.append(key, value))
+      if (imageFile) body.append('image', imageFile)
+
       const response = await fetch(
         `${CONFIG.apiBaseUrl}/api/events/${editingId ? `${editingId}/` : ''}`,
         {
           method: editingId ? 'PUT' : 'POST',
           headers: {
-            'Content-Type': 'application/json',
             Authorization: `Token ${getToken()}`
           },
-          body: JSON.stringify(form)
+          body
         }
       )
       if (response.ok) {
         await fetchEvents()
         setForm(EMPTY_FORM)
+        setImageFile(null)
         setEditingId(null)
         setShowForm(false)
       }
@@ -88,7 +101,7 @@ export default function AdminEventsPage() {
             <h1 className="font-display text-2xl text-bark">Events</h1>
             <p className="text-ink-muted text-sm font-light">Manage events shown on the landing page.</p>
           </div>
-          <button onClick={() => { setForm(EMPTY_FORM); setEditingId(null); setShowForm(true) }}
+          <button onClick={() => { setForm(EMPTY_FORM); setImageFile(null); setEditingId(null); setShowForm(true) }}
             className="bg-bark text-cream text-xs font-medium tracking-widest uppercase px-5 py-2.5 rounded-sm hover:bg-walnut">
             + Add event
           </button>
@@ -105,8 +118,14 @@ export default function AdminEventsPage() {
                   onChange={(e) => setForm({ ...form, date: e.target.value })} />
                 <input className={inputClass} placeholder="Location (optional)" value={form.location}
                   onChange={(e) => setForm({ ...form, location: e.target.value })} />
-                <input className={inputClass} placeholder="Image URL (optional)" value={form.image_url}
-                  onChange={(e) => setForm({ ...form, image_url: e.target.value })} />
+                <label className={`${inputClass} cursor-pointer`}>
+                  <span className="block text-ink-muted mb-1">Event image (optional)</span>
+                  <input type="file" accept="image/jpeg,image/png,image/webp"
+                    onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+                    className="w-full text-sm" />
+                  {imageFile && <span className="block text-xs text-forest mt-1">{imageFile.name}</span>}
+                  {!imageFile && editingId && <span className="block text-xs text-ink-muted mt-1">Leave blank to keep the current image.</span>}
+                </label>
               </div>
               <textarea className={`${inputClass} mt-4 min-h-24`} placeholder="Short event description (optional)"
                 value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
