@@ -239,23 +239,23 @@ export default function HomePage() {
         <LeafSVG variant="single"
           className="absolute right-0 top-1/2 -translate-y-1/2 w-56 opacity-[0.08] pointer-events-none" />
 
-        <div className="max-w-4xl mx-auto">
-          <div className="max-w-3xl">
-            <p className="text-forest text-xs font-medium tracking-[0.22em] uppercase mb-2">
+        <div className="max-w-4xl mx-auto text-center">
+          <div className="max-w-3xl mx-auto">
+            <p className="text-forest text-xs font-medium tracking-[0.22em] uppercase mb-3">
               {about.eyebrow}
             </p>
-            <h2 className="font-display text-3xl md:text-4xl font-normal text-bark leading-snug mb-4">
+            <h2 className="font-display text-4xl md:text-6xl font-normal text-bark leading-tight mb-5">
               {about.title}
               <br />
               <em className="italic text-walnut font-light">{about.titleEm}</em>
             </h2>
-            <p className="text-ink-muted text-sm font-light leading-relaxed mb-8">
+            <p className="text-ink-muted text-sm md:text-base font-light leading-relaxed max-w-2xl mx-auto mb-10">
               {about.body}
             </p>
-            <ul className="flex flex-col gap-4">
+            <ul className="grid md:grid-cols-3 gap-8 text-left border-t border-sage/50 pt-8">
               {about.values.map((v) => (
                 <li key={v.title} className="flex gap-3 items-start">
-                  <span className="w-1.5 h-1.5 rounded-full bg-sage flex-shrink-0 mt-2" />
+                  <span className="w-1.5 h-1.5 rounded-full bg-sage flex-shrink-0 mt-2.5" />
                   <div>
                     <strong className="block text-sm font-medium text-bark mb-0.5">
                       {v.icon} {v.title}
