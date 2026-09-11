@@ -5,7 +5,58 @@
 @tailwind utilities;
 
 html { scroll-behavior: smooth; }
-body { font-family: 'DM Sans', sans-serif; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  color: #000000;
+  background:
+    radial-gradient(circle at 12% 18%, rgba(255, 147, 133, 0.28), transparent 24rem),
+    radial-gradient(circle at 88% 12%, rgba(136, 216, 192, 0.3), transparent 28rem),
+    radial-gradient(circle at 72% 82%, rgba(164, 100, 161, 0.18), transparent 30rem),
+    linear-gradient(135deg, #f7f9fc 0%, #ffffff 48%, #eef8f5 100%);
+  background-attachment: fixed;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.22;
+  background-image: radial-gradient(rgba(22, 40, 105, 0.22) 0.7px, transparent 0.7px);
+  background-size: 18px 18px;
+  mask-image: linear-gradient(to bottom, black, transparent 78%);
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  width: 28rem;
+  height: 28rem;
+  right: -12rem;
+  bottom: 8%;
+  z-index: -1;
+  pointer-events: none;
+  border: 1px solid rgba(22, 40, 105, 0.12);
+  border-radius: 45% 55% 62% 38%;
+  transform: rotate(28deg);
+  box-shadow:
+    0 0 0 2rem rgba(136, 216, 192, 0.08),
+    0 0 0 4rem rgba(255, 147, 133, 0.06);
+}
+
+@media (max-width: 768px) {
+  body {
+    background-attachment: scroll;
+  }
+
+  body::after {
+    width: 18rem;
+    height: 18rem;
+    right: -10rem;
+  }
+}
+
 button, a { -webkit-tap-highlight-color: transparent; }
 
 :focus-visible {

@@ -21,6 +21,7 @@ This checklist translates the reference article into project-specific checks. It
 - [x] **Shared patterns:** Navigation focus behavior and global motion preferences are defined once instead of repeated per page.
 - [x] **Keyboard access:** Links and the mobile menu have visible `:focus-visible` states; menu state is exposed with `aria-expanded` and `aria-controls`.
 - [x] **Motion preferences:** Slideshow and hover animations are disabled/reduced when the user requests reduced motion.
+- [x] **Background treatment:** A layered navy/mint/coral/lavender gradient, dot texture, and organic outline create a distinctive background without adding image dependencies or competing with content.
 
 ## Intentionally preserved
 
