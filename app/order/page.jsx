@@ -94,9 +94,10 @@ export default function OrderPage() {
                     value={form.name} onChange={handleChange} className={inputClass}/>
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[0.65rem] font-medium tracking-[0.14em] uppercase text-cream/45">Contact Number</label>
-                  <input name="phone" type="tel" required placeholder="+63 9XX XXX XXXX"
+                  <label className="text-[0.65rem] font-medium tracking-[0.14em] uppercase text-cream/45">Phone Number</label>
+                  <input name="phone" type="tel" required placeholder="(555) 123-4567"
                     value={form.phone} onChange={handleChange} className={inputClass}/>
+                  <p className="text-xs text-cream/40">US or international numbers accepted. Include your country code if outside the US.</p>
                 </div>
               </div>
               <div className="flex flex-col gap-1.5">
