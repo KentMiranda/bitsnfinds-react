@@ -1,13 +1,31 @@
+'use client'
+
 import Link          from 'next/link'
+import { useEffect, useState } from 'react'
 import ProductCard     from '@/components/ProductCard'
 import SectionHeader   from '@/components/SectionHeader'
 import LeafSVG         from '@/components/LeafSVG'
 import { CONFIG }      from '@/lib/config'
 
-export const metadata = { title: `Gallery — ${CONFIG.brand.name}` }
-
 export default function ProductsPage() {
   const { gallery } = CONFIG
+  const [products, setProducts] = useState(CONFIG.products)
+
+  useEffect(() => {
+    document.title = `Gallery — ${CONFIG.brand.name}`
+    fetch(`${CONFIG.apiBaseUrl}/api/products/`)
+      .then((response) => response.ok ? response.json() : [])
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          setProducts(data.map((product) => ({
+            ...product,
+            desc: product.description,
+            image: product.image || product.image_url,
+          })))
+        }
+      })
+      .catch(() => {})
+  }, [])
 
   return (
     <section className="relative px-6 py-24 bg-cream overflow-hidden min-h-screen">
@@ -20,7 +38,7 @@ export default function ProductsPage() {
         subtitle={gallery.subtitle}
         centered />
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 max-w-6xl mx-auto">
-        {CONFIG.products.map((product) => (
+        {products.map((product) => (
           <ProductCard key={product.slug} product={product} />
         ))}
       </div>

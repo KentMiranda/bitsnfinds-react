@@ -19,6 +19,7 @@ export default function AdminProductsPage() {
   const [editingId, setEditingId] = useState(null)
   const [form,      setForm]      = useState(EMPTY_FORM)
   const [saving,    setSaving]    = useState(false)
+  const [imageFile, setImageFile] = useState(null)
 
   useEffect(() => {
     if (!isLoggedIn()) router.push('/admin/login')
@@ -43,6 +44,7 @@ export default function AdminProductsPage() {
   function openAddForm() {
     setForm(EMPTY_FORM)
     setEditingId(null)
+    setImageFile(null)
     setShowForm(true)
   }
 
@@ -57,6 +59,7 @@ export default function AdminProductsPage() {
       is_active:   product.is_active,
     })
     setEditingId(product.id)
+    setImageFile(null)
     setShowForm(true)
   }
 
@@ -68,13 +71,16 @@ export default function AdminProductsPage() {
         : `${CONFIG.apiBaseUrl}/api/products/`
       const method = editingId ? 'PUT' : 'POST'
 
+      const body = new FormData()
+      Object.entries(form).forEach(([key, value]) => body.append(key, value))
+      if (imageFile) body.append('image', imageFile)
+
       const res = await fetch(url, {
         method,
         headers: {
-          'Content-Type':  'application/json',
           'Authorization': `Token ${getToken()}`,
         },
-        body: JSON.stringify(form),
+        body,
       })
 
       if (res.ok) {
@@ -82,6 +88,7 @@ export default function AdminProductsPage() {
         setShowForm(false)
         setEditingId(null)
         setForm(EMPTY_FORM)
+        setImageFile(null)
       }
     } catch (err) {
       console.error('Failed to save product:', err)
@@ -144,6 +151,15 @@ export default function AdminProductsPage() {
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
                     className={inputClass}/>
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[0.65rem] font-medium tracking-widest uppercase text-ink-muted">
+                    Upload image (optional)
+                  </label>
+                  <input type="file" accept="image/jpeg,image/png,image/webp"
+                    onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+                    className="w-full text-sm"/>
+                  <span className="text-xs text-ink-muted">JPEG, PNG, or WebP up to 5 MB.</span>
                 </div>
                 <div className="flex flex-col gap-1.5">
                   <label className="text-[0.65rem] font-medium tracking-widest uppercase text-ink-muted">
@@ -239,8 +255,8 @@ export default function AdminProductsPage() {
                   className="bg-paper border border-mist rounded-md overflow-hidden">
 
                   <div className="aspect-[4/3] bg-mist flex items-center justify-center text-4xl relative">
-                    {product.image_url
-                      ? <img src={product.image_url} alt={product.name}
+                    {(product.image || product.image_url)
+                      ? <img src={product.image || product.image_url} alt={product.name}
                              className="w-full h-full object-cover"/>
                       : product.emoji || '📦'
                     }
