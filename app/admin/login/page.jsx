@@ -12,9 +12,11 @@ export default function AdminLoginPage() {
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
   const [warming, setWarming] = useState(true)
+  const [serverReady, setServerReady] = useState(false)
 
   useEffect(() => {
     fetch(`${CONFIG.apiBaseUrl}/health/`)
+      .then((response) => setServerReady(response.ok))
       .catch(() => {})
       .finally(() => setWarming(false))
   }, [])
@@ -96,7 +98,7 @@ export default function AdminLoginPage() {
             type="submit"
             disabled={loading || warming}
             className="w-full bg-bark text-cream text-xs font-medium tracking-widest uppercase py-3 rounded-sm hover:bg-walnut transition-colors disabled:opacity-50">
-            {loading ? 'Signing in...' : warming ? 'Waking up server...' : 'Sign in'}
+            {loading ? 'Signing in...' : warming ? 'Waking up server...' : serverReady ? 'Sign in' : 'Retry connection'}
           </button>
         </form>
 
