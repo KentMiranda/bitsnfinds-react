@@ -14,7 +14,7 @@ export default function RootLayout({ children }) {
       <head>
         <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
         <link rel="apple-touch-icon" href="/favicon.svg" />
-        <meta name="theme-color" content="#2F4F3A" />
+        <meta name="theme-color" content="#162869" />
       </head>
       <body className="bg-parchment text-ink font-body antialiased">
         {!isAdmin && <Navbar />}
