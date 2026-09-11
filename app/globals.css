@@ -84,10 +84,21 @@ main .hero-image-block {
   position: relative;
   z-index: 5;
   isolation: isolate;
-  background: #D9EEF0;
+  background: #FFFFFF;
+}
+
+main .hero-image-block::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: #FFFFFF;
 }
 
 main .hero-image-block img {
+  position: relative;
+  z-index: 1;
+  display: block;
   opacity: 1;
   mix-blend-mode: normal;
   filter: none;
