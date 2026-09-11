@@ -252,18 +252,6 @@ export default function HomePage() {
             <p className="text-ink-muted text-sm md:text-base font-light leading-relaxed max-w-2xl mx-auto mb-10">
               {about.body}
             </p>
-            <ul className="max-w-2xl mx-auto border-t border-sage/50">
-              {about.values.map((v) => (
-                <li key={v.title} className="py-6 border-b border-sage/50 text-center">
-                  <div>
-                    <strong className="block text-sm font-medium text-bark mb-0.5">
-                      {v.icon} {v.title}
-                    </strong>
-                    <span className="block max-w-lg mx-auto text-xs text-ink-muted font-light leading-relaxed">{v.desc}</span>
-                  </div>
-                </li>
-              ))}
-            </ul>
           </div>
         </div>
       </section>
