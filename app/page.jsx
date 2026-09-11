@@ -77,6 +77,7 @@ export default function HomePage() {
     <>
       <section className="relative min-h-[calc(100vh-73px)] flex items-center
                           px-6 py-16 md:py-24 bg-cream overflow-hidden">
+        <img src="/images/favicon.png" alt="" className="hero-brand-watermark" aria-hidden="true" />
         <LeafSVG variant="branch"
           className="absolute top-0 left-0 w-[min(280px,35vw)] opacity-[0.13] pointer-events-none" />
         <LeafSVG variant="branch"
