@@ -227,7 +227,7 @@ export default function HomePage() {
                   <LeafSVG variant="single" className="w-56 opacity-25" />
                 </div>
               )}
-              <div className="event-overlay absolute inset-0 bg-gradient-to-t from-bark/90 via-bark/20 to-transparent" />
+              <div className="event-overlay absolute inset-0 bg-gradient-to-t from-bark/70 via-bark/10 to-transparent" />
               <div className="event-info absolute inset-x-0 bottom-0 p-7 md:p-12 text-cream">
                 <p className="text-sage text-xs font-medium tracking-[0.22em] uppercase mb-2">
                   {event.is_past ? 'Past event' : 'Upcoming event'}
