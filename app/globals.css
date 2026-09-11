@@ -50,6 +50,32 @@ body::after {
   animation: orbitShape 18s ease-in-out infinite alternate;
 }
 
+.brand-watermark {
+  position: fixed;
+  z-index: 0;
+  top: 14%;
+  right: 7%;
+  width: min(32rem, 42vw);
+  pointer-events: none;
+  opacity: 0.075;
+  mix-blend-mode: multiply;
+  transform: rotate(8deg);
+}
+
+.brand-watermark img {
+  display: block;
+  width: 100%;
+  height: auto;
+  filter: grayscale(1) contrast(1.35) brightness(0.72);
+}
+
+main,
+body > header,
+body > footer {
+  position: relative;
+  z-index: 1;
+}
+
 @keyframes atmosphereDrift {
   from { background-position: 0 0, 0 0; }
   to { background-position: 18px 18px, 70px 70px; }
@@ -69,6 +95,13 @@ body::after {
     width: 18rem;
     height: 18rem;
     right: -10rem;
+  }
+
+  .brand-watermark {
+    top: 18%;
+    right: -4rem;
+    width: 18rem;
+    opacity: 0.06;
   }
 }
 
