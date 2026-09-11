@@ -109,7 +109,10 @@ main .hero-image-block img {
 }
 
 .hero-gallery {
+  position: relative;
+  z-index: 2;
   isolation: isolate;
+  background: #FFFDF0;
 }
 
 .hero-image-slideshow {
