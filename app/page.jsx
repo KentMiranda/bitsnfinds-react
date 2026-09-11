@@ -67,8 +67,10 @@ export default function HomePage() {
 
   const event = events[eventIndex]
   const heroImages = [
-    { src: '/images/products/ellie.jpeg', alt: 'Custom engraved portrait piece' },
-    { src: '/images/products/cutting-board.jpeg', alt: 'Custom engraved cutting board' }
+    { src: '/images/products/1.jpg', alt: 'Bits & Finds engraved creation' },
+    { src: '/images/products/2.jpg', alt: 'Bits & Finds personalized piece' },
+    { src: '/images/products/3.jpg', alt: 'Bits & Finds custom design' },
+    { src: '/images/products/4.jpg', alt: 'Bits & Finds crafted product' }
   ]
   const heroImage = heroImages[heroImageIndex]
   const upcomingCount = events.filter((item) => !item.is_past).length

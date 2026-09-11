@@ -112,7 +112,7 @@ main .hero-image-block img {
   position: relative;
   z-index: 2;
   isolation: isolate;
-  background: #FFFDF0;
+  background: rgba(255, 253, 240, 0.86);
 }
 
 .hero-image-slideshow {
