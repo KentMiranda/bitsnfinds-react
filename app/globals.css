@@ -76,6 +76,11 @@ body > footer {
   z-index: 1;
 }
 
+main :where(h1, h2, h3, h4, p, a, button, input, textarea, select, label, ul, ol, img, svg) {
+  position: relative;
+  z-index: 3;
+}
+
 @keyframes atmosphereDrift {
   from { background-position: 0 0, 0 0; }
   to { background-position: 18px 18px, 70px 70px; }
