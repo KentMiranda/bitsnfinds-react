@@ -35,20 +35,25 @@ export default function Navbar() {
         ))}
       </ul>
 
-      <button className="md:hidden flex flex-col gap-1.5"
-        onClick={() => setMenuOpen(!menuOpen)} aria-label="Toggle menu">
+      <button className="md:hidden flex flex-col gap-1.5 min-w-11 min-h-11 items-center justify-center
+                         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest"
+        onClick={() => setMenuOpen(!menuOpen)}
+        aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+        aria-expanded={menuOpen}
+        aria-controls="mobile-navigation">
         <span className="block w-6 h-px bg-bark" />
         <span className="block w-6 h-px bg-bark" />
         <span className="block w-6 h-px bg-bark" />
       </button>
 
       {menuOpen && (
-        <ul className="md:hidden absolute top-full left-0 right-0
+        <ul id="mobile-navigation" className="md:hidden absolute top-full left-0 right-0
                        bg-cream border-b border-mist flex flex-col gap-4 px-8 py-6">
           {CONFIG.navLinks.map((link) => (
             <li key={link.href}>
               <Link href={link.href}
-                className="text-xs font-medium tracking-widest uppercase text-ink-muted"
+                className="min-h-11 flex items-center text-xs font-medium tracking-widest uppercase text-ink-muted
+                           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest"
                 onClick={() => setMenuOpen(false)}>
                 {link.label}
               </Link>
