@@ -92,9 +92,9 @@ export default function HomePage() {
             </div>
 
             <h1 className="font-display text-6xl md:text-8xl font-normal text-bark leading-[0.92] mb-7 tracking-[-0.04em]">
-              Made to
+              {hero.titleLine1}
               <br />
-              <em className="italic text-walnut font-light">mean more.</em>
+              <em className="italic text-walnut font-light">{hero.titleLine2}</em>
             </h1>
             <p className="text-ink-muted text-base md:text-lg font-light leading-relaxed max-w-md mb-9">
               {hero.subtitle}
@@ -118,9 +118,9 @@ export default function HomePage() {
             <div className="flex items-center gap-4 mt-10 pt-5 border-t border-sage/50 max-w-md">
               <span className="text-2xl font-display text-bark">01</span>
               <p className="text-xs text-ink-muted leading-relaxed flex-1">
-                Designed with intention.
+                Natural materials.
                 <br />
-                Engraved with precision.
+                Made with care.
               </p>
               <span className="text-[0.6rem] tracking-[0.18em] uppercase text-forest whitespace-nowrap">Est. 2024</span>
             </div>
@@ -174,10 +174,10 @@ export default function HomePage() {
             <div className="flex items-end justify-between gap-6 mb-8">
               <div>
                 <p className="text-forest text-xs font-medium tracking-[0.25em] uppercase mb-2">
-                  Where to find us
+                  Find something special
                 </p>
                 <h2 className="font-display text-3xl md:text-5xl text-bark">
-                  Upcoming &amp; past events
+                  Where to find us
                 </h2>
                 <div className="flex gap-4 mt-4 text-[0.65rem] tracking-[0.18em] uppercase text-ink-muted">
                   <span><strong className="text-forest">{upcomingCount}</strong> upcoming</span>
