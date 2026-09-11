@@ -149,8 +149,17 @@ export default function OrderPage() {
             <div className="text-center p-10 border border-wheat/30 rounded-md bg-cream/5">
               <h3 className="font-display text-3xl font-normal text-wheat mb-2">Thank you 🌿</h3>
               <p className="text-cream/60 text-sm font-light">
-                We received your order request. We'll contact you within 24–48 hours.
+                We received your order request. To help us find it quickly, please message the Bits &amp; Finds Facebook page with your details or a screenshot of this order.
               </p>
+              <div className="mt-6 border border-wheat/25 bg-cream/5 p-4 text-left">
+                <p className="text-xs uppercase tracking-[0.14em] text-wheat mb-2">Suggested message</p>
+                <p className="text-sm text-cream/75 font-light leading-relaxed">
+                  “Hi, I ordered this [product] under the name [your name].”
+                </p>
+                <p className="text-xs text-cream/45 mt-2">
+                  You can also send a screenshot of your order details.
+                </p>
+              </div>
             </div>
           )}
         </div>
