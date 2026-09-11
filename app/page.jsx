@@ -11,6 +11,7 @@ export default function HomePage() {
   const [eventIndex, setEventIndex] = useState(0)
   const [eventsLoading, setEventsLoading] = useState(true)
   const [heroImageIndex, setHeroImageIndex] = useState(0)
+  const [eventImageIndex, setEventImageIndex] = useState(0)
 
   useEffect(() => {
     const cacheKey = 'bitsnfinds-events'
@@ -66,6 +67,24 @@ export default function HomePage() {
   }, [events.length, eventIndex])
 
   const event = events[eventIndex]
+  const eventImages = event?.image_urls?.length
+    ? event.image_urls
+    : event?.image_url
+      ? [event.image_url]
+      : []
+
+  useEffect(() => {
+    setEventImageIndex(0)
+  }, [event?.id])
+
+  useEffect(() => {
+    if (eventImages.length < 2) return undefined
+    const timer = window.setInterval(() => {
+      setEventImageIndex((current) => (current + 1) % eventImages.length)
+    }, 4500)
+    return () => window.clearInterval(timer)
+  }, [eventImages.length, event?.id])
+
   const heroImages = [
     { src: '/images/products/1.jpg', alt: 'Bits & Finds engraved creation' },
     { src: '/images/products/2.jpg', alt: 'Bits & Finds personalized piece' },
@@ -220,8 +239,8 @@ export default function HomePage() {
               className="group relative min-h-[430px] md:min-h-[600px] overflow-hidden event-slide focus-within:ring-2 focus-within:ring-forest"
               tabIndex="0"
             >
-              {event.image_url ? (
-                <img src={event.image_url} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-contain bg-mist transition-transform duration-700 ease-out group-hover:scale-[1.02]" />
+              {eventImages.length > 0 ? (
+                <img src={eventImages[eventImageIndex]} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-contain bg-mist transition-transform duration-700 ease-out group-hover:scale-[1.02]" />
               ) : (
                 <div className="absolute inset-0 bg-mist flex items-center justify-center">
                   <LeafSVG variant="single" className="w-56 opacity-25" />
@@ -240,6 +259,19 @@ export default function HomePage() {
                 </h3>
                 {event.description && <p className="text-cream/85 text-sm font-light leading-relaxed max-w-lg">{event.description}</p>}
               </div>
+              {eventImages.length > 1 && (
+                <div className="absolute top-5 right-5 z-[4] flex gap-2" aria-label="Event images">
+                  {eventImages.map((imageUrl, index) => (
+                    <button
+                      key={imageUrl}
+                      type="button"
+                      onClick={() => setEventImageIndex(index)}
+                      aria-label={`Show event image ${index + 1}`}
+                      className={`w-2 h-2 rounded-full ${index === eventImageIndex ? 'bg-cream' : 'bg-cream/45'}`}
+                    />
+                  ))}
+                </div>
+              )}
             </div> : (
                 <div className="min-h-[430px] md:min-h-[600px] bg-mist/40 flex items-center justify-center">
                   <div className="text-center">

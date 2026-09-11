@@ -18,7 +18,7 @@ export default function AdminEventsPage() {
   const [showForm, setShowForm] = useState(false)
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
-  const [imageFile, setImageFile] = useState(null)
+  const [imageFiles, setImageFiles] = useState([])
 
   useEffect(() => {
     if (!isLoggedIn()) router.push('/admin/login')
@@ -48,7 +48,7 @@ export default function AdminEventsPage() {
       is_past: event.is_past,
       is_active: event.is_active,
     })
-    setImageFile(null)
+    setImageFiles([])
     setShowForm(true)
   }
 
@@ -57,7 +57,9 @@ export default function AdminEventsPage() {
     try {
       const body = new FormData()
       Object.entries(form).forEach(([key, value]) => body.append(key, value))
-      if (imageFile) body.append('image', imageFile)
+      imageFiles.forEach((file, index) => {
+        body.append(index === 0 ? 'image' : `image_${index + 1}`, file)
+      })
 
       const response = await fetch(
         `${CONFIG.apiBaseUrl}/api/events/${editingId ? `${editingId}/` : ''}`,
@@ -72,7 +74,7 @@ export default function AdminEventsPage() {
       if (response.ok) {
         await fetchEvents()
         setForm(EMPTY_FORM)
-        setImageFile(null)
+        setImageFiles([])
         setEditingId(null)
         setShowForm(false)
       }
@@ -101,7 +103,7 @@ export default function AdminEventsPage() {
             <h1 className="font-display text-2xl text-bark">Events</h1>
             <p className="text-ink-muted text-sm font-light">Manage events shown on the landing page.</p>
           </div>
-          <button onClick={() => { setForm(EMPTY_FORM); setImageFile(null); setEditingId(null); setShowForm(true) }}
+          <button onClick={() => { setForm(EMPTY_FORM); setImageFiles([]); setEditingId(null); setShowForm(true) }}
             className="bg-bark text-cream text-xs font-medium tracking-widest uppercase px-5 py-2.5 rounded-sm hover:bg-walnut">
             + Add event
           </button>
@@ -119,12 +121,13 @@ export default function AdminEventsPage() {
                 <input className={inputClass} placeholder="Location (optional)" value={form.location}
                   onChange={(e) => setForm({ ...form, location: e.target.value })} />
                 <label className={`${inputClass} cursor-pointer`}>
-                  <span className="block text-ink-muted mb-1">Event image (optional)</span>
-                  <input type="file" accept="image/jpeg,image/png,image/webp"
-                    onChange={(e) => setImageFile(e.target.files?.[0] || null)}
+                  <span className="block text-ink-muted mb-1">Event images (up to 3)</span>
+                  <input type="file" accept="image/jpeg,image/png,image/webp" multiple
+                    onChange={(e) => setImageFiles(Array.from(e.target.files || []).slice(0, 3))}
                     className="w-full text-sm" />
-                  {imageFile && <span className="block text-xs text-forest mt-1">{imageFile.name}</span>}
-                  {!imageFile && editingId && <span className="block text-xs text-ink-muted mt-1">Leave blank to keep the current image.</span>}
+                  {imageFiles.length > 0 && <span className="block text-xs text-forest mt-1">{imageFiles.map((file) => file.name).join(', ')}</span>}
+                  {!imageFiles.length && editingId && <span className="block text-xs text-ink-muted mt-1">Leave blank to keep the current images.</span>}
+                  <span className="block text-xs text-ink-muted mt-1">Choose up to 3 images, 5 MB each.</span>
                 </label>
               </div>
               <textarea className={`${inputClass} mt-4 min-h-24`} placeholder="Short event description (optional)"
@@ -153,7 +156,13 @@ export default function AdminEventsPage() {
             <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
               {events.map((event) => (
                 <article key={event.id} className="bg-paper border border-mist rounded-lg overflow-hidden">
-                  {event.image_url && <img src={event.image_url} alt="" className="w-full h-36 object-cover" />}
+                  {event.image_urls?.length > 0 && (
+                    <div className="grid grid-cols-3 gap-1 bg-mist">
+                      {event.image_urls.map((imageUrl) => (
+                        <img key={imageUrl} src={imageUrl} alt="" className="w-full h-36 object-cover" />
+                      ))}
+                    </div>
+                  )}
                   <div className="p-5">
                     <div className="flex justify-between gap-3">
                       <h2 className="font-display text-lg text-bark">{event.title}</h2>
