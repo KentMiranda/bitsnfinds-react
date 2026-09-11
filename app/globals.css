@@ -81,8 +81,16 @@ main :where(h1, h2, h3, h4, p, a, button, input, textarea, select, label, ul, ol
 }
 
 main .hero-image-block {
+  position: relative;
+  z-index: 5;
   isolation: isolate;
   background: #D9EEF0;
+}
+
+main .hero-image-block img {
+  opacity: 1;
+  mix-blend-mode: normal;
+  filter: none;
 }
 
 @keyframes atmosphereDrift {
