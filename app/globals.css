@@ -109,12 +109,30 @@ main .hero-image-block img {
 }
 
 .hero-image-main {
-  z-index: 4;
+  top: 12%;
+  right: 8%;
+  width: 67%;
+  height: 54%;
+  z-index: 6;
+  border: 1px solid rgba(24, 48, 68, 0.75);
+  border-radius: 1.25rem;
+  box-shadow:
+    -0.55rem 0.55rem 0 -0.1rem #fff,
+    -0.55rem 0.55rem 0 0 rgba(24, 48, 68, 0.32),
+    -1.1rem 1.1rem 0 -0.1rem #fff,
+    -1.1rem 1.1rem 0 0 rgba(24, 48, 68, 0.22),
+    -1.65rem 1.65rem 0 -0.1rem #fff,
+    -1.65rem 1.65rem 0 0 rgba(24, 48, 68, 0.14);
 }
 
 .hero-image-detail {
-  z-index: 6;
-  transform: rotate(-3deg);
+  top: 30%;
+  left: 7%;
+  width: 64%;
+  height: 51%;
+  z-index: 4;
+  border-radius: 1.25rem;
+  box-shadow: -0.7rem 0.7rem 0 rgba(24, 48, 68, 0.18);
 }
 
 .hero-gallery-mark {
@@ -154,9 +172,17 @@ main .hero-image-block img {
   }
 
   .hero-image-detail {
-    top: 46%;
-    left: 0;
-    width: 62%;
+    top: 32%;
+    left: 7%;
+    width: 72%;
+    height: 48%;
+  }
+
+  .hero-image-main {
+    top: 13%;
+    right: 5%;
+    width: 75%;
+    height: 53%;
   }
 }
 
