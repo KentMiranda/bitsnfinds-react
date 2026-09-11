@@ -226,7 +226,7 @@ export default function HomePage() {
                 </div>
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-bark/90 via-bark/20 to-transparent" />
-              <div className="absolute inset-x-0 bottom-0 p-7 md:p-12 text-cream opacity-100 md:opacity-0 md:translate-y-5 transition-all duration-500 md:group-hover:opacity-100 md:group-hover:translate-y-0 md:group-focus-within:opacity-100 md:group-focus-within:translate-y-0">
+              <div className="event-info absolute inset-x-0 bottom-0 p-7 md:p-12 text-cream">
                 <p className="text-sage text-xs font-medium tracking-[0.22em] uppercase mb-2">
                   {event.is_past ? 'Past event' : 'Upcoming event'}
                 </p>

@@ -123,6 +123,18 @@ main .hero-image-block img {
   z-index: 7;
 }
 
+.event-info {
+  opacity: 0;
+  transform: translateY(1.25rem);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.group:hover .event-info,
+.group:focus-within .event-info {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 .hero-slideshow-controls {
   z-index: 8;
 }
@@ -173,6 +185,11 @@ main .hero-image-block img {
   .hero-slideshow-controls {
     left: 9%;
     right: 9%;
+  }
+
+  .event-info {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
 
