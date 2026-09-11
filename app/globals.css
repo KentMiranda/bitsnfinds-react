@@ -110,7 +110,7 @@ main .hero-image-block img {
 
 .hero-image-main {
   top: 4%;
-  right: 12%;
+  left: 12%;
   width: 70%;
   height: 57%;
   z-index: 6;
@@ -180,7 +180,7 @@ main .hero-image-block img {
 
   .hero-image-main {
     top: 5%;
-    right: 9%;
+    left: 9%;
     width: 78%;
     height: 55%;
   }
