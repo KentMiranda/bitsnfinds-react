@@ -126,14 +126,14 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="relative min-h-[420px] md:min-h-[620px] mt-4 lg:mt-0">
-            <div className="hero-image-block absolute top-0 right-0 w-[68%] h-[78%] overflow-hidden bg-mist shadow-[10px_10px_0_rgba(168,221,224,0.28)]">
+          <div className="hero-gallery relative min-h-[470px] md:min-h-[680px] mt-4 lg:mt-0">
+            <div className="hero-image-block absolute top-[-4%] right-0 w-[76%] h-[82%] overflow-hidden bg-mist shadow-[12px_12px_0_rgba(168,221,224,0.42)]">
               <img src="/images/products/ellie.jpeg" alt="Custom engraved portrait piece" className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" />
             </div>
-            <div className="hero-image-block absolute bottom-0 left-0 w-[54%] h-[48%] overflow-hidden bg-sage border-[8px] border-cream shadow-[-8px_8px_0_rgba(239,143,156,0.24)]">
+            <div className="hero-image-block absolute bottom-0 left-[3%] w-[58%] h-[45%] overflow-hidden bg-sage border-[8px] border-cream shadow-[-10px_10px_0_rgba(239,143,156,0.3)]">
               <img src="/images/products/cutting-board.jpeg" alt="Custom engraved cutting board" className="w-full h-full object-cover transition-transform duration-700 hover:scale-105" />
             </div>
-            <div className="absolute bottom-[12%] right-[3%] bg-wheat text-bark w-20 h-20 rounded-full flex items-center justify-center text-center rotate-[-12deg]">
+            <div className="hero-gallery-mark absolute bottom-[13%] right-[1%] bg-wheat text-bark w-24 h-24 rounded-full flex items-center justify-center text-center rotate-[-12deg]">
               <span className="text-[0.6rem] tracking-[0.15em] uppercase leading-tight">Made<br />personal</span>
             </div>
           </div>

@@ -104,6 +104,14 @@ main .hero-image-block img {
   filter: none;
 }
 
+.hero-gallery {
+  isolation: isolate;
+}
+
+.hero-gallery-mark {
+  z-index: 6;
+}
+
 @keyframes atmosphereDrift {
   from { background-position: 0 0, 0 0; }
   to { background-position: 18px 18px, 70px 70px; }
@@ -130,6 +138,10 @@ main .hero-image-block img {
     right: -3rem;
     width: 24rem;
     opacity: 0.16;
+  }
+
+  .hero-gallery {
+    min-height: 520px;
   }
 }
 
