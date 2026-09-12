@@ -131,7 +131,7 @@ export default function HomePage() {
                 <br />
                 Made with care.
               </p>
-              <span className="text-[0.6rem] tracking-[0.18em] uppercase text-forest whitespace-nowrap">Est. 2024</span>
+              <span className="text-[0.6rem] tracking-[0.18em] uppercase text-forest whitespace-nowrap">Est. 2026</span>
             </div>
           </div>
 
