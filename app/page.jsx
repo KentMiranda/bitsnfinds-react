@@ -125,7 +125,7 @@ export default function HomePage() {
           </div>
 
             <div className="flex items-center gap-4 mt-10 pt-5 border-t border-sage/50 max-w-md">
-              <span className="text-2xl font-display text-bark">01</span>
+              <span className="text-2xl font-display text-bark"></span>
               <p className="text-xs text-ink-muted leading-relaxed flex-1">
                 Natural materials.
                 <br />
