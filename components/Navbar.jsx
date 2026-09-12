@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
+import Image from 'next/image'
 import { CONFIG } from '@/lib/config'
 
 export default function Navbar() {
@@ -11,7 +12,14 @@ export default function Navbar() {
     <nav className="sticky top-0 z-50 flex items-center justify-between
                     px-8 py-4 bg-cream/95 backdrop-blur-md
                     border-b border-mist">
-      <Link href="/" className="font-display text-xl font-bold text-bark">
+      <Link href="/" className="flex items-center gap-2 font-display text-xl font-bold text-bark">
+        <Image
+          src="/images/favicon.png"
+          alt="Bits & Finds logo"
+          width={32}
+          height={32}
+          className="rounded-full object-cover"
+        />
         Bits <span className="text-forest">&</span> Finds
       </Link>
 
