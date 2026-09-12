@@ -89,30 +89,40 @@ export default function OrderPage() {
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
               <div className="grid grid-cols-2 gap-4">
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[0.65rem] font-medium tracking-[0.14em] uppercase text-cream/45">Full Name</label>
+                  <label className="text-[0.65rem] font-medium tracking-[0.14em] uppercase text-cream/45">
+                    Full Name <span className="text-wheat">*</span>
+                  </label>
                   <input name="name" type="text" required placeholder="Your name"
                     value={form.name} onChange={handleChange} className={inputClass}/>
                 </div>
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-[0.65rem] font-medium tracking-[0.14em] uppercase text-cream/45">Phone Number</label>
+                  <label className="text-[0.65rem] font-medium tracking-[0.14em] uppercase text-cream/45">
+                    Phone Number <span className="text-wheat">*</span>
+                  </label>
                   <input name="phone" type="tel" required placeholder="(555) 123-4567"
                     value={form.phone} onChange={handleChange} className={inputClass}/>
                   <p className="text-xs text-cream/40">US or international numbers accepted. Include your country code if outside the US.</p>
                 </div>
               </div>
               <div className="flex flex-col gap-1.5">
-                <label className="text-[0.65rem] font-medium tracking-[0.14em] uppercase text-cream/45">Email Address</label>
+                <label className="text-[0.65rem] font-medium tracking-[0.14em] uppercase text-cream/45">
+                  Email Address <span className="text-wheat">*</span>
+                </label>
                 <input name="email" type="email" required placeholder="you@email.com"
                   value={form.email} onChange={handleChange} className={inputClass}/>
               </div>
               <div className="flex flex-col gap-1.5">
-                <label className="text-[0.65rem] font-medium tracking-[0.14em] uppercase text-cream/45">Facebook Name</label>
-                <input name="facebookName" type="text" placeholder="Your Facebook name"
+                <label className="text-[0.65rem] font-medium tracking-[0.14em] uppercase text-cream/45">
+                  Facebook Name <span className="text-wheat">*</span>
+                </label>
+                <input name="facebookName" type="text" required placeholder="Your Facebook name"
                   value={form.facebookName} onChange={handleChange} className={inputClass}/>
                 <p className="text-xs text-cream/40">So the owner can message you about your order.</p>
               </div>
               <div className="flex flex-col gap-1.5">
-                <label className="text-[0.65rem] font-medium tracking-[0.14em] uppercase text-cream/45">Product Type</label>
+                <label className="text-[0.65rem] font-medium tracking-[0.14em] uppercase text-cream/45">
+                  Product Type <span className="text-wheat">*</span>
+                </label>
                 <select name="productType" required value={form.productType}
                   onChange={handleChange} className={inputClass}>
                   <option value="">Select a product type...</option>
@@ -122,18 +132,25 @@ export default function OrderPage() {
                 </select>
               </div>
               <div className="flex flex-col gap-1.5">
-                <label className="text-[0.65rem] font-medium tracking-[0.14em] uppercase text-cream/45">Reference Image (optional)</label>
-                <input name="referenceImage" type="file" accept="image/jpeg,image/png,image/webp"
+                <label className="text-[0.65rem] font-medium tracking-[0.14em] uppercase text-cream/45">
+                  Reference Image <span className="text-wheat">*</span>
+                </label>
+                <input name="referenceImage" type="file" required accept="image/jpeg,image/png,image/webp"
                   onChange={(e) => setForm({ ...form, referenceImage: e.target.files?.[0] || null })}
                   className="w-full text-sm text-cream/70 file:mr-3 file:rounded-sm file:border-0 file:bg-cream file:px-3 file:py-2 file:text-xs file:font-medium file:text-bark"/>
                 <p className="text-xs text-cream/40">JPG, PNG, or WebP up to 5 MB.</p>
               </div>
               <div className="flex flex-col gap-1.5">
-                <label className="text-[0.65rem] font-medium tracking-[0.14em] uppercase text-cream/45">Order Details</label>
+                <label className="text-[0.65rem] font-medium tracking-[0.14em] uppercase text-cream/45">
+                  Order Details <span className="text-cream/40 normal-case tracking-normal">(optional)</span>
+                </label>
                 <textarea name="details" rows={5}
                   placeholder="Describe what you'd like — size, wood type, design, quantity..."
                   value={form.details} onChange={handleChange} className={`${inputClass} resize-y`}/>
               </div>
+              <p className="text-xs text-cream/40 -mt-1">
+                <span className="text-wheat">*</span> Required field
+              </p>
               {error && (
                 <p className="text-sm text-red-300/90 font-light">{error}</p>
               )}
