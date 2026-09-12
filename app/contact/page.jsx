@@ -18,14 +18,14 @@ export default function ContactPage() {
             {contact.title}<br />
             <em className="italic text-walnut font-light">{contact.titleEm}</em>
           </h1>
-          <p className="text-ink-muted text-sm font-light leading-relaxed mb-8">{contact.subtitle}</p>
-          <ul className="flex flex-col text-left">
+          <p className="text-ink-muted text-sm font-light leading-relaxed mb-10">{contact.subtitle}</p>
+          <ul className="flex flex-col items-center gap-2">
             {contact.links.map((link) => (
-              <li key={link.label}>
+              <li key={link.label} className="w-full max-w-md">
                 <a href={link.href} target="_blank" rel="noreferrer"
-                  className="flex items-center gap-4 py-3 border-b border-mist
-                             text-ink-muted text-sm hover:text-forest transition-colors last:border-none">
-                  <span className="w-8 h-8 flex items-center justify-center text-base flex-shrink-0">
+                  className="flex items-center justify-center gap-4 py-5 border-b border-mist
+                             text-ink-muted text-lg hover:text-forest transition-colors last:border-none">
+                  <span className="w-12 h-12 flex items-center justify-center text-3xl flex-shrink-0">
                     {link.icon}
                   </span>
                   <span><strong className="font-medium">{link.label}</strong>{' · '}{link.value}</span>
