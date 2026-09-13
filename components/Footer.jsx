@@ -6,7 +6,7 @@ export default function Footer() {
     <footer className="bg-bark text-cream/50 px-8 py-6
                        flex flex-wrap items-center justify-between gap-4
                        text-xs tracking-wide">
-      <span className="font-display text-base text-cream font-normal">
+      <span className="font-display text-base text-sage font-normal">
         Bits <span className="text-wheat">&</span> Finds
       </span>
       <span>{CONFIG.footer.copy}</span>
