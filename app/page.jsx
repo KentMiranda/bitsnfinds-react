@@ -1,4 +1,4 @@
- 'use client'
+'use client'
 
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
@@ -106,7 +106,7 @@ export default function HomePage() {
               </span>
             </div>
 
-            <h1 className="font-display text-6xl md:text-8xl font-normal text-bark leading-[0.92] mb-7 tracking-[-0.04em]">
+            <h1 className="font-display text-6xl md:text-8xl font-normal text-sage leading-[0.92] mb-7 tracking-[-0.04em]">
               {hero.titleLine1}
               <br />
               <em className="italic text-walnut font-light">{hero.titleLine2}</em>
@@ -169,7 +169,7 @@ export default function HomePage() {
             <p className="text-forest text-xs font-medium tracking-[0.25em] uppercase mb-5">
               {services.eyebrow}
             </p>
-            <h2 className="font-display text-4xl md:text-6xl text-bark leading-tight">
+            <h2 className="font-display text-4xl md:text-6xl text-sage leading-tight">
               {services.title}
               <br />
               <em className="italic text-walnut font-light">{services.titleEm}</em>
@@ -264,7 +264,7 @@ export default function HomePage() {
                 <p className="text-cream/75 text-[0.65rem] tracking-[0.2em] uppercase mb-3">
                   {formatDate(event.date)}{event.location ? ` · ${event.location}` : ''}
                 </p>
-                <h3 className="font-display text-4xl md:text-6xl leading-[1.05] mb-4">
+                <h3 className="font-display text-4xl md:text-6xl leading-[1.05] mb-4 text-sage">
                   {event.title}
                 </h3>
                 {event.description && <p className="text-cream/85 text-sm font-light leading-relaxed max-w-lg">{event.description}</p>}
@@ -313,7 +313,7 @@ export default function HomePage() {
             <p className="text-forest text-xs font-medium tracking-[0.22em] uppercase mb-3">
               {about.eyebrow}
             </p>
-            <h2 className="font-display text-4xl md:text-6xl font-normal text-bark leading-tight mb-5">
+            <h2 className="font-display text-4xl md:text-6xl font-normal text-sage leading-tight mb-5">
               {about.title}
               <br />
               <em className="italic text-walnut font-light">{about.titleEm}</em>
