@@ -13,10 +13,10 @@ module.exports = {
         walnut:     '#2B6680',   // softened blue — headings and secondary actions
         tan:        '#EF8F9C',   // blush coral — accent
         forest:     '#123B57',   // deep blue — buttons and highlights
-        sage:       '#A8DEDE',   // pale aqua — borders and dividers
+        sage:       '#FFFDF0',   // warm cream — now used for borders and dividers
         mist:       '#D9EEF0',   // soft aqua — subtle surfaces
         wheat:      '#F2C66D',   // golden yellow — tags and hover accents
-        cream:      '#FFFDF0',   // warm cream — main background
+        cream:      '#A8DEDE',   // pale aqua — main background
         paper:      '#FFFFFF',   // white — card background
         ink:        '#183044',   // blue-black — body text
         'ink-muted':'#607786',   // slate blue — secondary text
