@@ -88,15 +88,13 @@ main .hero-image-block {
   position: relative;
   z-index: 5;
   isolation: isolate;
-  background: #FFFFFF;
 }
 
 main .hero-image-block::before {
   content: '';
   position: absolute;
-  inset: 0;
-  z-index: 0;
-  background: #FFFFFF;
+  z-index: 5;
+  isolation: isolate;
 }
 
 main .hero-image-block img {
@@ -112,7 +110,6 @@ main .hero-image-block img {
   position: relative;
   z-index: 2;
   isolation: isolate;
-  background: rgba(255, 253, 240, 0.86);
 }
 
 .hero-image-slideshow {
