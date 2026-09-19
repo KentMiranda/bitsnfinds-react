@@ -304,21 +304,21 @@ export default function HomePage() {
         </section>
       )}
 
-      <section id="about" className="relative px-6 py-24 bg-paper overflow-hidden">
+      <section id="about" className="relative px-6 py-24 bg-bark overflow-hidden">
         <LeafSVG variant="single"
           className="absolute right-0 top-1/2 -translate-y-1/2 w-56 opacity-[0.08] pointer-events-none" />
 
         <div className="max-w-4xl mx-auto text-center">
           <div className="max-w-3xl mx-auto">
-            <p className="text-forest text-xs font-medium tracking-[0.22em] uppercase mb-3">
+            <p className="text-wheat text-xs font-medium tracking-[0.22em] uppercase mb-3">
               {about.eyebrow}
             </p>
             <h2 className="font-display text-4xl md:text-6xl font-normal text-sage leading-tight mb-5">
               {about.title}
               <br />
-              <em className="italic text-walnut font-light">{about.titleEm}</em>
+              <em className="italic text-mist font-light">{about.titleEm}</em>
             </h2>
-            <p className="text-ink-muted text-sm md:text-base font-light leading-relaxed max-w-2xl mx-auto mb-10">
+            <p className="text-cream/70 text-sm md:text-base font-light leading-relaxed max-w-2xl mx-auto mb-10">
               {about.body}
             </p>
           </div>
