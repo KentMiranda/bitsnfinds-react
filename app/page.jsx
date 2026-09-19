@@ -269,29 +269,6 @@ export default function HomePage() {
                 </h3>
                 {event.description && <p className="text-cream/85 text-sm font-light leading-relaxed max-w-lg">{event.description}</p>}
               </div>
-              {eventImages.length > 1 && (
-                <>
-                  <button
-                    type="button"
-                    onClick={() => setEventImageIndex((current) => (current - 1 + eventImages.length) % eventImages.length)}
-                    className="event-nav-btn absolute left-4 top-1/2 -translate-y-1/2 md:left-6"
-                    aria-label="Previous event image"
-                  >
-                    ←
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setEventImageIndex((current) => (current + 1) % eventImages.length)}
-                    className="event-nav-btn absolute right-4 top-1/2 -translate-y-1/2 md:right-6"
-                    aria-label="Next event image"
-                  >
-                    →
-                  </button>
-                  <p className="absolute top-5 right-5 z-[4] text-cream/90 text-xs tracking-[0.2em] tabular-nums" aria-live="polite">
-                    {eventImageIndex + 1} / {eventImages.length}
-                  </p>
-                </>
-              )}
             </div> : (
                 <div className="min-h-[430px] md:min-h-[600px] bg-mist/40 flex items-center justify-center">
                   <div className="text-center">
@@ -300,6 +277,30 @@ export default function HomePage() {
                   </div>
                 </div>
               )}
+
+            {event && eventImages.length > 1 && (
+              <div className="flex items-center justify-center gap-6 mt-5">
+                <button
+                  type="button"
+                  onClick={() => setEventImageIndex((current) => (current - 1 + eventImages.length) % eventImages.length)}
+                  className="w-10 h-10 rounded-full border border-sage/50 flex items-center justify-center text-bark hover:bg-sage/20 transition-colors"
+                  aria-label="Previous event image"
+                >
+                  ←
+                </button>
+                <p className="text-xs tracking-[0.2em] tabular-nums text-ink-muted" aria-live="polite">
+                  {eventImageIndex + 1} / {eventImages.length}
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setEventImageIndex((current) => (current + 1) % eventImages.length)}
+                  className="w-10 h-10 rounded-full border border-sage/50 flex items-center justify-center text-bark hover:bg-sage/20 transition-colors"
+                  aria-label="Next event image"
+                >
+                  →
+                </button>
+              </div>
+            )}
           </div>
         </section>
       )}
