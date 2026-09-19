@@ -9,7 +9,24 @@ export default function OrderPage() {
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState('')
   const [form, setForm] = useState({ name: '', phone: '', email: '', facebookName: '', productType: '', details: '', referenceImage: null })
+  const [imagePreview, setImagePreview] = useState(null)
   const handleChange = (e) => setForm({ ...form, [e.target.name]: e.target.value })
+
+  const handleImageChange = (e) => {
+    const file = e.target.files?.[0] || null
+    setForm({ ...form, referenceImage: file })
+    if (file) {
+      const url = URL.createObjectURL(file)
+      setImagePreview(url)
+    } else {
+      setImagePreview(null)
+    }
+  }
+
+  const clearImage = () => {
+    setForm({ ...form, referenceImage: null })
+    setImagePreview(null)
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -70,7 +87,7 @@ export default function OrderPage() {
           <p className="text-wheat text-xs font-medium tracking-[0.22em] uppercase mb-2">
             {order.eyebrow}
           </p>
-          <h1 className="font-display text-4xl font-normal text-cream leading-snug mb-4">
+          <h1 className="font-display text-4xl font-normal text-sage leading-snug mb-4">
             {order.title}<br />
             <em className="italic text-mist font-light">{order.titleEm}</em>
           </h1>
@@ -135,9 +152,35 @@ export default function OrderPage() {
                 <label className="text-[0.65rem] font-medium tracking-[0.14em] uppercase text-cream/45">
                   Reference Image <span className="text-wheat">*</span>
                 </label>
-                <input name="referenceImage" type="file" required accept="image/jpeg,image/png,image/webp"
-                  onChange={(e) => setForm({ ...form, referenceImage: e.target.files?.[0] || null })}
-                  className="w-full text-sm text-cream/70 file:mr-3 file:rounded-sm file:border-0 file:bg-cream file:px-3 file:py-2 file:text-xs file:font-medium file:text-bark"/>
+
+                {imagePreview ? (
+                  <div className="flex items-center gap-3 bg-cream/5 border border-cream/10 rounded-sm p-3">
+                    <img
+                      src={imagePreview}
+                      alt="Reference preview"
+                      className="w-16 h-16 object-cover rounded-sm border border-cream/20 flex-shrink-0"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm text-cream/80 truncate">{form.referenceImage?.name}</p>
+                      <p className="text-xs text-cream/40">
+                        {form.referenceImage?.size ? `${(form.referenceImage.size / 1024 / 1024).toFixed(1)} MB` : ''}
+                      </p>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={clearImage}
+                      className="flex-shrink-0 min-w-11 min-h-11 flex items-center justify-center
+                                 text-cream/60 hover:text-wheat transition-colors text-sm"
+                      aria-label="Remove selected image"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ) : (
+                  <input name="referenceImage" type="file" required accept="image/jpeg,image/png,image/webp"
+                    onChange={handleImageChange}
+                    className="w-full text-sm text-cream/70 file:mr-3 file:rounded-sm file:border-0 file:bg-cream file:px-3 file:py-2 file:text-xs file:font-medium file:text-bark"/>
+                )}
                 <p className="text-xs text-cream/40">JPG, PNG, or WebP up to 5 MB.</p>
               </div>
               <div className="flex flex-col gap-1.5">
