@@ -19,6 +19,7 @@ export default function AdminEventsPage() {
   const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [imageFiles, setImageFiles] = useState([null, null, null])
+  const [error, setError] = useState('')
 
   useEffect(() => {
     if (!isLoggedIn()) router.push('/admin/login')
@@ -49,11 +50,13 @@ export default function AdminEventsPage() {
       is_active: event.is_active,
     })
     setImageFiles([null, null, null])
+    setError('')
     setShowForm(true)
   }
 
   async function saveEvent() {
     setSaving(true)
+    setError('')
     try {
       const body = new FormData()
       Object.entries(form).forEach(([key, value]) => body.append(key, value))
@@ -77,7 +80,16 @@ export default function AdminEventsPage() {
         setImageFiles([null, null, null])
         setEditingId(null)
         setShowForm(false)
+      } else {
+        const data = await response.json().catch(() => ({}))
+        const message = data.errors
+          ? Object.values(data.errors).flat().filter(Boolean).join(' ')
+          : (data.error || 'Could not save this event. Please check the fields and try again.')
+        setError(message)
       }
+    } catch (err) {
+      console.error('Failed to save event:', err)
+      setError('Could not reach the server. Please try again.')
     } finally {
       setSaving(false)
     }
@@ -85,11 +97,20 @@ export default function AdminEventsPage() {
 
   async function deleteEvent(id) {
     if (!confirm('Delete this event?')) return
-    await fetch(`${CONFIG.apiBaseUrl}/api/events/${id}/`, {
-      method: 'DELETE',
-      headers: { Authorization: `Token ${getToken()}` }
-    })
-    fetchEvents()
+    try {
+      const response = await fetch(`${CONFIG.apiBaseUrl}/api/events/${id}/`, {
+        method: 'DELETE',
+        headers: { Authorization: `Token ${getToken()}` }
+      })
+      if (response.ok) {
+        fetchEvents()
+      } else {
+        alert('Could not delete this event. Please try again.')
+      }
+    } catch (err) {
+      console.error('Failed to delete event:', err)
+      alert('Could not reach the server. Please try again.')
+    }
   }
 
   const inputClass = 'w-full border border-mist rounded-sm px-3 py-2.5 text-sm text-ink bg-cream focus:outline-none focus:border-sage'
@@ -103,7 +124,7 @@ export default function AdminEventsPage() {
             <h1 className="font-display text-2xl text-bark">Events</h1>
             <p className="text-ink-muted text-sm font-light">Manage events shown on the landing page.</p>
           </div>
-          <button onClick={() => { setForm(EMPTY_FORM); setImageFiles([null, null, null]); setEditingId(null); setShowForm(true) }}
+          <button onClick={() => { setForm(EMPTY_FORM); setImageFiles([null, null, null]); setEditingId(null); setError(''); setShowForm(true) }}
             className="bg-bark text-cream text-xs font-medium tracking-widest uppercase px-5 py-2.5 rounded-sm hover:bg-walnut">
             + Add event
           </button>
@@ -155,6 +176,7 @@ export default function AdminEventsPage() {
                 <label><input type="checkbox" checked={form.is_active}
                   onChange={(e) => setForm({ ...form, is_active: e.target.checked })} /> <span className="ml-2">Show on landing page</span></label>
               </div>
+              {error && <p className="text-sm text-red-600 mt-4">{error}</p>}
               <div className="flex gap-3 mt-5">
                 <button onClick={saveEvent} disabled={saving || !form.title || !form.date}
                   className="bg-bark text-cream text-xs uppercase tracking-widest px-5 py-2.5 rounded-sm disabled:opacity-50">
