@@ -219,16 +219,28 @@ export default function HomePage() {
                   ))}
                 </div>
               </div>
-              {events.length > 1 && (
-                <div className="flex gap-2" aria-label="Event slides">
-                  {events.map((item, index) => (
-                    <button
-                      key={item.id}
-                      onClick={() => setEventIndex(index)}
-                      aria-label={`Show event ${index + 1}`}
-                      className={`w-2 h-2 rounded-full transition-colors ${index === eventIndex ? 'bg-forest' : 'bg-sage/40'}`}
-                    />
-                  ))}
+
+              {visibleEvents.length > 1 && (
+                <div className="flex items-center gap-4 flex-shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => setEventIndex((current) => (current - 1 + visibleEvents.length) % visibleEvents.length)}
+                    className="w-10 h-10 rounded-full border border-sage/50 flex items-center justify-center text-bark hover:bg-sage/20 transition-colors"
+                    aria-label="Previous event"
+                  >
+                    ←
+                  </button>
+                  <span className="text-xs tracking-[0.2em] tabular-nums text-ink-muted" aria-live="polite">
+                    {eventIndex + 1} / {visibleEvents.length}
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => setEventIndex((current) => (current + 1) % visibleEvents.length)}
+                    className="w-10 h-10 rounded-full border border-sage/50 flex items-center justify-center text-bark hover:bg-sage/20 transition-colors"
+                    aria-label="Next event"
+                  >
+                    →
+                  </button>
                 </div>
               )}
             </div>
@@ -238,14 +250,14 @@ export default function HomePage() {
               className="group relative min-h-[430px] md:min-h-[600px] overflow-hidden event-slide focus-within:ring-2 focus-within:ring-forest"
               tabIndex="0"
               onKeyDown={(keyboardEvent) => {
-                if (eventImages.length < 2) return
+                if (visibleEvents.length < 2) return
                 if (keyboardEvent.key === 'ArrowLeft') {
                   keyboardEvent.preventDefault()
-                  setEventImageIndex((current) => (current - 1 + eventImages.length) % eventImages.length)
+                  setEventIndex((current) => (current - 1 + visibleEvents.length) % visibleEvents.length)
                 }
                 if (keyboardEvent.key === 'ArrowRight') {
                   keyboardEvent.preventDefault()
-                  setEventImageIndex((current) => (current + 1) % eventImages.length)
+                  setEventIndex((current) => (current + 1) % visibleEvents.length)
                 }
               }}
             >
@@ -257,6 +269,23 @@ export default function HomePage() {
                 </div>
               )}
               <div className="event-overlay absolute inset-0 pointer-events-none" />
+
+              {eventImages.length > 1 && (
+                <div className="absolute top-5 left-1/2 -translate-x-1/2 flex gap-2 z-[4]" aria-label="Event photos">
+                  {eventImages.map((_, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      onClick={() => setEventImageIndex(index)}
+                      aria-label={`Show photo ${index + 1}`}
+                      className={`w-2.5 h-2.5 rounded-full transition-colors ${
+                        index === eventImageIndex ? 'bg-cream' : 'bg-cream/40 hover:bg-cream/70'
+                      }`}
+                    />
+                  ))}
+                </div>
+              )}
+
               <div className="event-info absolute inset-x-0 bottom-0 p-7 md:p-12 text-cream">
                 <p className="text-sage text-xs font-medium tracking-[0.22em] uppercase mb-2">
                   {event.is_past ? 'Past event' : 'Upcoming event'}
@@ -277,30 +306,6 @@ export default function HomePage() {
                   </div>
                 </div>
               )}
-
-            {event && eventImages.length > 1 && (
-              <div className="flex items-center justify-center gap-6 mt-5">
-                <button
-                  type="button"
-                  onClick={() => setEventImageIndex((current) => (current - 1 + eventImages.length) % eventImages.length)}
-                  className="w-10 h-10 rounded-full border border-sage/50 flex items-center justify-center text-bark hover:bg-sage/20 transition-colors"
-                  aria-label="Previous event image"
-                >
-                  ←
-                </button>
-                <p className="text-xs tracking-[0.2em] tabular-nums text-ink-muted" aria-live="polite">
-                  {eventImageIndex + 1} / {eventImages.length}
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setEventImageIndex((current) => (current + 1) % eventImages.length)}
-                  className="w-10 h-10 rounded-full border border-sage/50 flex items-center justify-center text-bark hover:bg-sage/20 transition-colors"
-                  aria-label="Next event image"
-                >
-                  →
-                </button>
-              </div>
-            )}
           </div>
         </section>
       )}
