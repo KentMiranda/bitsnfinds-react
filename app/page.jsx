@@ -8,11 +8,8 @@ import { CONFIG } from '@/lib/config'
 export default function HomePage() {
   const { hero, about, services } = CONFIG
   const [events, setEvents] = useState([])
-  const [eventIndex, setEventIndex] = useState(0)
   const [eventsLoading, setEventsLoading] = useState(true)
   const [heroImageIndex, setHeroImageIndex] = useState(0)
-  const [eventImageIndex, setEventImageIndex] = useState(0)
-  const [eventFilter, setEventFilter] = useState('all')
 
   useEffect(() => {
     const cacheKey = 'bitsnfinds-events'
@@ -55,24 +52,6 @@ export default function HomePage() {
     }
   }, [])
 
-  const visibleEvents = eventFilter === 'all'
-    ? events
-    : events.filter((item) => eventFilter === 'past' ? item.is_past : !item.is_past)
-  const event = visibleEvents[eventIndex]
-  const eventImages = event?.image_urls?.length
-    ? event.image_urls
-    : event?.image_url
-      ? [event.image_url]
-      : []
-
-  useEffect(() => {
-    if (visibleEvents.length > 0 && eventIndex >= visibleEvents.length) setEventIndex(0)
-  }, [visibleEvents.length, eventIndex])
-
-  useEffect(() => {
-    setEventImageIndex(0)
-  }, [event?.id])
-
   const heroImages = [
     { src: '/images/products/1.jpg', alt: 'Bits & Finds engraved creation' },
     { src: '/images/products/2.jpg', alt: 'Bits & Finds personalized piece' },
@@ -81,12 +60,6 @@ export default function HomePage() {
   ]
   const heroImage = heroImages[heroImageIndex]
   const upcomingCount = events.filter((item) => !item.is_past).length
-  const pastCount = events.filter((item) => item.is_past).length
-  const formatDate = (value) => value
-    ? new Date(`${value}T00:00:00`).toLocaleDateString(undefined, {
-        month: 'long', day: 'numeric', year: 'numeric'
-      })
-    : ''
 
   return (
     <>
@@ -191,121 +164,31 @@ export default function HomePage() {
         </div>
       </section>
 
-      {(event || eventsLoading) && (
-        <section id="events" className="relative px-6 py-24 bg-paper overflow-hidden">
-          <div className="max-w-6xl mx-auto">
-            <div className="flex items-end justify-between gap-6 mb-8">
-              <div>
-                <p className="text-forest text-xs font-medium tracking-[0.25em] uppercase mb-2">
-                  Find something special
+      {(events.length > 0 || eventsLoading) && (
+        <section id="events" className="relative px-6 py-20 bg-paper overflow-hidden">
+          <div className="max-w-4xl mx-auto text-center">
+            <p className="text-forest text-xs font-medium tracking-[0.25em] uppercase mb-2">
+              Find something special
+            </p>
+            <h2 className="font-display text-3xl md:text-5xl text-bark mb-5">
+              Where to find us
+            </h2>
+            {eventsLoading ? (
+              <p className="text-ink-muted text-sm font-light">Loading events...</p>
+            ) : (
+              <>
+                <p className="text-ink-muted text-sm md:text-base font-light leading-relaxed max-w-xl mx-auto mb-8">
+                  {upcomingCount > 0
+                    ? `We have ${upcomingCount} upcoming event${upcomingCount !== 1 ? 's' : ''} — come say hello.`
+                    : 'Take a look back at where we\'ve been.'}
                 </p>
-                <h2 className="font-display text-3xl md:text-5xl text-bark">
-                  Where to find us
-                </h2>
-                <div className="flex flex-wrap gap-2 mt-4 text-[0.65rem] tracking-[0.18em] uppercase">
-                  {[
-                    ['all', 'All events', events.length],
-                    ['upcoming', 'Upcoming', upcomingCount],
-                    ['past', 'Past', pastCount],
-                  ].map(([value, label, count]) => (
-                    <button
-                      key={value}
-                      type="button"
-                      onClick={() => { setEventFilter(value); setEventIndex(0) }}
-                      className={`event-filter ${eventFilter === value ? 'event-filter-active' : ''}`}
-                    >
-                      {label} <span>{count}</span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {visibleEvents.length > 1 && (
-                <div className="flex items-center gap-4 flex-shrink-0">
-                  <button
-                    type="button"
-                    onClick={() => setEventIndex((current) => (current - 1 + visibleEvents.length) % visibleEvents.length)}
-                    className="w-10 h-10 rounded-full border border-sage/50 flex items-center justify-center text-bark hover:bg-sage/20 transition-colors"
-                    aria-label="Previous event"
-                  >
-                    ←
-                  </button>
-                  <span className="text-xs tracking-[0.2em] tabular-nums text-ink-muted" aria-live="polite">
-                    {eventIndex + 1} / {visibleEvents.length}
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => setEventIndex((current) => (current + 1) % visibleEvents.length)}
-                    className="w-10 h-10 rounded-full border border-sage/50 flex items-center justify-center text-bark hover:bg-sage/20 transition-colors"
-                    aria-label="Next event"
-                  >
-                    →
-                  </button>
-                </div>
-              )}
-            </div>
-
-            {event ? <div
-              key={event.id}
-              className="group relative min-h-[430px] md:min-h-[600px] overflow-hidden event-slide focus-within:ring-2 focus-within:ring-forest"
-              tabIndex="0"
-              onKeyDown={(keyboardEvent) => {
-                if (visibleEvents.length < 2) return
-                if (keyboardEvent.key === 'ArrowLeft') {
-                  keyboardEvent.preventDefault()
-                  setEventIndex((current) => (current - 1 + visibleEvents.length) % visibleEvents.length)
-                }
-                if (keyboardEvent.key === 'ArrowRight') {
-                  keyboardEvent.preventDefault()
-                  setEventIndex((current) => (current + 1) % visibleEvents.length)
-                }
-              }}
-            >
-              {eventImages.length > 0 ? (
-                <img key={eventImages[eventImageIndex]} src={eventImages[eventImageIndex]} alt="" loading="lazy" className="absolute inset-0 w-full h-full object-contain bg-mist" />
-              ) : (
-                <div className="absolute inset-0 bg-mist flex items-center justify-center">
-                  <LeafSVG variant="single" className="w-56 opacity-25" />
-                </div>
-              )}
-              <div className="event-overlay absolute inset-0 pointer-events-none" />
-
-              {eventImages.length > 1 && (
-                <div className="absolute top-5 left-1/2 -translate-x-1/2 flex gap-2 z-[4]" aria-label="Event photos">
-                  {eventImages.map((_, index) => (
-                    <button
-                      key={index}
-                      type="button"
-                      onClick={() => setEventImageIndex(index)}
-                      aria-label={`Show photo ${index + 1}`}
-                      className={`w-2.5 h-2.5 rounded-full transition-colors ${
-                        index === eventImageIndex ? 'bg-cream' : 'bg-cream/40 hover:bg-cream/70'
-                      }`}
-                    />
-                  ))}
-                </div>
-              )}
-
-              <div className="event-info absolute inset-x-0 bottom-0 p-7 md:p-12 text-cream">
-                <p className="text-sage text-xs font-medium tracking-[0.22em] uppercase mb-2">
-                  {event.is_past ? 'Past event' : 'Upcoming event'}
-                </p>
-                <p className="text-cream/75 text-[0.65rem] tracking-[0.2em] uppercase mb-3">
-                  {formatDate(event.date)}{event.location ? ` · ${event.location}` : ''}
-                </p>
-                <h3 className="font-display text-4xl md:text-6xl leading-[1.05] mb-4 text-sage">
-                  {event.title}
-                </h3>
-                {event.description && <p className="text-cream/85 text-sm font-light leading-relaxed max-w-lg">{event.description}</p>}
-              </div>
-            </div> : (
-                <div className="min-h-[430px] md:min-h-[600px] bg-mist/40 flex items-center justify-center">
-                  <div className="text-center">
-                    <div className="w-8 h-8 border-2 border-sage/40 border-t-forest rounded-full animate-spin mx-auto mb-4" />
-                    <p className="text-xs tracking-[0.2em] uppercase text-ink-muted">Loading events</p>
-                  </div>
-                </div>
-              )}
+                <Link href="/events"
+                  className="inline-block bg-bark text-cream text-xs font-medium tracking-widest
+                             uppercase px-8 py-3 rounded-sm hover:bg-walnut transition-all hover:-translate-y-0.5">
+                  See all events →
+                </Link>
+              </>
+            )}
           </div>
         </section>
       )}
