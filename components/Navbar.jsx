@@ -12,13 +12,13 @@ export default function Navbar() {
     <nav className="sticky top-0 z-50 flex items-center justify-between
                     px-8 py-4 bg-cream/95 backdrop-blur-md
                     border-b border-mist">
-      <Link href="/" className="flex items-center gap-2 font-display text-xl font-bold text-bark">
+      <Link href="/" className="flex items-center gap-3 font-display text-xl font-bold text-bark">
         <Image
           src="/images/favicon.png"
           alt="Bits & Finds logo"
-          width={32}
-          height={32}
-          className="rounded-full object-cover"
+          width={48}
+          height={48}
+          className="rounded-full object-cover border-2 border-bark/10 shadow-sm"
         />
         Bits <span className="text-forest">&</span> Finds
       </Link>
