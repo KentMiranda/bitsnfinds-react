@@ -7,10 +7,21 @@ import AdminSidebar from '@/components/admin/AdminSidebar'
 import { CONFIG } from '@/lib/config'
 
 const EMPTY_FORM = {
-  name: '', description: '', price: '', tag: '', emoji: '', image_url: '', is_active: true
+  name: '', description: '', price: '', tag: '', emoji: '',
+  category: 'General', customCategory: '',
+  image_url: '', is_active: true
 }
 
 const MAX_IMAGES = 5
+
+const CATEGORY_OPTIONS = [
+  'General',
+  'Christmas',
+  'Halloween',
+  'Fall / Autumn',
+  'Winter',
+  'Other',
+]
 
 export default function AdminProductsPage() {
   const router = useRouter()
@@ -23,9 +34,8 @@ export default function AdminProductsPage() {
   const [saving,         setSaving]         = useState(false)
   const [saveError,      setSaveError]      = useState('')
 
-  // New: multi-image state
-  const [newImageFiles,   setNewImageFiles]   = useState([])   // File[] not yet uploaded
-  const [existingImages,  setExistingImages]  = useState([])   // showcase_images from server (edit mode)
+  const [newImageFiles,   setNewImageFiles]   = useState([])
+  const [existingImages,  setExistingImages]  = useState([])
   const [imageError,      setImageError]      = useState('')
   const [uploadingImages, setUploadingImages] = useState(false)
 
@@ -60,12 +70,16 @@ export default function AdminProductsPage() {
   }
 
   function openEditForm(product) {
+    const savedCategory = product.category || 'General'
+    const isKnownCategory = CATEGORY_OPTIONS.includes(savedCategory)
     setForm({
       name:        product.name,
       description: product.description,
       price:       product.price,
       tag:         product.tag        || '',
       emoji:       product.emoji      || '',
+      category:    isKnownCategory ? savedCategory : 'Other',
+      customCategory: isKnownCategory ? '' : savedCategory,
       image_url:   product.image_url  || '',
       is_active:   product.is_active,
     })
@@ -79,7 +93,7 @@ export default function AdminProductsPage() {
 
   function handleImagePick(e) {
     const picked = Array.from(e.target.files || [])
-    e.target.value = '' // allow re-picking the same file later
+    e.target.value = ''
     if (picked.length === 0) return
 
     const remainingSlots = MAX_IMAGES - existingImages.length - newImageFiles.length
@@ -161,8 +175,18 @@ export default function AdminProductsPage() {
         : `${CONFIG.apiBaseUrl}/api/products/`
       const method = editingId ? 'PUT' : 'POST'
 
+      const finalCategory = form.category === 'Other'
+        ? (form.customCategory.trim() || 'Other')
+        : form.category
+
       const body = new FormData()
-      Object.entries(form).forEach(([key, value]) => body.append(key, value))
+      Object.entries(form).forEach(([key, value]) => {
+        if (key === 'category') {
+          body.append('category', finalCategory)
+        } else if (key !== 'customCategory') {
+          body.append(key, value)
+        }
+      })
 
       const res = await fetch(url, {
         method,
@@ -186,7 +210,6 @@ export default function AdminProductsPage() {
           setNewImageFiles([])
           setExistingImages([])
         } else {
-          // Keep the form open so the admin can see the image error and retry
           setNewImageFiles([])
         }
       } else {
@@ -275,7 +298,25 @@ export default function AdminProductsPage() {
                 </div>
               </div>
 
-              {/* Multi-image upload section */}
+              <div className="flex flex-col gap-1.5 mb-4">
+                <label className="text-[0.65rem] font-medium tracking-widest uppercase text-ink-muted">
+                  Category
+                </label>
+                <select value={form.category}
+                  onChange={(e) => setForm({ ...form, category: e.target.value })}
+                  className={inputClass}>
+                  {CATEGORY_OPTIONS.map((option) => (
+                    <option key={option} value={option}>{option}</option>
+                  ))}
+                </select>
+                {form.category === 'Other' && (
+                  <input type="text" placeholder="Specify the category (e.g. Keychains, Boards)"
+                    value={form.customCategory}
+                    onChange={(e) => setForm({ ...form, customCategory: e.target.value })}
+                    className={`${inputClass} mt-1`}/>
+                )}
+              </div>
+
               <div className="flex flex-col gap-1.5 mb-4">
                 <label className="text-[0.65rem] font-medium tracking-widest uppercase text-ink-muted">
                   Product images ({totalImageCount}/{MAX_IMAGES})
@@ -448,9 +489,17 @@ export default function AdminProductsPage() {
                   </div>
 
                   <div className="p-4">
-                    <h3 className="font-display text-base font-normal text-bark mb-0.5">
-                      {product.name}
-                    </h3>
+                    <div className="flex items-center gap-2 mb-1">
+                      <h3 className="font-display text-base font-normal text-bark">
+                        {product.name}
+                      </h3>
+                      {product.category && (
+                        <span className="text-[0.6rem] uppercase tracking-wider text-forest
+                                         border border-mist rounded-full px-2 py-0.5 flex-shrink-0">
+                          {product.category}
+                        </span>
+                      )}
+                    </div>
                     <p className="text-xs text-ink-muted font-light leading-relaxed mb-3 line-clamp-2">
                       {product.description}
                     </p>
