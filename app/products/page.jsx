@@ -75,7 +75,7 @@ export default function ProductsPage() {
   const activeLabel = filterOptions.find((opt) => opt.value === activeFilter)?.label || 'All products'
 
   return (
-    <section className="relative min-h-[60vh] overflow-hidden bg-cream px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
+    <section className="relative px-6 py-24 bg-cream overflow-hidden min-h-screen">
       <LeafSVG variant="sprig"
         className="absolute top-0 left-0 w-44 opacity-[0.08] pointer-events-none" />
       <SectionHeader
@@ -85,7 +85,7 @@ export default function ProductsPage() {
         subtitle={gallery.subtitle}
         centered />
 
-      <div className="mb-10 flex justify-center sm:mb-12">
+      <div className="flex justify-center mb-12">
         <div ref={dropdownRef} className="relative">
           <button
             type="button"
@@ -133,11 +133,11 @@ export default function ProductsPage() {
       </div>
 
       {loading ? (
-        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-10 max-w-6xl mx-auto">
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="animate-pulse">
-              <div className="aspect-[3/4] overflow-hidden rounded-sm bg-mist" />
-              <div className="pt-3">
+            <div key={i} className="bg-paper rounded-2xl overflow-hidden shadow-sm animate-pulse">
+              <div className="aspect-[4/3] bg-mist" />
+              <div className="p-5">
                 <div className="h-4 bg-mist rounded w-2/3 mb-3" />
                 <div className="h-3 bg-mist rounded w-full mb-2" />
                 <div className="h-3 bg-mist rounded w-4/5" />
@@ -150,7 +150,7 @@ export default function ProductsPage() {
           No products in this category yet.
         </p>
       ) : (
-        <div className="mx-auto grid max-w-6xl grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-10 max-w-6xl mx-auto">
           {visibleProducts.map((product, index) => (
             <div key={product.slug} className="relative">
               {activeFilter === 'Others' && (
@@ -165,8 +165,8 @@ export default function ProductsPage() {
         </div>
       )}
 
-      <div className="mx-auto mt-12 max-w-lg text-center sm:mt-16">
-        <p className="mb-4 text-sm font-light leading-relaxed text-ink-muted">
+      <div className="mt-16 text-center max-w-lg mx-auto">
+        <p className="text-ink-muted text-sm font-light leading-relaxed mb-5">
           {gallery.footerNote}
         </p>
         <Link href={gallery.orderLink.href}

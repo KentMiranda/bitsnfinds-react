@@ -9,14 +9,14 @@ export default function FAQItem({ question, answer }) {
     <li className="border-b border-mist">
       <button
         className="w-full text-left py-5 flex justify-between items-center gap-6
-                   font-display text-lg font-normal text-bark
-                   hover:text-walnut transition-colors"
+                   font-display text-lg font-normal text-moss
+                   hover:text-fern transition-colors"
         onClick={() => setOpen(!open)}
       >
         <span>{question}</span>
-        <span className={`text-walnut text-xl leading-none flex-shrink-0
+        <span className={`text-sage text-xl leading-none flex-shrink-0
                           transition-transform duration-300
-                          ${open ? 'rotate-45 text-bark' : ''}`}>
+                          ${open ? 'rotate-45 text-fern' : ''}`}>
           +
         </span>
       </button>
