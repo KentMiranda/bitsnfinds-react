@@ -41,7 +41,7 @@ export default function ProductDetailPage() {
 
   if (loading) {
     return (
-      <section className="px-6 py-24 bg-cream min-h-screen">
+      <section className="min-h-[60vh] bg-cream px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
         <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-10 animate-pulse">
           <div className="aspect-[3/4] bg-mist rounded-md" />
           <div className="pt-4">
@@ -57,7 +57,7 @@ export default function ProductDetailPage() {
 
   if (notFound || !product) {
     return (
-      <section className="px-6 py-24 bg-cream min-h-screen text-center">
+      <section className="min-h-[60vh] bg-cream px-4 py-12 text-center sm:px-6 sm:py-16 lg:px-8 lg:py-20">
         <p className="text-ink-muted text-sm font-light mb-4">We couldn't find that product.</p>
         <Link href="/products" className="text-forest text-xs font-medium tracking-wider uppercase hover:text-bark">
           ← Back to the gallery
@@ -70,18 +70,18 @@ export default function ProductDetailPage() {
   const hasMultiple = photos.length > 1
 
   return (
-    <section className="relative px-6 py-16 md:py-24 bg-cream overflow-hidden min-h-screen">
+    <section className="relative min-h-[60vh] overflow-hidden bg-cream px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
       <LeafSVG variant="sprig" className="absolute top-0 left-0 w-44 opacity-[0.08] pointer-events-none" />
 
-      <div className="max-w-5xl mx-auto">
+      <div className="mx-auto max-w-5xl">
         <button
           onClick={() => router.back()}
-          className="text-xs tracking-widest uppercase text-ink-muted hover:text-forest transition-colors mb-8 inline-flex items-center gap-1"
+          className="mb-6 inline-flex items-center gap-1 text-xs uppercase tracking-widest text-ink-muted transition-colors hover:text-forest sm:mb-8"
         >
           ← Back
         </button>
 
-        <div className="grid md:grid-cols-2 gap-10 md:gap-14">
+        <div className="grid gap-8 md:grid-cols-2 md:gap-12">
           <div>
             <div className="relative aspect-[3/4] bg-mist rounded-md overflow-hidden mb-4">
               {photos.length > 0 ? (
@@ -138,7 +138,7 @@ export default function ProductDetailPage() {
             )}
           </div>
 
-          <div className="pt-2">
+          <div className="min-w-0 md:pt-2">
             {product.category && product.category !== 'General' && (
               <span className="text-[0.65rem] tracking-widest uppercase text-forest border border-mist rounded-full px-3 py-1">
                 {product.category}
@@ -148,9 +148,9 @@ export default function ProductDetailPage() {
               {product.name}
             </h1>
             {product.price && (
-              <p className="text-wheat font-medium text-lg mb-6">{product.price}</p>
+              <p className="mb-4 text-lg font-medium text-walnut">{product.price}</p>
             )}
-            <p className="text-ink-muted text-sm font-light leading-relaxed mb-8">
+            <p className="mb-6 text-sm font-light leading-relaxed text-ink-muted">
               {product.desc}
             </p>
 
