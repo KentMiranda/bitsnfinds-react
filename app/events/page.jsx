@@ -90,7 +90,7 @@ export default function EventsPage() {
   }
 
   return (
-    <section className="relative px-6 py-24 bg-cream overflow-hidden min-h-screen">
+    <section className="relative min-h-[60vh] overflow-hidden bg-cream px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
       <LeafSVG variant="sprig"
         className="absolute top-0 left-0 w-44 opacity-[0.08] pointer-events-none" />
 
@@ -102,7 +102,7 @@ export default function EventsPage() {
         centered
       />
 
-      <div className="max-w-3xl mx-auto mb-8">
+      <div className="mx-auto mb-6 max-w-3xl sm:mb-8">
         <div className="relative">
           <span className="absolute left-0 top-1/2 -translate-y-1/2 text-ink-muted text-sm">🔍</span>
           <input
@@ -117,7 +117,7 @@ export default function EventsPage() {
         </div>
       </div>
 
-      <div className="flex justify-center gap-2 mb-14 text-[0.65rem] tracking-[0.18em] uppercase">
+      <div className="mb-10 flex flex-wrap justify-center gap-2 text-[0.65rem] uppercase tracking-[0.16em] sm:mb-12">
         {[
           ['all', 'All events', events.length],
           ['upcoming', 'Upcoming', upcomingCount],
@@ -134,14 +134,14 @@ export default function EventsPage() {
         ))}
       </div>
 
-      <div className="max-w-4xl mx-auto">
+      <div className="mx-auto max-w-5xl">
         {loading ? (
-          <p className="text-center text-ink-muted text-sm font-light py-16">Loading events...</p>
+          <p className="py-12 text-center text-sm font-light text-ink-muted sm:py-16">Loading events...</p>
         ) : filtered.length === 0 ? (
-          <p className="text-center text-ink-muted text-sm font-light py-16">No events found.</p>
+          <p className="py-12 text-center text-sm font-light text-ink-muted sm:py-16">No events found.</p>
         ) : (
           Object.entries(groupedByMonth).map(([monthLabel, monthEvents]) => (
-            <div key={monthLabel} className="mb-16">
+            <div key={monthLabel} className="mb-12 sm:mb-14">
               <div className="inline-block bg-bark text-cream text-xs font-medium tracking-[0.18em] uppercase px-4 py-2 rounded-sm mb-2">
                 {monthLabel}
               </div>
@@ -160,8 +160,7 @@ export default function EventsPage() {
                     key={event.id}
                     ref={registerCard}
                     data-event-id={event.id}
-                    className={`group flex flex-col md:flex-row items-start gap-6 py-8 border-b border-mist
-                               transition-all duration-700 ease-out
+                    className={`group flex flex-col items-start gap-4 border-b border-mist py-6 transition-all duration-700 ease-out sm:gap-6 sm:py-7 md:flex-row
                                ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'}`}
                     style={{ transitionDelay: `${Math.min(i, 6) * 60}ms` }}
                   >
@@ -174,8 +173,7 @@ export default function EventsPage() {
                       type="button"
                       onClick={() => images.length > 0 && setLightbox({ images, index: activeIndex, title: event.title })}
                       disabled={images.length === 0}
-                      className="relative w-full md:w-72 h-56 md:h-52 flex-shrink-0 rounded-md overflow-hidden bg-mist order-2
-                                 disabled:cursor-default cursor-zoom-in"
+                      className="relative order-2 h-56 w-full flex-shrink-0 cursor-zoom-in overflow-hidden rounded-md bg-mist disabled:cursor-default sm:h-64 md:h-52 md:w-72"
                     >
                       {images.length > 0 ? (
                         <img
@@ -231,7 +229,7 @@ export default function EventsPage() {
                     </button>
 
                     <div className="flex-1 min-w-0 order-3">
-                      <h3 className="font-display text-2xl md:text-3xl text-bark leading-tight mb-2">
+                      <h3 className="mb-2 font-display text-2xl leading-tight text-bark md:text-3xl">
                         {event.title}
                       </h3>
                       {event.location && (
@@ -240,7 +238,7 @@ export default function EventsPage() {
                         </p>
                       )}
                       {event.description && (
-                        <p className="text-sm text-ink-muted font-light leading-relaxed mb-4 max-w-md">
+                        <p className="mb-4 max-w-xl text-sm font-light leading-relaxed text-ink-muted">
                           {event.description}
                         </p>
                       )}

@@ -16,12 +16,12 @@ export default function RootLayout({ children }) {
         <link rel="apple-touch-icon" href="/images/favicon.png" />
         <meta name="theme-color" content="#123B57" />
       </head>
-      <body className="bg-parchment text-ink font-body antialiased">
+      <body className="flex min-h-screen flex-col bg-parchment font-body text-ink antialiased">
         <div className="brand-watermark" aria-hidden="true">
           <img src="/images/favicon.png" alt="" />
         </div>
         {!isAdmin && <Navbar />}
-        <main>{children}</main>
+        <main className="flex w-full flex-1 flex-col">{children}</main>
         {!isAdmin && <Footer />}
       </body>
     </html>

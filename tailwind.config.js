@@ -8,18 +8,18 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // ── Logo-derived palette ──────────────────────────────
-        bark:       '#123B57',   // deep blue — text, nav, primary actions
-        walnut:     '#2B6680',   // softened blue — headings and secondary actions
-        tan:        '#EF8F9C',   // blush coral — accent
-        forest:     '#123B57',   // deep blue — buttons and highlights
-        sage:       '#FFFDF0',   // warm cream — now used for borders and dividers
-        mist:       '#D9EEF0',   // soft aqua — subtle surfaces
-        wheat:      '#F2C66D',   // golden yellow — tags and hover accents
-        cream:      '#A8DEDE',   // pale aqua — main background
-        paper:      '#FFFFFF',   // white — card background
-        ink:        '#183044',   // blue-black — body text
-        'ink-muted':'#607786',   // slate blue — secondary text
+        bark:       '#123B57',
+        walnut:     '#2B6680',
+        tan:        '#EF8F9C',
+        forest:     '#123B57',
+        sage:       '#A8DDE0',
+        mist:       '#D9EEF0',
+        wheat:      '#F2C66D',
+        cream:      '#FFFDF0',
+        paper:      '#FFFFFF',
+        parchment:  '#F7F4ED',
+        ink:        '#183044',
+        'ink-muted':'#607786',
       },
       fontFamily: {
         display: ['Playfair Display', 'Georgia', 'serif'],

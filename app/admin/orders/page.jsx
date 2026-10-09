@@ -7,13 +7,13 @@ import AdminSidebar from '@/components/admin/AdminSidebar'
 import { CONFIG } from '@/lib/config'
 
 const STATUS_STYLES = {
-  received:  'bg-red-50 text-red-600',
-  confirmed: 'bg-amber-50 text-amber-600',
-  engraving: 'bg-yellow-50 text-yellow-600',
-  quality:   'bg-blue-50 text-blue-600',
-  ready:     'bg-purple-50 text-purple-600',
-  shipped:   'bg-teal-50 text-teal-600',
-  delivered: 'bg-green-50 text-green-700',
+  received:  'bg-tan/20 text-bark',
+  confirmed: 'bg-wheat/35 text-bark',
+  engraving: 'bg-mist text-bark',
+  quality:   'bg-walnut/15 text-walnut',
+  ready:     'bg-sage/50 text-bark',
+  shipped:   'bg-walnut/20 text-bark',
+  delivered: 'bg-forest/10 text-forest',
 }
 
 const STATUS_LABELS = {
@@ -27,13 +27,13 @@ const STATUS_LABELS = {
 }
 
 const DOT_COLORS = {
-  received:  'bg-red-400',
-  confirmed: 'bg-amber-400',
-  engraving: 'bg-yellow-400',
-  quality:   'bg-blue-400',
-  ready:     'bg-purple-400',
-  shipped:   'bg-teal-400',
-  delivered: 'bg-green-500',
+  received:  'bg-tan',
+  confirmed: 'bg-wheat',
+  engraving: 'bg-mist',
+  quality:   'bg-walnut',
+  ready:     'bg-sage',
+  shipped:   'bg-walnut',
+  delivered: 'bg-forest',
 }
 
 const TABS = ['All', 'Unread', 'Active', 'Archives']
@@ -140,9 +140,9 @@ export default function AdminOrdersPage() {
     <div className="min-h-screen bg-cream flex">
       <AdminSidebar />
 
-      <div className="flex-1 flex overflow-hidden">
-        <div className={`flex flex-col border-r border-mist bg-paper ${selectedOrder ? 'w-80 flex-shrink-0' : 'flex-1'}`}>
-          <div className="px-5 py-4 border-b border-mist flex items-center justify-between">
+      <div className="flex min-w-0 flex-1 overflow-hidden">
+        <div className={`min-w-0 flex-col border-r border-mist bg-paper ${selectedOrder ? 'hidden md:flex md:w-80 md:flex-shrink-0' : 'flex flex-1'}`}>
+          <div className="flex items-center justify-between gap-2 border-b border-mist px-3 py-4 sm:px-5">
             <div>
               <h1 className="font-display text-xl font-normal text-bark">Orders</h1>
               <p className="text-ink-muted text-xs font-light">
@@ -150,14 +150,14 @@ export default function AdminOrdersPage() {
               </p>
             </div>
             {unreadCount > 0 && (
-              <span className="bg-red-50 text-red-600 text-xs font-medium
+              <span className="bg-tan/20 text-bark text-xs font-medium
                                px-2 py-0.5 rounded-full">
                 {unreadCount} new
               </span>
             )}
           </div>
 
-          <div className="grid grid-cols-3 gap-3 px-5 py-3 border-b border-mist">
+          <div className="grid grid-cols-3 gap-2 border-b border-mist px-3 py-3 sm:gap-3 sm:px-5">
             {[
               { label: 'Total',  value: orders.filter(o => o.status !== 'delivered').length },
               { label: 'Active', value: orders.filter(o => ['confirmed','engraving','quality','ready'].includes(o.status)).length },
@@ -203,7 +203,7 @@ export default function AdminOrdersPage() {
                                 ? 'bg-mist/40'
                                 : 'hover:bg-cream'}`}>
 
-                  <div className={`w-2 h-2 rounded-full flex-shrink-0 ${DOT_COLORS[order.status] || 'bg-gray-300'}`} />
+                  <div className={`w-2 h-2 rounded-full flex-shrink-0 ${DOT_COLORS[order.status] || 'bg-mist'}`} />
 
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2">
@@ -211,7 +211,7 @@ export default function AdminOrdersPage() {
                         {order.name}
                       </span>
                       {!order.is_read && (
-                        <span className="w-1.5 h-1.5 rounded-full bg-red-400 flex-shrink-0" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-tan flex-shrink-0" />
                       )}
                     </div>
                     <div className="text-xs text-ink-muted font-light truncate">
@@ -221,7 +221,7 @@ export default function AdminOrdersPage() {
 
                   <div className="flex flex-col items-end gap-1 flex-shrink-0">
                     <span className={`text-[0.6rem] font-medium px-1.5 py-0.5 rounded-sm
-                                      ${STATUS_STYLES[order.status] || 'bg-gray-50 text-gray-500'}`}>
+                                      ${STATUS_STYLES[order.status] || 'bg-mist text-ink-muted'}`}>
                       {STATUS_LABELS[order.status] || order.status}
                     </span>
                     <span className="text-[0.65rem] text-ink-muted">
@@ -235,8 +235,8 @@ export default function AdminOrdersPage() {
         </div>
 
         {selectedOrder && (
-          <div className="flex-1 flex flex-col overflow-hidden">
-            <div className="px-6 py-4 border-b border-mist flex items-center justify-between">
+          <div className="fixed inset-0 z-20 flex min-w-0 flex-1 flex-col overflow-hidden bg-cream md:static md:z-auto">
+            <div className="flex items-center justify-between gap-3 border-b border-mist px-4 py-4 sm:px-6">
               <div className="flex items-center gap-3">
                 <button
                   onClick={() => setSelectedOrder(null)}
@@ -253,13 +253,13 @@ export default function AdminOrdersPage() {
                 </div>
               </div>
               {!selectedOrder.is_read && (
-                <span className="bg-red-50 text-red-600 text-xs font-medium px-2 py-0.5 rounded-full">
+                <span className="bg-tan/20 text-bark text-xs font-medium px-2 py-0.5 rounded-full">
                   Unread
                 </span>
               )}
             </div>
 
-            <div className="flex-1 overflow-y-auto px-6 py-5 flex flex-col gap-4">
+            <div className="flex-1 overflow-y-auto px-4 py-4 sm:px-6 sm:py-5 flex flex-col gap-4">
               <div className="bg-paper border border-mist rounded-md p-4">
                 <p className="text-[0.65rem] font-medium tracking-widest uppercase
                               text-ink-muted mb-3">
