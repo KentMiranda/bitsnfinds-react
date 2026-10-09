@@ -253,15 +253,13 @@ export default function AdminProductsPage() {
     <div className="min-h-screen bg-cream flex">
       <AdminSidebar />
 
-      <div className="min-w-0 flex-1 overflow-y-auto">
-        <div className="sticky top-0 z-10 flex flex-wrap items-center justify-between gap-3 border-b border-mist bg-cream/95 px-4 py-4 backdrop-blur-sm sm:px-6 sm:py-5 lg:px-8">
+      <div className="flex-1 overflow-y-auto">
+        <div className="px-8 py-6 border-b border-mist flex items-center justify-between
+                        sticky top-0 bg-cream/95 backdrop-blur-sm z-10">
           <div>
             <h1 className="font-display text-2xl font-normal text-bark">Products</h1>
             <p className="text-ink-muted text-sm font-light">
               {products.length} product{products.length !== 1 ? 's' : ''}
-            </p>
-            <p className="mt-1 text-xs font-light text-ink-muted">
-              Active products appear in the landing carousel. Edit a product’s images to change its carousel photo.
             </p>
           </div>
           <button
@@ -272,14 +270,14 @@ export default function AdminProductsPage() {
           </button>
         </div>
 
-        <div className="px-4 py-4 sm:px-6 sm:py-5 lg:px-8">
+        <div className="px-8 py-6">
           {showForm && (
-            <div className="mb-5 rounded-lg border border-mist bg-paper p-4 sm:p-6">
+            <div className="bg-paper border border-mist rounded-lg p-6 mb-6">
               <h2 className="font-display text-lg font-normal text-bark mb-5">
                 {editingId ? 'Edit product' : 'Add new product'}
               </h2>
 
-              <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="grid grid-cols-2 gap-4 mb-4">
                 <div className="flex flex-col gap-1.5">
                   <label className="text-[0.65rem] font-medium tracking-widest uppercase text-ink-muted">
                     Product name *
@@ -383,7 +381,7 @@ export default function AdminProductsPage() {
                   className={`${inputClass} resize-y`}/>
               </div>
 
-              <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="grid grid-cols-3 gap-4 mb-4">
                 <div className="flex flex-col gap-1.5">
                   <label className="text-[0.65rem] font-medium tracking-widest uppercase text-ink-muted">
                     Tag (optional)
@@ -455,7 +453,7 @@ export default function AdminProductsPage() {
               No products yet. Click "Add product" to get started.
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 xl:grid-cols-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {products.map((product) => (
                 <div key={product.id}
                   className="bg-paper border border-mist rounded-md overflow-hidden">
@@ -506,7 +504,7 @@ export default function AdminProductsPage() {
                       {product.description}
                     </p>
                     <div className="flex items-center justify-between">
-                      <span className="text-walnut font-medium text-sm">{product.price}</span>
+                      <span className="text-wheat font-medium text-sm">{product.price}</span>
                       <div className="flex gap-2">
                         <button onClick={() => openEditForm(product)}
                           className="text-xs text-forest font-medium hover:text-bark

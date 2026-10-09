@@ -21,7 +21,7 @@ export default function ProductCard({ product, index = 0 }) {
             className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.05]"
           />
         ) : (
-          <div className="w-full h-full flex items-center justify-center text-5xl bg-gradient-to-br from-mist to-sage">
+          <div className="w-full h-full flex items-center justify-center text-5xl bg-gradient-to-br from-mist to-[#dce8d4]">
             {emoji}
           </div>
         )}
@@ -53,7 +53,7 @@ export default function ProductCard({ product, index = 0 }) {
         <h3 className="font-display text-base font-normal text-bark leading-snug mb-1">{name}</h3>
         <div className="flex items-center justify-between">
           <p className="text-ink-muted text-xs font-light leading-relaxed line-clamp-1 flex-1">{desc}</p>
-          {price && <span className="text-xs text-walnut font-medium flex-shrink-0 ml-3">{price}</span>}
+          {price && <span className="text-xs text-wheat font-medium flex-shrink-0 ml-3">{price}</span>}
         </div>
       </div>
 

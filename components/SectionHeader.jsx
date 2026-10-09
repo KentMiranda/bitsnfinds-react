@@ -2,11 +2,11 @@ import LeafSVG from './LeafSVG'
 
 export default function SectionHeader({ eyebrow, title, titleEm, subtitle, centered = false }) {
   return (
-    <div className={`mb-10 sm:mb-12 ${centered ? 'text-center' : ''}`}>
-      <p className="text-forest text-xs font-medium tracking-[0.2em] uppercase mb-2">
+    <div className={`mb-14 ${centered ? 'text-center' : ''}`}>
+      <p className="text-forest text-xs font-medium tracking-[0.22em] uppercase mb-2">
         {eyebrow}
       </p>
-      <h2 className="font-display text-3xl md:text-4xl font-normal text-bark leading-tight mb-2">
+      <h2 className="font-display text-3xl md:text-4xl font-normal text-bark leading-snug mb-3">
         {title}{' '}
         {titleEm && <em className="italic text-walnut font-light">{titleEm}</em>}
       </h2>
