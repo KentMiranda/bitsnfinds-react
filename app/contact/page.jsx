@@ -5,7 +5,7 @@ export default function ContactPage() {
   const { contact } = CONFIG
 
   return (
-    <section className="relative min-h-[60vh] overflow-hidden bg-cream px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
+    <section className="page-surface relative min-h-[60vh] overflow-hidden bg-cream px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
       <LeafSVG variant="single"
         className="absolute left-0 bottom-0 w-48 opacity-[0.09] pointer-events-none -scale-x-100" />
 

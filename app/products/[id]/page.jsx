@@ -70,7 +70,7 @@ export default function ProductDetailPage() {
   const hasMultiple = photos.length > 1
 
   return (
-    <section className="relative min-h-[60vh] overflow-hidden bg-cream px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
+    <section className="page-surface relative min-h-[60vh] overflow-hidden bg-cream px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
       <LeafSVG variant="sprig" className="absolute top-0 left-0 w-44 opacity-[0.08] pointer-events-none" />
 
       <div className="mx-auto max-w-5xl">

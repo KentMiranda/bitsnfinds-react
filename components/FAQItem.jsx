@@ -4,10 +4,14 @@ import { useState } from 'react'
 
 export default function FAQItem({ question, answer }) {
   const [open, setOpen] = useState(false)
+  const answerId = `faq-answer-${question.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`
 
   return (
     <li className="border-b border-mist">
       <button
+        type="button"
+        aria-expanded={open}
+        aria-controls={answerId}
         className="w-full text-left py-5 flex justify-between items-center gap-6
                    font-display text-lg font-normal text-bark
                    hover:text-walnut transition-colors"
@@ -21,7 +25,7 @@ export default function FAQItem({ question, answer }) {
         </span>
       </button>
 
-      <div className={`faq-answer text-ink-muted text-sm font-light leading-relaxed
+      <div id={answerId} className={`faq-answer text-ink-muted text-sm font-light leading-relaxed
                        ${open ? 'open' : ''}`}>
         {answer}
       </div>

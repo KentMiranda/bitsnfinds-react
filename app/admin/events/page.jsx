@@ -116,7 +116,7 @@ export default function AdminEventsPage() {
   const inputClass = 'w-full border border-mist rounded-sm px-3 py-2.5 text-sm text-ink bg-cream focus:outline-none focus:border-sage'
 
   return (
-    <div className="min-h-screen bg-cream flex">
+    <div className="admin-shell min-h-screen bg-cream flex">
       <AdminSidebar />
       <main className="min-w-0 flex-1 overflow-y-auto">
         <header className="sticky top-0 z-10 flex flex-wrap items-center justify-between gap-3 border-b border-mist bg-cream/95 px-4 py-4 backdrop-blur-sm sm:px-6 sm:py-5 lg:px-8">
