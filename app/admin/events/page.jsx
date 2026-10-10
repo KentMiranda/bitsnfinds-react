@@ -118,8 +118,8 @@ export default function AdminEventsPage() {
   return (
     <div className="min-h-screen bg-cream flex">
       <AdminSidebar />
-      <main className="flex-1 overflow-y-auto">
-        <header className="px-8 py-6 border-b border-mist flex items-center justify-between sticky top-0 bg-cream/95 backdrop-blur-sm z-10">
+      <main className="min-w-0 flex-1 overflow-y-auto">
+        <header className="sticky top-0 z-10 flex flex-wrap items-center justify-between gap-3 border-b border-mist bg-cream/95 px-4 py-4 backdrop-blur-sm sm:px-6 sm:py-5 lg:px-8">
           <div>
             <h1 className="font-display text-2xl text-bark">Events</h1>
             <p className="text-ink-muted text-sm font-light">Manage events shown on the landing page.</p>
@@ -130,11 +130,11 @@ export default function AdminEventsPage() {
           </button>
         </header>
 
-        <div className="px-8 py-6">
+        <div className="px-4 py-4 sm:px-6 sm:py-5 lg:px-8">
           {showForm && (
-            <section className="bg-paper border border-mist rounded-lg p-6 mb-6">
+            <section className="mb-5 rounded-lg border border-mist bg-paper p-4 sm:p-6">
               <h2 className="font-display text-lg text-bark mb-5">{editingId ? 'Edit event' : 'Add event'}</h2>
-              <div className="grid md:grid-cols-2 gap-4">
+              <div className="grid gap-4 sm:grid-cols-2">
                 <input className={inputClass} placeholder="Event title" value={form.title}
                   onChange={(e) => setForm({ ...form, title: e.target.value })} />
                 <input className={inputClass} type="date" value={form.date}
@@ -192,7 +192,7 @@ export default function AdminEventsPage() {
           {loading ? <p className="text-ink-muted">Loading events...</p> : events.length === 0 ? (
             <p className="text-ink-muted">No events yet. Add an event to show it on the landing page.</p>
           ) : (
-            <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+            <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {events.map((event) => (
                 <article key={event.id} className="bg-paper border border-mist rounded-lg overflow-hidden">
                   {event.image_urls?.length > 0 && (

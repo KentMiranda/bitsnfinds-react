@@ -78,21 +78,21 @@ export default function OrderPage() {
                       focus:outline-none focus:border-wheat transition-colors`
 
   return (
-    <section className="relative px-6 py-24 bg-bark text-cream overflow-hidden min-h-screen">
+    <section className="relative min-h-[60vh] overflow-hidden bg-bark px-4 py-12 text-cream sm:px-6 sm:py-16 lg:px-8 lg:py-20">
       <LeafSVG variant="branch"
         className="absolute bottom-0 right-0 w-64 opacity-10 pointer-events-none rotate-180" />
 
-      <div className="grid md:grid-cols-[1fr_1.5fr] gap-20 items-start max-w-4xl mx-auto">
+      <div className="mx-auto grid max-w-5xl items-start gap-8 md:grid-cols-[minmax(0,0.8fr)_minmax(0,1.2fr)] md:gap-12 lg:gap-16">
         <div>
-          <p className="text-wheat text-xs font-medium tracking-[0.22em] uppercase mb-2">
+          <p className="mb-2 text-xs font-medium uppercase tracking-[0.2em] text-wheat">
             {order.eyebrow}
           </p>
-          <h1 className="font-display text-4xl font-normal text-sage leading-snug mb-4">
+          <h1 className="mb-3 font-display text-4xl font-normal leading-tight text-sage">
             {order.title}<br />
             <em className="italic text-mist font-light">{order.titleEm}</em>
           </h1>
-          <p className="text-cream/60 text-sm font-light leading-relaxed mb-8">{order.subtitle}</p>
-          <ul className="flex flex-col gap-3">
+          <p className="mb-6 text-sm font-light leading-relaxed text-cream/60">{order.subtitle}</p>
+          <ul className="flex flex-col gap-2.5">
             {order.infoItems.map((item) => (
               <li key={item} className="flex gap-3 text-sm text-cream/65 font-light">
                 <span className="text-wheat flex-shrink-0">↳</span>{item}
@@ -104,7 +104,7 @@ export default function OrderPage() {
         <div>
           {!submitted ? (
             <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="flex flex-col gap-1.5">
                   <label className="text-[0.65rem] font-medium tracking-[0.14em] uppercase text-cream/45">
                     Full Name <span className="text-wheat">*</span>
@@ -206,7 +206,7 @@ export default function OrderPage() {
               </button>
             </form>
           ) : (
-            <div className="text-center p-10 border border-wheat/30 rounded-md bg-cream/5">
+            <div className="rounded-md border border-wheat/30 bg-cream/5 p-6 text-center sm:p-8">
               <h3 className="font-display text-3xl font-normal text-wheat mb-2">Thank you 🌿</h3>
               <p className="text-cream/60 text-sm font-light">
                 We received your order request. To help us find it quickly, please message the Bits &amp; Finds Facebook page with your details or a screenshot of this order.
