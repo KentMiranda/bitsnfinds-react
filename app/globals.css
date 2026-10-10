@@ -694,25 +694,29 @@ button, a { -webkit-tap-highlight-color: transparent; }
   grid-column: 2;
   grid-row: 1;
   display: inline-flex;
-  min-width: 5.25rem;
-  min-height: 3rem;
+  min-width: 6rem;
+  min-height: 3.125rem;
   align-items: center;
   justify-content: center;
   gap: 0.55rem;
   border: 1px solid rgba(255, 248, 227, 0.24);
-  border-radius: 0.45rem;
-  background: transparent;
+  border-radius: 999px;
+  background: rgba(255, 248, 227, 0.06);
   color: var(--surface-paper);
   font: inherit;
   font-size: 0.75rem;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 160ms ease, border-color 160ms ease;
+  transition: background-color 180ms ease, border-color 180ms ease, transform 180ms ease;
 }
 
 .nav-toggle:hover {
   border-color: rgba(255, 248, 227, 0.45);
-  background: rgba(255, 248, 227, 0.08);
+  background: rgba(255, 248, 227, 0.12);
+}
+
+.nav-toggle:active {
+  transform: scale(0.97);
 }
 
 .nav-toggle-icon {
@@ -753,28 +757,31 @@ button, a { -webkit-tap-highlight-color: transparent; }
 
 .nav-mobile-menu {
   position: absolute;
-  top: calc(100% + 1px);
+  top: calc(100% + 0.5rem);
   right: clamp(0.75rem, 3.5vw, 3rem);
   z-index: 60;
   visibility: hidden;
-  width: min(24rem, calc(100% - 1.5rem));
+  width: min(22rem, calc(100vw - 2rem));
   max-height: 0;
   overflow: hidden;
-  border-bottom: 1px solid rgba(255, 248, 227, 0.16);
+  border: 1px solid transparent;
+  border-radius: 1.25rem;
   background: var(--brand-blue);
-  box-shadow: 0 12px 22px rgba(8, 36, 56, 0.18);
+  box-shadow: 0 16px 34px rgba(8, 36, 56, 0.24);
   opacity: 0;
   pointer-events: none;
-  transform: translateY(-0.35rem);
-  transition: max-height 240ms ease, opacity 180ms ease, transform 180ms ease, visibility 180ms ease;
+  transform: translateY(-0.5rem) scale(0.98);
+  transform-origin: top right;
+  transition: max-height 240ms ease, opacity 180ms ease, transform 180ms ease, visibility 180ms ease, border-color 180ms ease;
 }
 
 .nav-mobile-menu.is-open {
   visibility: visible;
   max-height: min(75vh, 34rem);
+  border-color: rgba(255, 248, 227, 0.2);
   opacity: 1;
   pointer-events: auto;
-  transform: translateY(0);
+  transform: translateY(0) scale(1);
 }
 
 .nav-mobile-links {
@@ -784,16 +791,16 @@ button, a { -webkit-tap-highlight-color: transparent; }
   gap: 0.25rem;
   overflow-y: auto;
   margin: 0;
-  padding: 0.75rem clamp(1rem, 4vw, 2rem) 1rem;
+  padding: 0.75rem;
   list-style: none;
 }
 
 .nav-mobile-link {
   display: flex;
-  min-height: 3rem;
+  min-height: 3.125rem;
   align-items: center;
-  padding: 0 0.75rem;
-  border-radius: 0.35rem;
+  padding: 0 1rem;
+  border-radius: 999px;
   color: rgba(255, 254, 248, 0.92);
   font-size: 0.78rem;
   font-weight: 500;
@@ -805,12 +812,12 @@ button, a { -webkit-tap-highlight-color: transparent; }
 
 .nav-mobile-link:hover,
 .nav-mobile-link[aria-current='page'] {
-  background: rgba(165, 224, 222, 0.14);
+  background: rgba(255, 248, 227, 0.1);
   color: var(--surface-paper);
 }
 
 .nav-mobile-link[aria-current='page'] {
-  box-shadow: inset 3px 0 0 var(--logo-gold);
+  box-shadow: inset 0 0 0 1px rgba(248, 213, 158, 0.4);
   font-weight: 700;
 }
 
@@ -820,6 +827,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   justify-content: space-between;
   margin-top: 0.35rem;
   padding-inline: 0.9rem;
+  border-radius: 999px;
 }
 
 .site-nav :focus-visible,
@@ -858,7 +866,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
   }
 
   .nav-mobile-menu {
-    right: clamp(2rem, 4vw, 4rem);
+    right: clamp(1rem, 3vw, 2rem);
   }
 }
 
@@ -884,6 +892,7 @@ button, a { -webkit-tap-highlight-color: transparent; }
 @media (prefers-reduced-motion: reduce) {
   .nav-link::after,
   .nav-toggle-line,
+  .nav-toggle,
   .nav-mobile-menu,
   .nav-action,
   .nav-mobile-cta,
