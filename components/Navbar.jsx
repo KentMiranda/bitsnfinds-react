@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import { usePathname } from 'next/navigation'
@@ -9,72 +9,143 @@ import { CONFIG } from '@/lib/config'
 export default function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
   const pathname = usePathname()
+  const navRef = useRef(null)
+  const menuButtonRef = useRef(null)
+  const mobileMenuRef = useRef(null)
+
+  const navigationLinks = CONFIG.navLinks.filter((link) => !link.cta)
+  const primaryAction = CONFIG.navLinks.find((link) => link.cta)
+
+  function isCurrentPage(href) {
+    const route = href.split('#')[0] || '/'
+    return href !== '/#services' && (
+      pathname === route || (route === '/products' && pathname.startsWith('/products/'))
+    )
+  }
+
+  useEffect(() => {
+    setMenuOpen(false)
+  }, [pathname])
+
+  useEffect(() => {
+    function handleKeyDown(event) {
+      if (event.key !== 'Escape') return
+
+      if (menuOpen) {
+        setMenuOpen(false)
+        menuButtonRef.current?.focus()
+      }
+    }
+
+    function handlePointerDown(event) {
+      if (!navRef.current?.contains(event.target)) {
+        setMenuOpen(false)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    document.addEventListener('pointerdown', handlePointerDown)
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+      document.removeEventListener('pointerdown', handlePointerDown)
+    }
+  }, [menuOpen])
 
   return (
-    <nav className="sticky top-0 z-50 grid grid-cols-[1fr_auto_1fr] items-center
-                    px-4 py-3 bg-cream/95 backdrop-blur-md sm:px-6 md:px-8 md:py-4
-                    border-b border-mist">
-      <Link href="/" className="group col-start-1 row-start-1 flex shrink-0 items-center gap-3 font-display text-xl font-bold text-bark md:gap-4 md:text-3xl">
+    <>
+      <a className="skip-link" href="#main-content">Skip to content</a>
+      <nav ref={navRef} aria-label="Primary navigation" className="site-nav sticky top-0 z-50 grid items-center">
+        <Link href="/" className="nav-brand group flex min-w-0 items-center gap-2.5 font-display text-lg font-bold md:gap-3">
           <Image
             src="/images/favicon.png"
             alt="Bits & Finds logo"
             width={88}
             height={88}
-            className="h-16 w-16 rounded-full border-2 border-bark/10 object-cover shadow-md transition-transform duration-500 group-hover:rotate-6 group-hover:scale-105 md:h-[88px] md:w-[88px]"
+            className="nav-brand-logo h-12 w-12 shrink-0 rounded-full border-2 object-cover shadow-sm transition-transform duration-300 group-hover:scale-[1.03] md:h-14 md:w-14"
           />
-          <span>Bits <span className="text-forest">&</span> Finds</span>
-      </Link>
+          <span className="nav-brand-name whitespace-nowrap text-base sm:text-lg">
+            Bits <span>&amp;</span> Finds
+          </span>
+        </Link>
 
-      <ul className="col-start-2 row-start-1 hidden items-center gap-4 lg:flex xl:gap-7">
-        {CONFIG.navLinks.map((link) => (
-          <li key={link.href}>
-            {link.cta ? (
-              <Link href={link.href}
-                aria-current={pathname === link.href ? 'page' : undefined}
-                className="nav-action whitespace-nowrap rounded-sm bg-bark px-3 py-2 text-[0.65rem] font-medium
-                           uppercase tracking-widest text-cream xl:px-4 xl:text-xs">
-                {link.label}
-              </Link>
-            ) : (
-              <Link href={link.href}
-                aria-current={pathname === link.href ? 'page' : undefined}
-                className="nav-underline whitespace-nowrap text-[0.65rem] font-medium uppercase
-                           tracking-widest text-ink-muted transition-colors hover:text-forest xl:text-xs">
-                {link.label}
-              </Link>
+        <div className="nav-desktop">
+          <ul className="nav-links">
+            {navigationLinks.map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  aria-current={isCurrentPage(link.href) ? 'page' : undefined}
+                  className="nav-link"
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+          {primaryAction && (
+            <Link
+              href={primaryAction.href}
+              aria-current={isCurrentPage(primaryAction.href) ? 'page' : undefined}
+              className="nav-action"
+            >
+              {primaryAction.label}
+              <span aria-hidden="true" className="nav-action-arrow">→</span>
+            </Link>
+          )}
+        </div>
+
+        <button
+          ref={menuButtonRef}
+          type="button"
+          className="nav-toggle"
+          onClick={() => setMenuOpen((open) => !open)}
+          aria-label="Toggle navigation menu"
+          aria-expanded={menuOpen}
+          aria-controls="mobile-navigation"
+        >
+          <span className="nav-toggle-icon" aria-hidden="true">
+            <span className={`nav-toggle-line ${menuOpen ? 'is-open' : ''}`} />
+            <span className={`nav-toggle-line ${menuOpen ? 'is-hidden' : ''}`} />
+            <span className={`nav-toggle-line ${menuOpen ? 'is-open' : ''}`} />
+          </span>
+          <span>{menuOpen ? 'Close' : 'Menu'}</span>
+        </button>
+
+        <div
+          id="mobile-navigation"
+          ref={mobileMenuRef}
+          className={`nav-mobile-menu ${menuOpen ? 'is-open' : ''}`}
+          aria-hidden={!menuOpen}
+        >
+          <ul className="nav-mobile-links">
+            {navigationLinks.map((link) => (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  aria-current={isCurrentPage(link.href) ? 'page' : undefined}
+                  className="nav-mobile-link"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {link.label}
+                </Link>
+              </li>
+            ))}
+            {primaryAction && (
+              <li>
+                <Link
+                  href={primaryAction.href}
+                  aria-current={isCurrentPage(primaryAction.href) ? 'page' : undefined}
+                  className="nav-mobile-cta"
+                  onClick={() => setMenuOpen(false)}
+                >
+                  {primaryAction.label}
+                  <span aria-hidden="true" className="nav-action-arrow">→</span>
+                </Link>
+              </li>
             )}
-          </li>
-        ))}
-      </ul>
-
-      <button className="col-start-3 row-start-1 flex min-h-11 min-w-11 flex-col items-center justify-self-end gap-1.5
-                         focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest lg:hidden"
-        onClick={() => setMenuOpen(!menuOpen)}
-        aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-        aria-expanded={menuOpen}
-        aria-controls="mobile-navigation">
-        <span className={`block h-px w-6 bg-bark transition-transform duration-300 ${menuOpen ? 'translate-y-[7px] rotate-45' : ''}`} />
-        <span className={`block h-px w-6 bg-bark transition-opacity duration-200 ${menuOpen ? 'opacity-0' : ''}`} />
-        <span className={`block h-px w-6 bg-bark transition-transform duration-300 ${menuOpen ? '-translate-y-[7px] -rotate-45' : ''}`} />
-      </button>
-
-      {menuOpen && (
-        <ul id="mobile-navigation" className="nav-mobile-menu absolute left-0 right-0 top-full
-                       lg:hidden
-                       bg-cream border-b border-mist flex flex-col gap-3 px-4 py-5 sm:px-6">
-          {CONFIG.navLinks.map((link) => (
-            <li key={link.href}>
-              <Link href={link.href}
-                aria-current={pathname === link.href ? 'page' : undefined}
-                className="min-h-11 flex items-center text-xs font-medium tracking-widest uppercase text-ink-muted
-                           focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forest"
-                onClick={() => setMenuOpen(false)}>
-                {link.label}
-              </Link>
-            </li>
-          ))}
-        </ul>
-      )}
-    </nav>
+          </ul>
+        </div>
+      </nav>
+    </>
   )
 }

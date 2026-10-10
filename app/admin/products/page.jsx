@@ -250,7 +250,7 @@ export default function AdminProductsPage() {
   const slotsLeft = MAX_IMAGES - totalImageCount
 
   return (
-    <div className="min-h-screen bg-cream flex">
+    <div className="admin-shell min-h-screen bg-cream flex">
       <AdminSidebar />
 
       <div className="min-w-0 flex-1 overflow-y-auto">

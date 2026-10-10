@@ -11,11 +11,10 @@ export default function HomePage() {
   const [eventsLoading, setEventsLoading] = useState(true)
   const [eventsError, setEventsError] = useState(false)
   const [heroImageIndex, setHeroImageIndex] = useState(0)
-  const [isHeroCarouselPlaying, setIsHeroCarouselPlaying] = useState(true)
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
   const [isDocumentVisible, setIsDocumentVisible] = useState(true)
+  const [isCarouselHovered, setIsCarouselHovered] = useState(false)
   const [carouselWidth, setCarouselWidth] = useState(0)
-  const [hoveredProductIndex, setHoveredProductIndex] = useState(null)
   const [failedImageSources, setFailedImageSources] = useState(() => new Set())
   const heroCarouselRef = useRef(null)
   const swipeStartRef = useRef(null)
@@ -66,7 +65,6 @@ export default function HomePage() {
   }, [products.length])
 
   const navigateHeroCarousel = (direction) => {
-    setIsHeroCarouselPlaying(false)
     moveHeroCarousel(direction)
   }
 
@@ -76,10 +74,6 @@ export default function HomePage() {
     }
   }, [activeHeroImageIndex, heroImageIndex, products.length])
 
-  useEffect(() => {
-    setHoveredProductIndex(null)
-  }, [activeHeroImageIndex])
-
   useLayoutEffect(() => {
     previousActiveIndexRef.current = activeHeroImageIndex
   }, [activeHeroImageIndex])
@@ -88,7 +82,6 @@ export default function HomePage() {
     const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)')
     const updateMotionPreference = () => {
       setPrefersReducedMotion(motionPreference.matches)
-      if (motionPreference.matches) setIsHeroCarouselPlaying(false)
     }
     const updateDocumentVisibility = () => {
       setIsDocumentVisible(document.visibilityState === 'visible')
@@ -119,10 +112,9 @@ export default function HomePage() {
 
   useEffect(() => {
     if (
-      !isHeroCarouselPlaying ||
       prefersReducedMotion ||
       !isDocumentVisible ||
-      hoveredProductIndex !== null ||
+      isCarouselHovered ||
       products.length < 2
     ) return undefined
 
@@ -131,7 +123,7 @@ export default function HomePage() {
     }, 4000)
 
     return () => window.clearInterval(interval)
-  }, [hoveredProductIndex, isDocumentVisible, isHeroCarouselPlaying, moveHeroCarousel, prefersReducedMotion, products.length])
+  }, [isCarouselHovered, isDocumentVisible, moveHeroCarousel, prefersReducedMotion, products.length])
 
   useEffect(() => {
     const revealElements = document.querySelectorAll('[data-home-reveal]')
@@ -221,216 +213,171 @@ export default function HomePage() {
             navigateHeroCarousel(1)
           }
         }}
-        className="hero-gallery home-carousel-stage relative w-full overflow-hidden px-2 py-8 sm:px-5 sm:py-10 lg:py-12"
+        className="hero-gallery home-carousel-stage relative w-full overflow-hidden px-3 py-8 sm:px-6 sm:py-12 lg:px-10 lg:py-16"
       >
-        {products.length > 0 && (
-          <h1 className="sr-only">Little details. Lasting meaning.</h1>
-        )}
-        <div className="home-carousel-frame home-carousel-enter relative mx-auto w-full max-w-[1160px] overflow-hidden px-0 py-2 sm:px-4 md:px-6 md:py-4">
-        <div
-          ref={heroCarouselRef}
-          className="relative w-full overflow-hidden"
-        >
+        <div className="home-carousel-editorial home-carousel-enter relative mx-auto w-full max-w-[1160px]">
+          <header className="mb-7 flex flex-col justify-between gap-4 border-b border-bark/15 pb-5 sm:mb-9 sm:flex-row sm:items-end sm:pb-6">
+            <div>
+              <p className="mb-3 text-[0.62rem] font-medium uppercase tracking-[0.24em] text-walnut">
+                Bits &amp; Finds <span className="mx-2 text-bark/30">/</span> The engraving edit
+              </p>
+              <h1 className="max-w-2xl font-display text-3xl font-normal leading-tight tracking-[-0.03em] text-bark sm:text-4xl lg:text-5xl">
+                Little details. <em className="font-light text-walnut">Lasting meaning.</em>
+              </h1>
+            </div>
+            <p className="max-w-sm text-sm font-light leading-6 text-ink-muted sm:text-right">
+              {hero.subtitle}
+            </p>
+          </header>
           <div
-            className="relative h-[50vw] min-h-[190px] max-h-[500px] sm:h-[46vw] md:h-[40vw] lg:h-[min(36vw,500px)]"
+            ref={heroCarouselRef}
+            className="relative w-full overflow-hidden"
+            onMouseEnter={() => setIsCarouselHovered(true)}
+            onMouseLeave={() => setIsCarouselHovered(false)}
+            onFocusCapture={() => setIsCarouselHovered(true)}
+            onBlurCapture={(event) => {
+              if (!event.currentTarget.contains(event.relatedTarget)) {
+                setIsCarouselHovered(false)
+              }
+            }}
           >
-            {products.map((product, index) => {
-              const image = product.images?.[0] || product.image
-              const isActive = index === activeHeroImageIndex
-              const productKey = product.id || product.slug || product.name
-              const relativeIndex = ((index - activeHeroImageIndex + products.length + Math.floor(products.length / 2)) % products.length) - Math.floor(products.length / 2)
-              const previousRelativeIndex = ((index - previousActiveIndexRef.current + products.length + Math.floor(products.length / 2)) % products.length) - Math.floor(products.length / 2)
-              const isWrappingBehindStack = Math.abs(relativeIndex - previousRelativeIndex) > 1
-              const x = relativeIndex * carouselWidth * 0.7
+            <div className="relative h-[58vw] min-h-[250px] max-h-[540px] sm:h-[48vw] md:h-[40vw] lg:h-[min(38vw,500px)]">
+              {products.map((product, index) => {
+                const image = product.images?.[0] || product.image
+                const isActive = index === activeHeroImageIndex
+                const productKey = product.id || product.slug || product.name
+                const relativeIndex = ((index - activeHeroImageIndex + products.length + Math.floor(products.length / 2)) % products.length) - Math.floor(products.length / 2)
+                const previousRelativeIndex = ((index - previousActiveIndexRef.current + products.length + Math.floor(products.length / 2)) % products.length) - Math.floor(products.length / 2)
+                const isWrappingBehindStack = Math.abs(relativeIndex - previousRelativeIndex) > 1
+                const x = relativeIndex * carouselWidth * 0.68
 
-              return (
-                <article
-                  key={productKey}
-                  className={`absolute left-1/2 top-1/2 h-[90%] w-[88%] max-w-[1000px] -translate-y-1/2 sm:w-[82%] lg:w-[76%] ${
-                    isActive ? 'z-20' : 'z-[1]'
-                  }`}
-                  style={{
-                    transform: `translate(calc(-50% + ${x}px), -50%)`,
-                    transition: isWrappingBehindStack ? 'none' : 'transform 700ms cubic-bezier(0.16, 1, 0.3, 1)',
-                    pointerEvents: isActive ? 'auto' : 'none',
-                  }}
-                  role="group"
-                  aria-roledescription="slide"
-                  aria-label={`${index + 1} of ${products.length}: ${product.name}`}
-                  aria-hidden={!isActive}
-                  onMouseEnter={() => setHoveredProductIndex(index)}
-                  onMouseLeave={(event) => {
-                    if (!event.currentTarget.contains(document.activeElement)) {
-                      setHoveredProductIndex(null)
-                    }
-                  }}
-                  onFocus={() => setHoveredProductIndex(index)}
-                  onBlur={(event) => {
-                    if (
-                      !event.currentTarget.contains(event.relatedTarget) &&
-                      !event.currentTarget.matches(':hover')
-                    ) {
-                      setHoveredProductIndex(null)
-                    }
-                  }}
-                  aria-current={isActive ? 'true' : undefined}
-                >
-                  <Link
-                    href={`/products/${product.id || product.slug}`}
-                    tabIndex={isActive ? undefined : -1}
-                    aria-label={`View ${product.name}`}
-                    className="group relative block h-full touch-pan-y overflow-hidden rounded-[1.25rem] border border-white/80 bg-mist shadow-[0_16px_38px_rgba(18,59,87,0.14)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bark sm:rounded-[1.75rem]"
-                    onPointerDown={(event) => {
-                      if (event.pointerType === 'touch') {
-                        swipeStartRef.current = { x: event.clientX, y: event.clientY }
-                      }
+                return (
+                  <article
+                    key={productKey}
+                    className={`absolute left-1/2 top-1/2 h-[88%] w-[88%] max-w-[960px] -translate-y-1/2 sm:w-[82%] lg:w-[76%] ${
+                      isActive ? 'z-20' : 'z-[1]'
+                    }`}
+                    style={{
+                      transform: `translate(calc(-50% + ${x}px), -50%) scale(${isActive ? 1 : 0.97})`,
+                      transition: isWrappingBehindStack ? 'none' : 'transform 850ms cubic-bezier(0.22, 1, 0.36, 1)',
+                      pointerEvents: isActive ? 'auto' : 'none',
                     }}
-                    onPointerUp={(event) => {
-                      const start = swipeStartRef.current
-                      swipeStartRef.current = null
-                      if (!start) return
-
-                      const deltaX = event.clientX - start.x
-                      const deltaY = event.clientY - start.y
-                      if (Math.abs(deltaX) < 48 || Math.abs(deltaX) <= Math.abs(deltaY)) return
-
-                      suppressSwipeClickRef.current = true
-                      navigateHeroCarousel(deltaX < 0 ? 1 : -1)
-                    }}
-                    onPointerCancel={() => {
-                      swipeStartRef.current = null
-                    }}
-                    onClickCapture={(event) => {
-                      if (!suppressSwipeClickRef.current) return
-                      suppressSwipeClickRef.current = false
-                      event.preventDefault()
-                      event.stopPropagation()
-                    }}
+                    role="group"
+                    aria-roledescription="slide"
+                    aria-label={`${index + 1} of ${products.length}: ${product.name}`}
+                    aria-hidden={!isActive}
+                    aria-current={isActive ? 'true' : undefined}
                   >
-                    {image && !failedImageSources.has(image) ? (
-                      <img
-                        src={image}
-                        alt={product.name}
-                        loading={isActive ? 'eager' : 'lazy'}
-                        decoding="async"
-                        fetchPriority={isActive ? 'high' : 'auto'}
-                        onError={() => {
-                          setFailedImageSources((current) => new Set(current).add(image))
-                        }}
-                        className={`h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.035] ${
-                          isActive ? 'scale-[1.015]' : 'scale-100'
-                        }`}
-                      />
-                    ) : (
-                      <div
-                        aria-hidden="true"
-                        className="flex h-full flex-col items-center justify-center gap-3 bg-gradient-to-br from-[#e6f2f1] to-[#d7eceb] text-5xl text-bark/65"
-                      >
-                        {product.emoji}
-                        <span className="text-xs font-medium uppercase tracking-[0.18em] text-bark/65">
-                          {product.name}
-                        </span>
-                      </div>
-                    )}
-                    <div
-                      className={`pointer-events-none absolute inset-0 z-10 bg-bark/0 transition-colors duration-500 ${
-                        hoveredProductIndex === index ? 'bg-bark/10' : ''
-                      }`}
+                    <Link
+                      href={`/products/${product.id || product.slug}`}
+                      tabIndex={isActive ? undefined : -1}
+                      aria-label={`View ${product.name}`}
+                      className="group relative block h-full touch-pan-y overflow-hidden bg-mist shadow-[0_20px_55px_rgba(12,47,75,0.3)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-bark"
+                      onPointerDown={(event) => {
+                        if (event.pointerType === 'touch') swipeStartRef.current = { x: event.clientX, y: event.clientY }
+                      }}
+                      onPointerUp={(event) => {
+                        const start = swipeStartRef.current
+                        swipeStartRef.current = null
+                        if (!start) return
+                        const deltaX = event.clientX - start.x
+                        const deltaY = event.clientY - start.y
+                        if (Math.abs(deltaX) < 48 || Math.abs(deltaX) <= Math.abs(deltaY)) return
+                        suppressSwipeClickRef.current = true
+                        navigateHeroCarousel(deltaX < 0 ? 1 : -1)
+                      }}
+                      onPointerCancel={() => { swipeStartRef.current = null }}
+                      onClickCapture={(event) => {
+                        if (!suppressSwipeClickRef.current) return
+                        suppressSwipeClickRef.current = false
+                        event.preventDefault()
+                        event.stopPropagation()
+                      }}
                     >
-                    </div>
+                      {image && !failedImageSources.has(image) ? (
+                        <img
+                          src={image}
+                          alt={product.name}
+                          loading={isActive ? 'eager' : 'lazy'}
+                          decoding="async"
+                          fetchPriority={isActive ? 'high' : 'auto'}
+                          onError={() => setFailedImageSources((current) => new Set(current).add(image))}
+                          className={`h-full w-full object-cover transition-transform duration-1000 ease-out group-hover:scale-[1.035] ${isActive ? 'scale-[1.015]' : 'scale-100'}`}
+                        />
+                      ) : (
+                        <div
+                          aria-hidden="true"
+                          className="flex h-full flex-col items-center justify-center gap-3 bg-gradient-to-br from-[#e6f2f1] to-[#d7eceb] text-5xl text-bark/65"
+                        >
+                          {product.emoji}
+                          <span className="text-xs font-medium uppercase tracking-[0.18em] text-bark/65">{product.name}</span>
+                        </div>
+                      )}
+                    </Link>
+                  </article>
+                )
+              })}
+              {products.length === 0 && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
+                  <p className="mb-3 text-xs font-medium uppercase tracking-[0.2em] text-bark/70">Thoughtful gifts, made personal</p>
+                  <h1 className="font-display text-3xl leading-tight text-bark sm:text-4xl">
+                    Little details. <em className="font-light text-walnut">Lasting meaning.</em>
+                  </h1>
+                  <p className="mt-3 max-w-md text-sm leading-relaxed text-ink-muted">{hero.subtitle}</p>
+                  <Link href="/products" className="home-action mt-5 inline-flex min-h-11 items-center rounded-sm bg-bark px-5 text-xs font-medium uppercase tracking-widest text-cream">
+                    Explore the collection
                   </Link>
-                </article>
-              )
-            })}
-            {products.length === 0 && (
-              <div className="absolute inset-0 flex flex-col items-center justify-center px-6 text-center">
-                <p className="mb-3 text-xs font-medium uppercase tracking-[0.2em] text-bark/70">
-                  Thoughtful gifts, made personal
-                </p>
-                <h1 className="font-display text-3xl leading-tight text-bark sm:text-4xl">
-                  Little details. <em className="font-light text-walnut">Lasting meaning.</em>
-                </h1>
-                <p className="mt-3 max-w-md text-sm leading-relaxed text-ink-muted">{hero.subtitle}</p>
-                <Link href="/products" className="home-action mt-5 inline-flex min-h-11 items-center rounded-sm bg-bark px-5 text-xs font-medium uppercase tracking-widest text-cream">
-                  Explore the collection
+                </div>
+              )}
+              {products.length > 0 && (
+                <Link
+                  href="/products"
+                  tabIndex={isCarouselHovered ? 0 : -1}
+                  aria-label="View all products"
+                  aria-hidden={!isCarouselHovered}
+                  className={`home-carousel-cta absolute inset-0 z-30 flex flex-col items-center justify-center px-6 text-center text-white ${
+                    isCarouselHovered ? 'is-visible' : ''
+                  }`}
+                >
+                  <span className="mb-3 text-[0.62rem] font-semibold uppercase tracking-[0.28em] text-wheat sm:text-xs">
+                    Bits &amp; Finds <span className="mx-2 text-white/55">/</span> The engraving edit
+                  </span>
+                  <span className="max-w-3xl font-display text-3xl leading-[1.08] sm:text-5xl lg:text-6xl">
+                    Find a piece <em className="font-light">made personal.</em>
+                  </span>
+                  <span className="mt-6 inline-flex min-h-11 items-center gap-3 border-b border-wheat pb-1 text-xs font-semibold uppercase tracking-[0.2em] sm:mt-8">
+                    View all products <span aria-hidden="true" className="text-lg text-wheat">↗</span>
+                  </span>
                 </Link>
-              </div>
-            )}
-          </div>
-          <button
-            type="button"
-            onClick={() => navigateHeroCarousel(-1)}
-            onFocus={() => setIsHeroCarouselPlaying(false)}
-            disabled={products.length < 2}
-            className="home-carousel-arrow hero-slideshow-next absolute left-2 top-1/2 z-30 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-bark/10 bg-cream/95 text-lg text-bark shadow-sm transition-colors hover:bg-white sm:left-6 md:left-[7%]"
-            aria-label="Show previous product"
-          >
-            ←
-          </button>
-          <button
-            type="button"
-            onClick={() => navigateHeroCarousel(1)}
-            onFocus={() => setIsHeroCarouselPlaying(false)}
-            disabled={products.length < 2}
-            className="home-carousel-arrow hero-slideshow-next absolute right-2 top-1/2 z-30 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-bark/10 bg-cream/95 text-lg text-bark shadow-sm transition-colors hover:bg-white sm:right-6 md:right-[7%]"
-            aria-label="Show next product"
-          >
-            →
-          </button>
-        </div>
-        <div className="hero-slideshow-controls mx-auto mt-5 w-full max-w-5xl px-4 sm:mt-6 sm:px-6">
-          <div className="grid grid-cols-[auto_1fr_auto] items-center gap-2 sm:grid-cols-3">
-            <button
-              type="button"
-              onClick={() => setIsHeroCarouselPlaying((playing) => !playing)}
-              onFocus={() => setIsHeroCarouselPlaying(false)}
-              disabled={prefersReducedMotion}
-              className="home-carousel-toggle flex min-h-11 min-w-20 items-center gap-2 text-xs font-medium uppercase tracking-[0.18em] text-bark/80 transition-colors hover:text-bark disabled:cursor-not-allowed disabled:opacity-55"
-              aria-label={prefersReducedMotion ? 'Autoplay disabled because reduced motion is preferred' : isHeroCarouselPlaying ? 'Pause product carousel' : 'Play product carousel'}
-              aria-pressed={!isHeroCarouselPlaying}
-            >
-              <span aria-hidden="true" className="text-walnut">
-                {isHeroCarouselPlaying ? '||' : '>'}
-              </span>
-              {isHeroCarouselPlaying ? 'Pause' : 'Play'}
-            </button>
-            <div className="col-start-2 flex flex-wrap items-center justify-center gap-x-4 gap-y-1">
-              <Link
-                href="/products"
-                className="home-action inline-flex min-h-11 items-center justify-center rounded-sm bg-bark px-3 text-[0.58rem] font-medium uppercase tracking-widest text-cream transition-all hover:-translate-y-0.5 hover:bg-walnut sm:px-5 sm:text-xs"
-              >
-                Explore collection
-              </Link>
-              <Link
-                href={hero.cta2.href}
-                className="home-text-action hidden min-h-11 items-center text-[0.58rem] font-medium uppercase tracking-widest text-bark sm:inline-flex sm:text-xs"
-              >
-                Custom order <span aria-hidden="true" className="ml-1 text-walnut">→</span>
-              </Link>
-            </div>
-            <div className="col-start-3 flex items-center justify-self-end gap-2 sm:gap-4">
-              <span className="hidden text-xs tracking-[0.2em] text-bark/80 sm:inline" aria-live={isHeroCarouselPlaying ? 'off' : 'polite'}>
-                {products.length ? String(activeHeroImageIndex + 1).padStart(2, '0') : '00'} / {String(products.length).padStart(2, '0')}
-              </span>
+              )}
             </div>
           </div>
-          <div
-            className="relative mt-4 h-px w-full overflow-hidden bg-bark/15"
-            role="progressbar"
-            aria-label="Carousel position"
-            aria-valuemin={products.length ? 1 : 0}
-            aria-valuemax={Math.max(products.length, 1)}
-            aria-valuenow={products.length ? activeHeroImageIndex + 1 : 0}
-          >
+          <div className="hero-slideshow-controls mx-auto mt-5 w-full max-w-5xl px-2 sm:mt-6 sm:px-6">
+            <div className="flex items-center justify-between gap-4 border-b border-bark/15 pb-3">
+              <p className="text-[0.62rem] font-medium uppercase tracking-[0.2em] text-ink-muted">
+                Selected work <span className="mx-2 text-bark/30">/</span> {products.length ? String(activeHeroImageIndex + 1).padStart(2, '0') : '00'} of {String(products.length).padStart(2, '0')}
+              </p>
+              <Link href={hero.cta2.href} className="home-text-action inline-flex min-h-11 items-center gap-2 text-[0.62rem] font-semibold uppercase tracking-[0.16em] text-bark">
+                Commission a piece <span aria-hidden="true" className="text-lg text-walnut">→</span>
+              </Link>
+            </div>
             <div
-              className="absolute inset-y-0 left-0 bg-wheat transition-transform duration-700 ease-out"
-              style={{
-                width: `${products.length ? 100 / products.length : 0}%`,
-                transform: `translateX(${activeHeroImageIndex * 100}%)`,
-              }}
-            />
+              className="relative mt-4 h-px w-full overflow-hidden bg-bark/15"
+              role="progressbar"
+              aria-label="Carousel position"
+              aria-valuemin={products.length ? 1 : 0}
+              aria-valuemax={Math.max(products.length, 1)}
+              aria-valuenow={products.length ? activeHeroImageIndex + 1 : 0}
+            >
+              <div
+                className="absolute inset-y-0 left-0 bg-wheat transition-transform duration-700 ease-out"
+                style={{
+                  width: `${products.length ? 100 / products.length : 0}%`,
+                  transform: `translateX(${activeHeroImageIndex * 100}%)`,
+                }}
+              />
+            </div>
           </div>
-        </div>
         </div>
       </section>
 

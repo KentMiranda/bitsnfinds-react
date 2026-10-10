@@ -21,7 +21,12 @@ export default function ProductsPage() {
   const [loading, setLoading] = useState(true)
   const [activeFilter, setActiveFilter] = useState('all')
   const [isOpen, setIsOpen] = useState(false)
+  const [selectedProduct, setSelectedProduct] = useState(null)
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0)
   const dropdownRef = useRef(null)
+  const viewerRef = useRef(null)
+  const viewerCloseRef = useRef(null)
+  const productTriggerRef = useRef(null)
 
   useEffect(() => {
     document.title = `Gallery — ${CONFIG.brand.name}`
@@ -57,6 +62,70 @@ export default function ProductsPage() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
+  useEffect(() => {
+    if (!selectedProduct) return undefined
+
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    viewerCloseRef.current?.focus()
+
+    function closeViewer() {
+      setSelectedProduct(null)
+      window.requestAnimationFrame(() => productTriggerRef.current?.focus())
+    }
+
+    function handleKeyDown(event) {
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        closeViewer()
+        return
+      }
+
+      const photos = selectedProduct.images?.length
+        ? selectedProduct.images
+        : [selectedProduct.image].filter(Boolean)
+
+      if (event.key === 'ArrowRight' && photos.length > 1) {
+        event.preventDefault()
+        setSelectedImageIndex((index) => (index + 1) % photos.length)
+      } else if (event.key === 'ArrowLeft' && photos.length > 1) {
+        event.preventDefault()
+        setSelectedImageIndex((index) => (index - 1 + photos.length) % photos.length)
+      } else if (event.key === 'Tab' && viewerRef.current) {
+        const focusableElements = viewerRef.current.querySelectorAll(
+          'button:not(:disabled), a[href], [tabindex]:not([tabindex="-1"])'
+        )
+        const firstElement = focusableElements[0]
+        const lastElement = focusableElements[focusableElements.length - 1]
+
+        if (event.shiftKey && document.activeElement === firstElement) {
+          event.preventDefault()
+          lastElement?.focus()
+        } else if (!event.shiftKey && document.activeElement === lastElement) {
+          event.preventDefault()
+          firstElement?.focus()
+        }
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => {
+      document.body.style.overflow = previousOverflow
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [selectedProduct])
+
+  function openViewer(product, trigger) {
+    productTriggerRef.current = trigger
+    setSelectedImageIndex(0)
+    setSelectedProduct(product)
+  }
+
+  function closeViewer() {
+    setSelectedProduct(null)
+    window.requestAnimationFrame(() => productTriggerRef.current?.focus())
+  }
+
   const presentCategories = Array.from(new Set(products.map((p) => p.category).filter(Boolean)))
   const otherPresent = presentCategories.filter((cat) => !KNOWN_CATEGORIES.includes(cat))
 
@@ -75,7 +144,7 @@ export default function ProductsPage() {
   const activeLabel = filterOptions.find((opt) => opt.value === activeFilter)?.label || 'All products'
 
   return (
-    <section className="relative min-h-[60vh] overflow-hidden bg-cream px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
+    <section className="page-surface relative min-h-[60vh] overflow-hidden bg-cream px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
       <LeafSVG variant="sprig"
         className="absolute top-0 left-0 w-44 opacity-[0.08] pointer-events-none" />
       <SectionHeader
@@ -159,7 +228,11 @@ export default function ProductsPage() {
                   {product.category}
                 </span>
               )}
-              <ProductCard product={product} index={index} />
+              <ProductCard
+                product={product}
+                index={index}
+                onSelect={(selected, trigger) => openViewer(selected, trigger)}
+              />
             </div>
           ))}
         </div>
@@ -175,6 +248,107 @@ export default function ProductsPage() {
           {gallery.orderLink.label} →
         </Link>
       </div>
+
+      {selectedProduct && (
+        <div
+          className="gallery-viewer-backdrop"
+          onClick={(event) => {
+            if (event.target === event.currentTarget) closeViewer()
+          }}
+        >
+          <section
+            ref={viewerRef}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="gallery-viewer-title"
+            className="gallery-viewer"
+          >
+            <header className="gallery-viewer-header">
+              <div className="min-w-0">
+                <p className="gallery-viewer-eyebrow">Product gallery</p>
+                <h2 id="gallery-viewer-title" className="gallery-viewer-title">
+                  {selectedProduct.name}
+                </h2>
+              </div>
+              <div className="flex items-center gap-3">
+                {selectedProduct.images?.length > 0 && (
+                  <span className="gallery-viewer-count" aria-live="polite">
+                    {selectedImageIndex + 1} / {selectedProduct.images.length}
+                  </span>
+                )}
+                <button
+                  ref={viewerCloseRef}
+                  type="button"
+                  onClick={closeViewer}
+                  className="gallery-viewer-close"
+                  aria-label="Close image viewer"
+                >
+                  <span aria-hidden="true">×</span>
+                </button>
+              </div>
+            </header>
+
+            <div className="gallery-viewer-image-stage">
+              {(selectedProduct.images?.length > 0 || selectedProduct.image) ? (
+                <img
+                  key={selectedProduct.images?.[selectedImageIndex] || selectedProduct.image}
+                  src={selectedProduct.images?.[selectedImageIndex] || selectedProduct.image}
+                  alt={`${selectedProduct.name}, image ${selectedImageIndex + 1}`}
+                  className="gallery-viewer-image"
+                />
+              ) : (
+                <p className="gallery-viewer-empty">No product images are available.</p>
+              )}
+
+              {(selectedProduct.images?.length || 0) > 1 && (
+                <>
+                  <button
+                    type="button"
+                    className="gallery-viewer-arrow gallery-viewer-previous"
+                    onClick={() => setSelectedImageIndex((index) => (
+                      (index - 1 + selectedProduct.images.length) % selectedProduct.images.length
+                    ))}
+                    aria-label="Previous image"
+                  >
+                    ‹
+                  </button>
+                  <button
+                    type="button"
+                    className="gallery-viewer-arrow gallery-viewer-next"
+                    onClick={() => setSelectedImageIndex((index) => (
+                      (index + 1) % selectedProduct.images.length
+                    ))}
+                    aria-label="Next image"
+                  >
+                    ›
+                  </button>
+                </>
+              )}
+            </div>
+
+            {selectedProduct.images?.length > 1 && (
+              <div className="gallery-viewer-thumbnails" aria-label="Choose product image">
+                {selectedProduct.images.map((photo, index) => (
+                  <button
+                    key={`${photo}-${index}`}
+                    type="button"
+                    onClick={() => setSelectedImageIndex(index)}
+                    className={`gallery-viewer-thumbnail ${index === selectedImageIndex ? 'is-active' : ''}`}
+                    aria-label={`Show image ${index + 1}`}
+                    aria-pressed={index === selectedImageIndex}
+                  >
+                    <img src={photo} alt="" />
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {selectedProduct.desc && (
+              <p className="gallery-viewer-description">{selectedProduct.desc}</p>
+            )}
+          </section>
+        </div>
+      )}
     </section>
   )
 }

@@ -137,7 +137,7 @@ export default function AdminOrdersPage() {
   }
 
   return (
-    <div className="min-h-screen bg-cream flex">
+    <div className="admin-shell min-h-screen bg-cream flex">
       <AdminSidebar />
 
       <div className="flex min-w-0 flex-1 overflow-hidden">
@@ -235,7 +235,7 @@ export default function AdminOrdersPage() {
         </div>
 
         {selectedOrder && (
-          <div className="fixed inset-0 z-20 flex min-w-0 flex-1 flex-col overflow-hidden bg-cream md:static md:z-auto">
+          <div className="fixed inset-0 z-40 flex min-w-0 flex-1 flex-col overflow-hidden bg-cream md:static md:z-auto">
             <div className="flex items-center justify-between gap-3 border-b border-mist px-4 py-4 sm:px-6">
               <div className="flex items-center gap-3">
                 <button
