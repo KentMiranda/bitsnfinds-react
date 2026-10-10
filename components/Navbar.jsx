@@ -99,7 +99,7 @@ export default function Navbar() {
           type="button"
           className="nav-toggle"
           onClick={() => setMenuOpen((open) => !open)}
-          aria-label="Toggle navigation menu"
+          aria-label="Menu"
           aria-expanded={menuOpen}
           aria-controls="mobile-navigation"
         >
@@ -108,7 +108,7 @@ export default function Navbar() {
             <span className={`nav-toggle-line ${menuOpen ? 'is-hidden' : ''}`} />
             <span className={`nav-toggle-line ${menuOpen ? 'is-open' : ''}`} />
           </span>
-          <span>{menuOpen ? 'Close' : 'Menu'}</span>
+          <span>Menu</span>
         </button>
 
         <div
