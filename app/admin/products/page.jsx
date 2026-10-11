@@ -164,22 +164,23 @@ export default function AdminProductsPage() {
     setMediaError('')
   }
 
-  async function removeExistingMedia(imageId) {
+  async function removeExistingMedia(mediaItem) {
     if (!editingId) return
-    if (!confirm('Remove this media item?')) return
+    const mediaLabel = mediaItem.media_type === 'video' ? 'video' : 'photo'
+    if (!confirm(`Remove this ${mediaLabel} from the product?`)) return
     try {
       const res = await fetch(
-        `${CONFIG.apiBaseUrl}/api/products/${editingId}/showcase-images/${imageId}/`,
+        `${CONFIG.apiBaseUrl}/api/products/${editingId}/showcase-images/${mediaItem.id}/`,
         { method: 'DELETE', headers: { 'Authorization': `Token ${getToken()}` } }
       )
       if (res.ok) {
-        setExistingMedia((prev) => prev.filter((media) => media.id !== imageId))
+        setExistingMedia((prev) => prev.filter((item) => item.id !== mediaItem.id))
       } else {
-        setMediaError('Could not remove that media item. Please try again.')
+        setMediaError(`Could not remove that ${mediaLabel}. Please try again.`)
       }
     } catch (err) {
       console.error('Failed to delete product media:', err)
-      setMediaError('Could not reach the server to remove that media item.')
+      setMediaError(`Could not reach the server to remove that ${mediaLabel}.`)
     }
   }
 
@@ -380,11 +381,10 @@ export default function AdminProductsPage() {
                         {media.media_type === 'video' && (
                           <span className="absolute bottom-1 left-1 rounded bg-bark/80 px-1 text-[0.5rem] text-cream">VIDEO</span>
                         )}
-                        <button type="button" onClick={() => removeExistingMedia(media.id)}
-                          aria-label="Remove media item"
-                          className="absolute top-0.5 right-0.5 bg-bark/80 text-cream text-xs
-                                     w-5 h-5 rounded-full flex items-center justify-center
-                                     hover:bg-red-600 transition-colors">
+                        <button type="button" onClick={() => removeExistingMedia(media)}
+                          aria-label={`Remove ${media.media_type === 'video' ? 'video' : 'photo'}`}
+                          title={`Remove ${media.media_type === 'video' ? 'video' : 'photo'}`}
+                          className="absolute right-1 top-1 flex h-8 min-w-8 items-center justify-center rounded-full bg-bark/90 px-2 text-sm font-semibold text-cream shadow transition-colors hover:bg-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream">
                           ×
                         </button>
                       </div>
@@ -396,10 +396,9 @@ export default function AdminProductsPage() {
                           : <img src={media.previewUrl} alt="" className="w-full h-full object-cover"/>
                         }
                         <button type="button" onClick={() => removeNewMedia(i)}
-                          aria-label="Remove selected media item"
-                          className="absolute top-0.5 right-0.5 bg-bark/80 text-cream text-xs
-                                     w-5 h-5 rounded-full flex items-center justify-center
-                                     hover:bg-red-600 transition-colors">
+                          aria-label={`Remove selected ${media.mediaType === 'video' ? 'video' : 'photo'}`}
+                          title={`Remove selected ${media.mediaType === 'video' ? 'video' : 'photo'}`}
+                          className="absolute right-1 top-1 flex h-8 min-w-8 items-center justify-center rounded-full bg-bark/90 px-2 text-sm font-semibold text-cream shadow transition-colors hover:bg-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream">
                           ×
                         </button>
                         <span className="absolute bottom-0 left-0 right-0 bg-bark/70 text-cream
