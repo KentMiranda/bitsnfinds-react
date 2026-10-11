@@ -294,6 +294,8 @@ export default function AdminProductsPage() {
 
   const totalMediaCount = existingMedia.length + newMediaFiles.length
   const slotsLeft = MAX_MEDIA - totalMediaCount
+  const uploadedPhotoCount = existingMedia.filter((media) => media.media_type !== 'video').length
+  const uploadedVideoCount = existingMedia.length - uploadedPhotoCount
 
   return (
     <div className="admin-shell min-h-screen bg-cream flex">
@@ -367,13 +369,21 @@ export default function AdminProductsPage() {
 
               <div className="flex flex-col gap-1.5 mb-4">
                 <label className="text-[0.65rem] font-medium tracking-widest uppercase text-ink-muted">
-                  Product media ({totalMediaCount}/{MAX_MEDIA})
+                  Product media
                 </label>
+                <p className="text-xs text-ink-muted" aria-live="polite">
+                  <span className="font-semibold text-bark">{existingMedia.length}/{MAX_MEDIA} uploaded</span>
+                  {' '}({uploadedPhotoCount} photo{uploadedPhotoCount !== 1 ? 's' : ''}
+                  {uploadedVideoCount > 0 && `, ${uploadedVideoCount} video${uploadedVideoCount !== 1 ? 's' : ''}`})
+                  {newMediaFiles.length > 0 && (
+                    <span> · {newMediaFiles.length} selected to upload</span>
+                  )}
+                </p>
 
                 {(existingMedia.length > 0 || newMediaFiles.length > 0) && (
                   <div className="flex flex-wrap gap-3 mb-2">
                     {existingMedia.map((media) => (
-                      <div key={media.id} className="relative w-20 h-20 rounded-sm overflow-hidden border border-mist group">
+                      <div key={media.id} className="relative h-24 w-24 rounded-sm overflow-hidden border border-mist group">
                         {media.media_type === 'video'
                           ? <video src={media.url} muted playsInline preload="metadata" className="w-full h-full object-cover"/>
                           : <img src={media.url} alt="" className="w-full h-full object-cover"/>
@@ -384,13 +394,14 @@ export default function AdminProductsPage() {
                         <button type="button" onClick={() => removeExistingMedia(media)}
                           aria-label={`Remove ${media.media_type === 'video' ? 'video' : 'photo'}`}
                           title={`Remove ${media.media_type === 'video' ? 'video' : 'photo'}`}
-                          className="absolute right-1 top-1 flex h-8 min-w-8 items-center justify-center rounded-full bg-bark/90 px-2 text-sm font-semibold text-cream shadow transition-colors hover:bg-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream">
-                          ×
+                          className="absolute right-1 top-1 flex min-h-8 items-center justify-center gap-1 rounded-full bg-red-700/95 px-2 text-xs font-semibold text-white shadow transition-colors hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
+                          <span aria-hidden="true">×</span>
+                          <span>Remove</span>
                         </button>
                       </div>
                     ))}
                     {newMediaFiles.map((media, i) => (
-                      <div key={media.previewUrl} className="relative w-20 h-20 rounded-sm overflow-hidden border border-mist group">
+                      <div key={media.previewUrl} className="relative h-24 w-24 rounded-sm overflow-hidden border border-mist group">
                         {media.mediaType === 'video'
                           ? <video src={media.previewUrl} muted playsInline preload="metadata" className="w-full h-full object-cover"/>
                           : <img src={media.previewUrl} alt="" className="w-full h-full object-cover"/>
@@ -398,8 +409,9 @@ export default function AdminProductsPage() {
                         <button type="button" onClick={() => removeNewMedia(i)}
                           aria-label={`Remove selected ${media.mediaType === 'video' ? 'video' : 'photo'}`}
                           title={`Remove selected ${media.mediaType === 'video' ? 'video' : 'photo'}`}
-                          className="absolute right-1 top-1 flex h-8 min-w-8 items-center justify-center rounded-full bg-bark/90 px-2 text-sm font-semibold text-cream shadow transition-colors hover:bg-red-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-cream">
-                          ×
+                          className="absolute right-1 top-1 flex min-h-8 items-center justify-center gap-1 rounded-full bg-red-700/95 px-2 text-xs font-semibold text-white shadow transition-colors hover:bg-red-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
+                          <span aria-hidden="true">×</span>
+                          <span>Remove</span>
                         </button>
                         <span className="absolute bottom-0 left-0 right-0 bg-bark/70 text-cream
                                          text-[0.55rem] text-center py-0.5">
