@@ -61,7 +61,7 @@ export default function Navbar() {
             alt="Bits & Finds logo"
             width={88}
             height={88}
-            className="nav-brand-logo h-12 w-12 shrink-0 rounded-full border-2 object-cover shadow-sm transition-transform duration-300 group-hover:scale-[1.03] md:h-14 md:w-14"
+            className="nav-brand-logo h-12 w-12 shrink-0 rounded-full border-2 object-cover transition-transform duration-300 group-hover:scale-[1.04] md:h-14 md:w-14"
           />
           <span className="nav-brand-name whitespace-nowrap text-base sm:text-lg">
             Bits <span>&amp;</span> Finds
