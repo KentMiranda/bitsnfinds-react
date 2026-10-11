@@ -173,9 +173,6 @@ export default function ProductDetailPage() {
             <h1 className="font-display text-3xl md:text-4xl text-bark leading-snug mt-4 mb-2">
               {product.name}
             </h1>
-            {product.price && (
-              <p className="mb-4 text-lg font-medium text-walnut">{product.price}</p>
-            )}
             <p className="mb-6 text-sm font-light leading-relaxed text-ink-muted">
               {product.desc}
             </p>

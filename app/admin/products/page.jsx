@@ -7,7 +7,7 @@ import AdminSidebar from '@/components/admin/AdminSidebar'
 import { CONFIG } from '@/lib/config'
 
 const EMPTY_FORM = {
-  name: '', description: '', price: '', tag: '', emoji: '',
+  name: '', description: '', tag: '', emoji: '',
   category: 'General', customCategory: '',
   image_url: '', is_active: true
 }
@@ -91,7 +91,6 @@ export default function AdminProductsPage() {
     setForm({
       name:        product.name,
       description: product.description,
-      price:       product.price,
       tag:         product.tag        || '',
       emoji:       product.emoji      || '',
       category:    isKnownCategory ? savedCategory : 'Other',
@@ -327,7 +326,7 @@ export default function AdminProductsPage() {
                 {editingId ? 'Edit product' : 'Add new product'}
               </h2>
 
-              <div className="mb-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <div className="mb-4">
                 <div className="flex flex-col gap-1.5">
                   <label className="text-[0.65rem] font-medium tracking-widest uppercase text-ink-muted">
                     Product name *
@@ -335,15 +334,6 @@ export default function AdminProductsPage() {
                   <input type="text" placeholder="e.g. Portrait Engraving"
                     value={form.name}
                     onChange={(e) => setForm({ ...form, name: e.target.value })}
-                    className={inputClass}/>
-                </div>
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-[0.65rem] font-medium tracking-widest uppercase text-ink-muted">
-                    Price or pricing note
-                  </label>
-                  <input type="text" placeholder="e.g. From $25, Custom quote, Contact us"
-                    value={form.price}
-                    onChange={(e) => setForm({ ...form, price: e.target.value })}
                     className={inputClass}/>
                 </div>
               </div>
@@ -579,8 +569,7 @@ export default function AdminProductsPage() {
                     <p className="text-xs text-ink-muted font-light leading-relaxed mb-3 line-clamp-2">
                       {product.description}
                     </p>
-                    <div className="flex items-center justify-between">
-                      <span className="text-walnut font-medium text-sm">{product.price}</span>
+                    <div className="flex items-center justify-end">
                       <div className="flex gap-2">
                         <button onClick={() => openEditForm(product)}
                           className="text-xs text-forest font-medium hover:text-bark

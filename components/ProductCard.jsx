@@ -3,7 +3,7 @@
 import Link from 'next/link'
 
 export default function ProductCard({ product, index = 0, onSelect }) {
-  const { id, slug, name, desc, emoji, image, media, images, price, category } = product
+  const { id, slug, name, desc, emoji, image, media, images, category } = product
   const mediaItems = media?.length
     ? media
     : images?.length
@@ -70,10 +70,7 @@ export default function ProductCard({ product, index = 0, onSelect }) {
 
       <div className="px-0.5">
         <h3 className="font-display text-lg font-normal text-bark leading-snug mb-1 transition-colors group-hover:text-walnut">{name}</h3>
-        <div className="flex items-center justify-between">
-          <p className="text-ink-muted text-xs font-light leading-relaxed line-clamp-1 flex-1">{desc}</p>
-          {price && <span className="text-xs text-walnut font-medium flex-shrink-0 ml-3">{price}</span>}
-        </div>
+        <p className="text-ink-muted text-xs font-light leading-relaxed line-clamp-1">{desc}</p>
       </div>
 
       <style jsx global>{`
