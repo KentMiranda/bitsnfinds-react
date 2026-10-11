@@ -21,14 +21,20 @@ export default function ProductDetailPage() {
         return res.json()
       })
       .then((data) => {
-        const showcaseUrls = (data.showcase_images || []).map((img) => img.url)
+        const showcaseMedia = (data.showcase_images || []).map((item) => ({
+          url: item.url,
+          media_type: item.media_type || 'image',
+        }))
         setProduct({
           ...data,
           desc: data.description,
           category: data.category || 'General',
-          images: showcaseUrls.length > 0
-            ? showcaseUrls
-            : [data.image || data.image_url].filter(Boolean),
+          media: showcaseMedia.length > 0
+            ? showcaseMedia
+            : [data.image || data.image_url].filter(Boolean).map((url) => ({
+              url,
+              media_type: 'image',
+            })),
         })
       })
       .catch(() => setNotFound(true))
@@ -66,8 +72,8 @@ export default function ProductDetailPage() {
     )
   }
 
-  const photos = product.images
-  const hasMultiple = photos.length > 1
+  const mediaItems = product.media
+  const hasMultiple = mediaItems.length > 1
 
   return (
     <section className="page-surface relative min-h-[60vh] overflow-hidden bg-cream px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-20">
@@ -84,13 +90,21 @@ export default function ProductDetailPage() {
         <div className="grid gap-8 md:grid-cols-2 md:gap-12">
           <div>
             <div className="relative aspect-[3/4] bg-mist rounded-md overflow-hidden mb-4">
-              {photos.length > 0 ? (
-                <img
-                  key={photos[activeIndex]}
-                  src={photos[activeIndex]}
-                  alt={product.name}
-                  className="w-full h-full object-cover"
-                />
+              {mediaItems.length > 0 ? (
+                mediaItems[activeIndex].media_type === 'video'
+                  ? <video
+                      key={mediaItems[activeIndex].url}
+                      src={mediaItems[activeIndex].url}
+                      controls
+                      playsInline
+                      className="w-full h-full object-contain bg-bark"
+                    />
+                  : <img
+                      key={mediaItems[activeIndex].url}
+                      src={mediaItems[activeIndex].url}
+                      alt={product.name}
+                      className="w-full h-full object-cover"
+                    />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-6xl">
                   {product.emoji}
@@ -101,19 +115,19 @@ export default function ProductDetailPage() {
                 <>
                   <button
                     type="button"
-                    onClick={() => setActiveIndex((i) => (i - 1 + photos.length) % photos.length)}
+                    onClick={() => setActiveIndex((i) => (i - 1 + mediaItems.length) % mediaItems.length)}
                     className="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-cream/90
                                flex items-center justify-center text-sm text-bark hover:bg-cream transition-colors"
-                    aria-label="Previous photo"
+                    aria-label="Previous media item"
                   >
                     ‹
                   </button>
                   <button
                     type="button"
-                    onClick={() => setActiveIndex((i) => (i + 1) % photos.length)}
+                    onClick={() => setActiveIndex((i) => (i + 1) % mediaItems.length)}
                     className="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full bg-cream/90
                                flex items-center justify-center text-sm text-bark hover:bg-cream transition-colors"
-                    aria-label="Next photo"
+                    aria-label="Next media item"
                   >
                     ›
                   </button>
@@ -123,15 +137,27 @@ export default function ProductDetailPage() {
 
             {hasMultiple && (
               <div className="flex gap-2 flex-wrap">
-                {photos.map((photo, i) => (
+                {mediaItems.map((media, i) => (
                   <button
-                    key={photo}
+                  key={`${media.url}-${i}`}
                     type="button"
                     onClick={() => setActiveIndex(i)}
                     className={`w-16 h-16 rounded-sm overflow-hidden border-2 transition-colors
                       ${i === activeIndex ? 'border-forest' : 'border-transparent hover:border-mist'}`}
+                  aria-label={`Show ${media.media_type} ${i + 1}`}
                   >
-                    <img src={photo} alt="" className="w-full h-full object-cover" />
+                  {media.media_type === 'video'
+                    ? <video
+                        src={media.url}
+                        poster={mediaItems.find((item) => item.media_type === 'image')?.url}
+                        muted
+                        playsInline
+                        preload="metadata"
+                        aria-hidden="true"
+                        className="w-full h-full object-cover"
+                      />
+                    : <img src={media.url} alt="" className="w-full h-full object-cover" />
+                  }
                   </button>
                 ))}
               </div>

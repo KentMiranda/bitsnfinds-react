@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import { getToken, isLoggedIn } from '@/lib/auth'
 import AdminSidebar from '@/components/admin/AdminSidebar'
@@ -12,7 +12,10 @@ const EMPTY_FORM = {
   image_url: '', is_active: true
 }
 
-const MAX_IMAGES = 5
+const MAX_MEDIA = 5
+const MAX_VIDEO_SIZE = 50 * 1024 * 1024
+const IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp']
+const VIDEO_EXTENSIONS = ['mp4', 'webm']
 
 const CATEGORY_OPTIONS = [
   'General',
@@ -34,15 +37,28 @@ export default function AdminProductsPage() {
   const [saving,         setSaving]         = useState(false)
   const [saveError,      setSaveError]      = useState('')
 
-  const [newImageFiles,   setNewImageFiles]   = useState([])
-  const [existingImages,  setExistingImages]  = useState([])
-  const [imageError,      setImageError]      = useState('')
-  const [uploadingImages, setUploadingImages] = useState(false)
+  const [newMediaFiles,   setNewMediaFiles]   = useState([])
+  const [existingMedia,   setExistingMedia]   = useState([])
+  const [mediaError,      setMediaError]      = useState('')
+  const [uploadingMedia,  setUploadingMedia]  = useState(false)
+  const previewUrlsRef = useRef(new Set())
 
   useEffect(() => {
     if (!isLoggedIn()) router.push('/admin/login')
     else fetchProducts()
   }, [])
+
+  useEffect(() => () => {
+    previewUrlsRef.current.forEach((url) => URL.revokeObjectURL(url))
+  }, [])
+
+  function clearNewMedia() {
+    newMediaFiles.forEach(({ previewUrl }) => {
+      URL.revokeObjectURL(previewUrl)
+      previewUrlsRef.current.delete(previewUrl)
+    })
+    setNewMediaFiles([])
+  }
 
   async function fetchProducts() {
     try {
@@ -62,9 +78,9 @@ export default function AdminProductsPage() {
   function openAddForm() {
     setForm(EMPTY_FORM)
     setEditingId(null)
-    setNewImageFiles([])
-    setExistingImages([])
-    setImageError('')
+    clearNewMedia()
+    setExistingMedia([])
+    setMediaError('')
     setSaveError('')
     setShowForm(true)
   }
@@ -84,65 +100,96 @@ export default function AdminProductsPage() {
       is_active:   product.is_active,
     })
     setEditingId(product.id)
-    setNewImageFiles([])
-    setExistingImages(product.showcase_images || [])
-    setImageError('')
+    clearNewMedia()
+    setExistingMedia(product.showcase_images || [])
+    setMediaError('')
     setSaveError('')
     setShowForm(true)
   }
 
-  function handleImagePick(e) {
+  function handleMediaPick(e) {
     const picked = Array.from(e.target.files || [])
     e.target.value = ''
     if (picked.length === 0) return
 
-    const remainingSlots = MAX_IMAGES - existingImages.length - newImageFiles.length
+    const remainingSlots = MAX_MEDIA - existingMedia.length - newMediaFiles.length
     if (remainingSlots <= 0) {
-      setImageError(`You can only have ${MAX_IMAGES} images per product.`)
+      setMediaError(`You can only have ${MAX_MEDIA} media items per product.`)
       return
     }
 
-    const accepted = picked.slice(0, remainingSlots)
-    if (picked.length > remainingSlots) {
-      setImageError(`Only added ${accepted.length} of ${picked.length} — max ${MAX_IMAGES} images per product.`)
+    const validFiles = []
+    const rejected = []
+    picked.forEach((file) => {
+      const extension = file.name.split('.').pop()?.toLowerCase()
+      if (file.size === 0) {
+        rejected.push(`${file.name} is empty.`)
+      } else if (IMAGE_EXTENSIONS.includes(extension)) {
+        validFiles.push({ file, mediaType: 'image' })
+      } else if (VIDEO_EXTENSIONS.includes(extension)) {
+        if (file.size > MAX_VIDEO_SIZE) {
+          rejected.push(`${file.name} exceeds the 50 MB video limit.`)
+        } else {
+          validFiles.push({ file, mediaType: 'video' })
+        }
+      } else {
+        rejected.push(`${file.name} is not a supported image or video.`)
+      }
+    })
+
+    const accepted = validFiles.slice(0, remainingSlots).map((media) => {
+      const previewUrl = URL.createObjectURL(media.file)
+      previewUrlsRef.current.add(previewUrl)
+      return { ...media, previewUrl }
+    })
+    if (validFiles.length > remainingSlots) {
+      rejected.push(`Only added ${accepted.length} of ${validFiles.length} valid files — maximum ${MAX_MEDIA} media items per product.`)
+    }
+    if (rejected.length) {
+      setMediaError(rejected.join(' '))
     } else {
-      setImageError('')
+      setMediaError('')
     }
 
-    setNewImageFiles(prev => [...prev, ...accepted])
+    setNewMediaFiles((previous) => [...previous, ...accepted])
   }
 
-  function removeNewImage(index) {
-    setNewImageFiles(prev => prev.filter((_, i) => i !== index))
-    setImageError('')
+  function removeNewMedia(index) {
+    const removed = newMediaFiles[index]
+    if (removed) {
+      URL.revokeObjectURL(removed.previewUrl)
+      previewUrlsRef.current.delete(removed.previewUrl)
+    }
+    setNewMediaFiles((previous) => previous.filter((_, i) => i !== index))
+    setMediaError('')
   }
 
-  async function removeExistingImage(imageId) {
+  async function removeExistingMedia(imageId) {
     if (!editingId) return
-    if (!confirm('Remove this image?')) return
+    if (!confirm('Remove this media item?')) return
     try {
       const res = await fetch(
         `${CONFIG.apiBaseUrl}/api/products/${editingId}/showcase-images/${imageId}/`,
         { method: 'DELETE', headers: { 'Authorization': `Token ${getToken()}` } }
       )
       if (res.ok) {
-        setExistingImages(prev => prev.filter(img => img.id !== imageId))
+        setExistingMedia((prev) => prev.filter((media) => media.id !== imageId))
       } else {
-        setImageError('Could not remove that image. Please try again.')
+        setMediaError('Could not remove that media item. Please try again.')
       }
     } catch (err) {
-      console.error('Failed to delete image:', err)
-      setImageError('Could not reach the server to remove that image.')
+      console.error('Failed to delete product media:', err)
+      setMediaError('Could not reach the server to remove that media item.')
     }
   }
 
-  async function uploadNewImages(productId) {
-    if (newImageFiles.length === 0) return true
+  async function uploadNewMedia(productId) {
+    if (newMediaFiles.length === 0) return true
 
-    setUploadingImages(true)
+    setUploadingMedia(true)
     try {
       const body = new FormData()
-      newImageFiles.forEach(file => body.append('images', file))
+      newMediaFiles.forEach(({ file }) => body.append('images', file))
 
       const res = await fetch(
         `${CONFIG.apiBaseUrl}/api/products/${productId}/showcase-images/`,
@@ -155,14 +202,14 @@ export default function AdminProductsPage() {
       if (res.ok) return true
 
       const data = await res.json().catch(() => ({}))
-      setImageError(data.error || 'Some images failed to upload.')
+      setMediaError(data.error || 'Some media files failed to upload.')
       return false
     } catch (err) {
-      console.error('Failed to upload images:', err)
-      setImageError('Could not reach the server to upload images.')
+      console.error('Failed to upload product media:', err)
+      setMediaError('Could not reach the server to upload media.')
       return false
     } finally {
-      setUploadingImages(false)
+      setUploadingMedia(false)
     }
   }
 
@@ -200,17 +247,15 @@ export default function AdminProductsPage() {
         const savedProduct = await res.json()
         const productId = savedProduct.id || editingId
 
-        const imagesOk = await uploadNewImages(productId)
+        const mediaOk = await uploadNewMedia(productId)
 
         await fetchProducts()
-        if (imagesOk) {
+        if (mediaOk) {
           setShowForm(false)
           setEditingId(null)
           setForm(EMPTY_FORM)
-          setNewImageFiles([])
-          setExistingImages([])
-        } else {
-          setNewImageFiles([])
+          clearNewMedia()
+          setExistingMedia([])
         }
       } else {
         const data = await res.json().catch(() => ({}))
@@ -246,8 +291,8 @@ export default function AdminProductsPage() {
                       text-sm text-ink bg-cream
                       focus:outline-none focus:border-sage transition-colors`
 
-  const totalImageCount = existingImages.length + newImageFiles.length
-  const slotsLeft = MAX_IMAGES - totalImageCount
+  const totalMediaCount = existingMedia.length + newMediaFiles.length
+  const slotsLeft = MAX_MEDIA - totalMediaCount
 
   return (
     <div className="admin-shell min-h-screen bg-cream flex">
@@ -261,7 +306,7 @@ export default function AdminProductsPage() {
               {products.length} product{products.length !== 1 ? 's' : ''}
             </p>
             <p className="mt-1 text-xs font-light text-ink-muted">
-              Active products appear in the landing carousel. Edit a product’s images to change its carousel photo.
+              Active products appear in the landing carousel. Add photos or videos to each product’s media gallery.
             </p>
           </div>
           <button
@@ -321,15 +366,22 @@ export default function AdminProductsPage() {
 
               <div className="flex flex-col gap-1.5 mb-4">
                 <label className="text-[0.65rem] font-medium tracking-widest uppercase text-ink-muted">
-                  Product images ({totalImageCount}/{MAX_IMAGES})
+                  Product media ({totalMediaCount}/{MAX_MEDIA})
                 </label>
 
-                {(existingImages.length > 0 || newImageFiles.length > 0) && (
+                {(existingMedia.length > 0 || newMediaFiles.length > 0) && (
                   <div className="flex flex-wrap gap-3 mb-2">
-                    {existingImages.map((img) => (
-                      <div key={img.id} className="relative w-20 h-20 rounded-sm overflow-hidden border border-mist group">
-                        <img src={img.url} alt="" className="w-full h-full object-cover"/>
-                        <button type="button" onClick={() => removeExistingImage(img.id)}
+                    {existingMedia.map((media) => (
+                      <div key={media.id} className="relative w-20 h-20 rounded-sm overflow-hidden border border-mist group">
+                        {media.media_type === 'video'
+                          ? <video src={media.url} muted playsInline preload="metadata" className="w-full h-full object-cover"/>
+                          : <img src={media.url} alt="" className="w-full h-full object-cover"/>
+                        }
+                        {media.media_type === 'video' && (
+                          <span className="absolute bottom-1 left-1 rounded bg-bark/80 px-1 text-[0.5rem] text-cream">VIDEO</span>
+                        )}
+                        <button type="button" onClick={() => removeExistingMedia(media.id)}
+                          aria-label="Remove media item"
                           className="absolute top-0.5 right-0.5 bg-bark/80 text-cream text-xs
                                      w-5 h-5 rounded-full flex items-center justify-center
                                      hover:bg-red-600 transition-colors">
@@ -337,10 +389,14 @@ export default function AdminProductsPage() {
                         </button>
                       </div>
                     ))}
-                    {newImageFiles.map((file, i) => (
-                      <div key={i} className="relative w-20 h-20 rounded-sm overflow-hidden border border-mist group">
-                        <img src={URL.createObjectURL(file)} alt="" className="w-full h-full object-cover"/>
-                        <button type="button" onClick={() => removeNewImage(i)}
+                    {newMediaFiles.map((media, i) => (
+                      <div key={media.previewUrl} className="relative w-20 h-20 rounded-sm overflow-hidden border border-mist group">
+                        {media.mediaType === 'video'
+                          ? <video src={media.previewUrl} muted playsInline preload="metadata" className="w-full h-full object-cover"/>
+                          : <img src={media.previewUrl} alt="" className="w-full h-full object-cover"/>
+                        }
+                        <button type="button" onClick={() => removeNewMedia(i)}
+                          aria-label="Remove selected media item"
                           className="absolute top-0.5 right-0.5 bg-bark/80 text-cream text-xs
                                      w-5 h-5 rounded-full flex items-center justify-center
                                      hover:bg-red-600 transition-colors">
@@ -348,7 +404,7 @@ export default function AdminProductsPage() {
                         </button>
                         <span className="absolute bottom-0 left-0 right-0 bg-bark/70 text-cream
                                          text-[0.55rem] text-center py-0.5">
-                          new
+                          {media.mediaType === 'video' ? 'new video' : 'new photo'}
                         </span>
                       </div>
                     ))}
@@ -357,19 +413,19 @@ export default function AdminProductsPage() {
 
                 {slotsLeft > 0 ? (
                   <>
-                    <input type="file" accept="image/jpeg,image/png,image/webp" multiple
-                      onChange={handleImagePick}
+                    <input type="file" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm,.mp4,.webm" multiple
+                      onChange={handleMediaPick}
                       className="w-full text-sm"/>
                     <span className="text-xs text-ink-muted">
-                      JPEG, PNG, or WebP. Up to {MAX_IMAGES} images total — {slotsLeft} slot{slotsLeft !== 1 ? 's' : ''} left.
+                      Photos: JPG, PNG, or WebP. Videos: MP4 or WebM, up to 50 MB each. Maximum {MAX_MEDIA} photos/videos combined; {slotsLeft} slot{slotsLeft !== 1 ? 's' : ''} left.
                     </span>
                   </>
                 ) : (
                   <span className="text-xs text-ink-muted">
-                    Maximum of {MAX_IMAGES} images reached. Remove one to add another.
+                    Maximum of {MAX_MEDIA} media items reached. Remove one to add another.
                   </span>
                 )}
-                {imageError && <p className="text-xs text-red-600 mt-1">{imageError}</p>}
+                {mediaError && <p role="alert" className="text-xs text-red-600 mt-1">{mediaError}</p>}
               </div>
 
               <div className="flex flex-col gap-1.5 mb-4">
@@ -426,17 +482,17 @@ export default function AdminProductsPage() {
               {saveError && <p className="text-sm text-red-700 mb-4">{saveError}</p>}
 
               <div className="flex gap-3">
-                <button onClick={handleSave} disabled={saving || uploadingImages}
+                <button onClick={handleSave} disabled={saving || uploadingMedia}
                   className="bg-bark text-cream text-xs font-medium tracking-widest
                              uppercase px-6 py-2.5 rounded-sm hover:bg-walnut
                              transition-colors disabled:opacity-50">
                   {saving
                     ? 'Saving...'
-                    : uploadingImages
-                      ? 'Uploading images...'
+                    : uploadingMedia
+                      ? 'Uploading media...'
                       : editingId ? 'Save changes' : 'Add product'}
                 </button>
-                <button onClick={() => { setShowForm(false); setEditingId(null) }}
+                <button onClick={() => { setShowForm(false); setEditingId(null); clearNewMedia() }}
                   className="border border-mist text-ink-muted text-xs font-medium
                              tracking-widest uppercase px-6 py-2.5 rounded-sm
                              hover:border-sage transition-colors">
@@ -462,16 +518,23 @@ export default function AdminProductsPage() {
 
                   <div className="aspect-[4/3] bg-mist flex items-center justify-center text-4xl relative">
                     {(product.showcase_images?.[0]?.url || product.image || product.image_url)
-                      ? <img
-                          src={product.showcase_images?.[0]?.url || product.image || product.image_url}
-                          alt={product.name}
-                          className="w-full h-full object-cover"/>
+                      ? product.showcase_images?.[0]?.media_type === 'video'
+                        ? <video
+                            src={product.showcase_images[0].url}
+                            muted
+                            playsInline
+                            preload="metadata"
+                            className="w-full h-full object-cover"/>
+                        : <img
+                            src={product.showcase_images?.[0]?.url || product.image || product.image_url}
+                            alt={product.name}
+                            className="w-full h-full object-cover"/>
                       : product.emoji || '📦'
                     }
-                    {product.showcase_images?.length > 1 && (
+                    {product.showcase_images?.length > 0 && (
                       <span className="absolute bottom-2 right-2 bg-bark/80 text-cream
                                        text-[0.6rem] font-medium px-2 py-0.5 rounded-sm">
-                        +{product.showcase_images.length - 1} more
+                        {product.showcase_images.length} media item{product.showcase_images.length !== 1 ? 's' : ''}
                       </span>
                     )}
                     {product.tag && (

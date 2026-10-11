@@ -35,16 +35,23 @@ export default function ProductsPage() {
       .then((data) => {
         if (!Array.isArray(data)) return
         setProducts(data.map((product) => {
-          const showcaseUrls = (product.showcase_images || []).map((img) => img.url)
+          const showcaseMedia = (product.showcase_images || []).map((item) => ({
+            url: item.url,
+            media_type: item.media_type || 'image',
+          }))
+          const media = showcaseMedia.length > 0
+            ? showcaseMedia
+            : [product.image || product.image_url].filter(Boolean).map((url) => ({
+              url,
+              media_type: 'image',
+            }))
           return {
             ...product,
             slug: product.id || product.name,
             desc: product.description,
             category: product.category || 'General',
-            image: showcaseUrls[0] || product.image || product.image_url || '',
-            images: showcaseUrls.length > 0
-              ? showcaseUrls
-              : [product.image || product.image_url].filter(Boolean),
+            image: media[0]?.url || '',
+            media,
           }
         }))
       })
@@ -81,16 +88,14 @@ export default function ProductsPage() {
         return
       }
 
-      const photos = selectedProduct.images?.length
-        ? selectedProduct.images
-        : [selectedProduct.image].filter(Boolean)
+      const mediaItems = selectedProduct.media || []
 
-      if (event.key === 'ArrowRight' && photos.length > 1) {
+      if (event.key === 'ArrowRight' && mediaItems.length > 1) {
         event.preventDefault()
-        setSelectedImageIndex((index) => (index + 1) % photos.length)
-      } else if (event.key === 'ArrowLeft' && photos.length > 1) {
+        setSelectedImageIndex((index) => (index + 1) % mediaItems.length)
+      } else if (event.key === 'ArrowLeft' && mediaItems.length > 1) {
         event.preventDefault()
-        setSelectedImageIndex((index) => (index - 1 + photos.length) % photos.length)
+        setSelectedImageIndex((index) => (index - 1 + mediaItems.length) % mediaItems.length)
       } else if (event.key === 'Tab' && viewerRef.current) {
         const focusableElements = viewerRef.current.querySelectorAll(
           'button:not(:disabled), a[href], [tabindex]:not([tabindex="-1"])'
@@ -271,9 +276,9 @@ export default function ProductsPage() {
                 </h2>
               </div>
               <div className="flex items-center gap-3">
-                {selectedProduct.images?.length > 0 && (
+                {selectedProduct.media?.length > 0 && (
                   <span className="gallery-viewer-count" aria-live="polite">
-                    {selectedImageIndex + 1} / {selectedProduct.images.length}
+                    {selectedImageIndex + 1} / {selectedProduct.media.length}
                   </span>
                 )}
                 <button
@@ -281,7 +286,7 @@ export default function ProductsPage() {
                   type="button"
                   onClick={closeViewer}
                   className="gallery-viewer-close"
-                  aria-label="Close image viewer"
+                  aria-label="Close product media viewer"
                 >
                   <span aria-hidden="true">×</span>
                 </button>
@@ -289,26 +294,35 @@ export default function ProductsPage() {
             </header>
 
             <div className="gallery-viewer-image-stage">
-              {(selectedProduct.images?.length > 0 || selectedProduct.image) ? (
-                <img
-                  key={selectedProduct.images?.[selectedImageIndex] || selectedProduct.image}
-                  src={selectedProduct.images?.[selectedImageIndex] || selectedProduct.image}
-                  alt={`${selectedProduct.name}, image ${selectedImageIndex + 1}`}
-                  className="gallery-viewer-image"
-                />
+              {selectedProduct.media?.length > 0 ? (
+                selectedProduct.media[selectedImageIndex]?.media_type === 'video'
+                  ? <video
+                      key={selectedProduct.media[selectedImageIndex].url}
+                      src={selectedProduct.media[selectedImageIndex].url}
+                      controls
+                      playsInline
+                      aria-label={`${selectedProduct.name}, video ${selectedImageIndex + 1}`}
+                      className="gallery-viewer-image"
+                    />
+                  : <img
+                      key={selectedProduct.media[selectedImageIndex].url}
+                      src={selectedProduct.media[selectedImageIndex].url}
+                      alt={`${selectedProduct.name}, image ${selectedImageIndex + 1}`}
+                      className="gallery-viewer-image"
+                    />
               ) : (
-                <p className="gallery-viewer-empty">No product images are available.</p>
+                <p className="gallery-viewer-empty">No product media is available.</p>
               )}
 
-              {(selectedProduct.images?.length || 0) > 1 && (
+              {(selectedProduct.media?.length || 0) > 1 && (
                 <>
                   <button
                     type="button"
                     className="gallery-viewer-arrow gallery-viewer-previous"
                     onClick={() => setSelectedImageIndex((index) => (
-                      (index - 1 + selectedProduct.images.length) % selectedProduct.images.length
+                      (index - 1 + selectedProduct.media.length) % selectedProduct.media.length
                     ))}
-                    aria-label="Previous image"
+                    aria-label="Previous media item"
                   >
                     ‹
                   </button>
@@ -316,9 +330,9 @@ export default function ProductsPage() {
                     type="button"
                     className="gallery-viewer-arrow gallery-viewer-next"
                     onClick={() => setSelectedImageIndex((index) => (
-                      (index + 1) % selectedProduct.images.length
+                      (index + 1) % selectedProduct.media.length
                     ))}
-                    aria-label="Next image"
+                    aria-label="Next media item"
                   >
                     ›
                   </button>
@@ -326,18 +340,29 @@ export default function ProductsPage() {
               )}
             </div>
 
-            {selectedProduct.images?.length > 1 && (
-              <div className="gallery-viewer-thumbnails" aria-label="Choose product image">
-                {selectedProduct.images.map((photo, index) => (
+            {selectedProduct.media?.length > 1 && (
+              <div className="gallery-viewer-thumbnails" aria-label="Choose product media">
+                {selectedProduct.media.map((media, index) => (
                   <button
-                    key={`${photo}-${index}`}
+                    key={`${media.url}-${index}`}
                     type="button"
                     onClick={() => setSelectedImageIndex(index)}
                     className={`gallery-viewer-thumbnail ${index === selectedImageIndex ? 'is-active' : ''}`}
-                    aria-label={`Show image ${index + 1}`}
+                    aria-label={`Show ${media.media_type} ${index + 1}`}
                     aria-pressed={index === selectedImageIndex}
                   >
-                    <img src={photo} alt="" />
+                    {media.media_type === 'video'
+                      ? <video
+                          src={media.url}
+                          poster={selectedProduct.media.find((item) => item.media_type === 'image')?.url}
+                          muted
+                          playsInline
+                          preload="metadata"
+                          aria-hidden="true"
+                        />
+                      : <img src={media.url} alt="" />
+                    }
+                    {media.media_type === 'video' && <span aria-hidden="true" className="gallery-viewer-video-badge">▶</span>}
                   </button>
                 ))}
               </div>

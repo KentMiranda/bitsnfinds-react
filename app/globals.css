@@ -1189,6 +1189,7 @@ button:disabled {
   }
 
   .gallery-viewer-thumbnail {
+    position: relative;
     width: 4rem;
     height: 4rem;
     flex: 0 0 auto;
@@ -1211,11 +1212,23 @@ button:disabled {
     opacity: 1;
   }
 
-  .gallery-viewer-thumbnail img {
+  .gallery-viewer-thumbnail img,
+  .gallery-viewer-thumbnail video {
     display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+
+  .gallery-viewer-video-badge {
+    position: absolute;
+    inset: 0;
+    display: grid;
+    place-items: center;
+    color: #fffef8;
+    font-size: 0.7rem;
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.75);
+    pointer-events: none;
   }
 
   .gallery-viewer-description {

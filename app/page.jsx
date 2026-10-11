@@ -14,13 +14,24 @@ export default function HomePage() {
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(false)
   const [isDocumentVisible, setIsDocumentVisible] = useState(true)
   const [isCarouselHovered, setIsCarouselHovered] = useState(false)
+  const [isHeroVideoPlaying, setIsHeroVideoPlaying] = useState(false)
   const [carouselWidth, setCarouselWidth] = useState(0)
   const [failedImageSources, setFailedImageSources] = useState(() => new Set())
   const heroCarouselRef = useRef(null)
+  const activeHeroVideoRef = useRef(null)
   const swipeStartRef = useRef(null)
   const suppressSwipeClickRef = useRef(false)
   const activeHeroImageIndex = products.length ? heroImageIndex % products.length : 0
+  const activeHeroProduct = products[activeHeroImageIndex]
+  const activeHeroMedia = activeHeroProduct?.media?.[0] || {
+    url: activeHeroProduct?.image || '',
+    media_type: 'image',
+  }
   const previousActiveIndexRef = useRef(activeHeroImageIndex)
+
+  useEffect(() => {
+    setIsHeroVideoPlaying(false)
+  }, [activeHeroMedia.url])
 
   useEffect(() => {
     const controller = new AbortController()
@@ -36,17 +47,23 @@ export default function HomePage() {
       .then((data) => {
         if (!Array.isArray(data)) throw new Error('Product response was not a list')
         setProducts(data.filter((product) => product.is_active !== false).map((product) => {
-          const showcaseImages = (product.showcase_images || []).map((image) => image.url)
-          const images = showcaseImages.length > 0
-            ? showcaseImages
-            : [product.image || product.image_url].filter(Boolean)
+          const showcaseMedia = (product.showcase_images || []).map((item) => ({
+            url: item.url,
+            media_type: item.media_type || 'image',
+          }))
+          const media = showcaseMedia.length > 0
+            ? showcaseMedia
+            : [product.image || product.image_url].filter(Boolean).map((url) => ({
+              url,
+              media_type: 'image',
+            }))
 
           return {
             ...product,
             slug: product.id || product.slug || product.name,
             desc: product.description || product.desc || '',
-            image: images[0] || '',
-            images,
+            image: media[0]?.url || '',
+            media,
           }
         }))
       })
@@ -66,6 +83,16 @@ export default function HomePage() {
 
   const navigateHeroCarousel = (direction) => {
     moveHeroCarousel(direction)
+  }
+
+  const toggleHeroVideo = () => {
+    const video = activeHeroVideoRef.current
+    if (!video) return
+    if (video.paused) {
+      video.play().catch((error) => console.warn('Could not play featured product video:', error))
+    } else {
+      video.pause()
+    }
   }
 
   useEffect(() => {
@@ -115,6 +142,7 @@ export default function HomePage() {
       prefersReducedMotion ||
       !isDocumentVisible ||
       isCarouselHovered ||
+      activeHeroMedia.media_type === 'video' ||
       products.length < 2
     ) return undefined
 
@@ -123,7 +151,7 @@ export default function HomePage() {
     }, 4000)
 
     return () => window.clearInterval(interval)
-  }, [isCarouselHovered, isDocumentVisible, moveHeroCarousel, prefersReducedMotion, products.length])
+  }, [activeHeroMedia.media_type, isCarouselHovered, isDocumentVisible, moveHeroCarousel, prefersReducedMotion, products.length])
 
   useEffect(() => {
     const revealElements = document.querySelectorAll('[data-home-reveal]')
@@ -243,7 +271,10 @@ export default function HomePage() {
           >
             <div className="relative h-[58vw] min-h-[250px] max-h-[540px] sm:h-[48vw] md:h-[40vw] lg:h-[min(38vw,500px)]">
               {products.map((product, index) => {
-                const image = product.images?.[0] || product.image
+                const media = product.media?.[0] || {
+                  url: product.image,
+                  media_type: 'image',
+                }
                 const isActive = index === activeHeroImageIndex
                 const productKey = product.id || product.slug || product.name
                 const relativeIndex = ((index - activeHeroImageIndex + products.length + Math.floor(products.length / 2)) % products.length) - Math.floor(products.length / 2)
@@ -294,16 +325,36 @@ export default function HomePage() {
                         event.stopPropagation()
                       }}
                     >
-                      {image && !failedImageSources.has(image) ? (
-                        <img
-                          src={image}
-                          alt={product.name}
-                          loading={isActive ? 'eager' : 'lazy'}
-                          decoding="async"
-                          fetchPriority={isActive ? 'high' : 'auto'}
-                          onError={() => setFailedImageSources((current) => new Set(current).add(image))}
-                          className={`h-full w-full object-cover transition-transform duration-1000 ease-out group-hover:scale-[1.035] ${isActive ? 'scale-[1.015]' : 'scale-100'}`}
-                        />
+                      {media.url && (media.media_type === 'video' || !failedImageSources.has(media.url)) ? (
+                        media.media_type === 'video'
+                          ? <video
+                              ref={isActive ? activeHeroVideoRef : null}
+                              key={media.url}
+                              src={media.url}
+                              poster={product.media?.find((item) => item.media_type === 'image')?.url}
+                              muted
+                              playsInline
+                              loop
+                              autoPlay={isActive && !prefersReducedMotion}
+                              onPlay={() => {
+                                if (isActive) setIsHeroVideoPlaying(true)
+                              }}
+                              onPause={() => {
+                                if (isActive) setIsHeroVideoPlaying(false)
+                              }}
+                              preload={isActive ? 'auto' : 'none'}
+                              aria-label={`${product.name} video`}
+                              className={`h-full w-full bg-bark object-cover ${isActive ? 'scale-[1.015]' : 'scale-100'}`}
+                            />
+                          : <img
+                              src={media.url}
+                              alt={product.name}
+                              loading={isActive ? 'eager' : 'lazy'}
+                              decoding="async"
+                              fetchPriority={isActive ? 'high' : 'auto'}
+                              onError={() => setFailedImageSources((current) => new Set(current).add(media.url))}
+                              className={`h-full w-full object-cover transition-transform duration-1000 ease-out group-hover:scale-[1.035] ${isActive ? 'scale-[1.015]' : 'scale-100'}`}
+                            />
                       ) : (
                         <div
                           aria-hidden="true"
@@ -314,6 +365,16 @@ export default function HomePage() {
                         </div>
                       )}
                     </Link>
+                    {isActive && media.media_type === 'video' && (
+                      <button
+                        type="button"
+                        onClick={toggleHeroVideo}
+                        aria-label={isHeroVideoPlaying ? 'Pause featured video' : 'Play featured video'}
+                        className="absolute bottom-4 right-4 z-40 rounded-full border border-white/50 bg-bark/75 px-4 py-2 text-xs font-medium text-cream backdrop-blur-sm transition-colors hover:bg-bark focus-visible:outline focus-visible:outline-2 focus-visible:outline-white"
+                      >
+                        {isHeroVideoPlaying ? 'Pause video' : 'Play video'}
+                      </button>
+                    )}
                   </article>
                 )
               })}
